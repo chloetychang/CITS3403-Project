@@ -64,4 +64,4 @@ Powered by: The NapNinjas
 ## Discuss expectations for next meeting, as well as set-up next meeting time
 - Meet up next week.
 - Wednesday 16th of April: 2-4pm Meeting. Location: EZONE 102A Meeting Room.
-
+- Finalise theme for website and work on other pages.
