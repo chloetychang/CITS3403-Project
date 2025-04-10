@@ -1,9 +1,11 @@
 # Meeting 1
+### EZONE 102B Meeting Room. 1-3pm. 
+- Attendance: All Present
 
+## Agenda
 Accounting for:
 In the week 28th April-2nd May, at least one person from your group will need to turn up to a lab session for a 5 minute presentation. This should involve describing your idea to the facilitator and presenting designs for your GUI. These should consist of static HTML pages with some minimal CSS styling. No actual functionality required (e.g. button presses required, and complex graphs etc. can have placeholders).
 
-## Agenda
 - Deliverable
 - Deciding on an idea
 - Discuss on which CSS Framework to use
@@ -48,14 +50,18 @@ Powered by: The NapNinjas
 4. Visualisation Page
 5. Share Data Page
 
-### Selection: One of Bootstrap/Tailwind/SemanticUI/Foundation
+## Selection: One of Bootstrap/Tailwind/SemanticUI/Foundation
 - Bootstrap
 
-### Individual Strengths
+## Individual Strengths
 - Liam - Please start us off with selecting primary colours, secondary colours...Canva designing for one key page for now. 
 - We can all help :)
 
-### Create Initial Issues
+## Create Initial Issues
+- Need to confirm designing first, then we can set up individual issues
+> Liam: Finalise Welcome page + decide on colour scheme first. Give us permissions for Canva / Figma.
 
-
+## Discuss expectations for next meeting, as well as set-up next meeting time
+- Meet up next week.
+- Wednesday 16th of April: 2-4pm Meeting. Location: EZONE 102A Meeting Room.
 
