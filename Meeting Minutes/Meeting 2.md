@@ -1,4 +1,4 @@
-# Meeting 1
+# Meeting 2
 ### EZONE 102A Meeting Room. 2-4pm. 
 - Attendance: All Present
 
