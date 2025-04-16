@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+
+    </head>
+
+    <body>
+        <nav>
+            <ul>
+                <li> <a href= "{{ url_for('home') }}" > Home </a></li>
+                <li> <a href= "{{ url_for('visualisation') }}" > Visualisation </a></li>
+            </ul>
+        </nav>
+
+        <div class = "page-content">
+            {% block content %} {% endblock %}
+        </div>
+
+
+    </body>
+</html>
