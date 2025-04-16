@@ -5,12 +5,12 @@ from app import app
 
 @app.route('/home')
 def home():
-    return "Hello, World!"
+    return render_template('home.html', title="Home")
 
 @app.route('/visualisation')
 def visualisation():
-    return "Hello, Visualisation!"
+    return render_template('visualisation.html', title = "Visualisation")
 
 @app.route("/share")
 def share():
-    return "Hello, Share!"
+    return render_template('share.html', title = "Share")
