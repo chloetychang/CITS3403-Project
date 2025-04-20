@@ -1,9 +1,4 @@
-nav ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-}
-
+/* Styling for Navigation Bar */
 .sidenav {
     height: 100%;
     width: 180px;
@@ -15,6 +10,7 @@ nav ul {
     padding-top: 20px;
 }
 
+/* Styling for contents inside Navigation Bar */
 .sidenav a {
     padding: 8px, 8px, 8px, 32px;       /* Padding: Top, Right, Bottom, Left */
     text-decoration: none;
@@ -24,10 +20,24 @@ nav ul {
     display: block;
 }
 
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* Styling for contents inside Navigation Bar on hover */
 .sidenav a:hover {
     color: #f1f1f1;
 }
 
+/* Styling for Page Content - In consideration of the Navigation Bar */
 .page-content {
     margin-left: 200px;
+}
+
+/* Responsive Design - For smaller screens */
+@media screen and {max-height: 450px} {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
 }
