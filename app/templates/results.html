@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Results{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6">Your Sleep Analysis</h1>
+    <!-- i separate the graphic and upload pages for easier access, i also found it less painful to implement -->
+    <div class="bg-white bg-opacity-10 p-6 rounded-lg mb-6">
+        <h2 class="text-xl font-bold mb-4">Weekly Overview</h2>
+        <div class="h-64 bg-white bg-opacity-5 rounded flex items-end justify-between p-4">
+            {% set heights = [15, 30, 45, 60, 45, 75, 90] %}
+            {% for day in ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] %}
+            <div class="flex flex-col items-center">
+                <!--<div class="w-10 bg-button rounded-t" style="height: {{ heights[loop.index0] }}px"></div>-->
+                <span class="text-xs mt-1">{{ day }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white bg-opacity-10 p-4 rounded-lg">
+            <h3 class="font-bold mb-2">Average Sleep Duration</h3>
+            <p class="text-2xl font-bold">7.2 hours</p>
+        </div>
+        <div class="bg-white bg-opacity-10 p-4 rounded-lg">
+            <h3 class="font-bold mb-2">Sleep Consistency</h3>
+            <p class="text-2xl font-bold">85%</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Sleep{% endblock %}
+<!-- should this be changed to homepage? or the name of our application/website? please review -->
+{% block content %}
+<div class="flex flex-col items-center justify-center min-h-[80vh]">
+    <div class="text-center max-w-2xl">
+        <h1 class="text-4xl font-bold mb-6">Sleep</h1>
+        
+        <p class="text-lg mb-8">
+            Upload your sleep data and habits to formulate a sleep plan.<br>
+            Create a profile to store your records.<br>
+            Based on peer reviewed research.<br>
+            do we even need text here
+        </p>
+
+        <div class="my-12">
+            <button class="bg-button text-secondary text-2xl font-bold py-4 px-8 rounded-full 
+                         hover:bg-opacity-90 transition duration-200 shadow-lg">
+                Upload Sleep Data ⬆
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}

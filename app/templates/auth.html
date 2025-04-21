@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- auth.html is responsible for both login and signup pages. -->
+<div class="max-w-md mx-auto mt-10">
+    <div class="bg-accent p-8 rounded-xl shadow-lg">
+        <h1 class="text-3xl font-bold mb-6 text-center">Login</h1>
+        
+        <form method="POST" action="{{ url_for('login') }}" class="space-y-4">
+            <div>
+                <input type="email" name="email" placeholder="Email" required
+                       class="w-full p-3 rounded bg-white text-gray-800">
+            </div>
+            
+            <div>
+                <input type="password" name="password" placeholder="Password" required
+                       class="w-full p-3 rounded bg-white text-gray-800">
+            </div>
+            
+            <button type="submit" 
+                    class="w-full bg-secondary text-white py-3 px-4 rounded hover:bg-opacity-90">
+                Login
+            </button>
+        </form>
+        
+        <div class="mt-6 text-center text-sm">
+            <p>Test account: <span class="font-mono">test@example.com</span> / <span class="font-mono">password123</span></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
