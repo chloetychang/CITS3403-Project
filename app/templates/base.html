@@ -1,25 +1,66 @@
-<!DOCTYPE HTML>
-<html>
-    <head>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
-
-    </head>
-
-    <body>
-        <div class = "sidenav">
-            <nav>
-                <ul>
-                    <li> <a href= "{{ url_for('home') }}" > Home </a></li>
-                    <li> <a href= "{{ url_for('visualisation') }}" > Visualisation </a></li>
-                    <li> <a href = "{{ url_for('share') }}"> Share </li>
-                </ul>
-            </nav>
-        </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Sleep Tracker{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!--tailwind is being imported from a link here-->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4c497e',
+                        secondary: '#807a8b',
+                        accent: '#807a8b',
+                        button: '#d5caa1',
+                        /*colour palette*/
+                    },
+                    fontFamily: {
+                        sans: ['Inknut Antiqua', 'serif'],
+                        /*the universal font is Inknut Antiqua*/
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@400;700&display=swap" rel="stylesheet">
+    <!--font is being imported from a link here-->
+</head>
+<body class="bg-primary text-white font-sans min-h-screen">
+    {% if 'user' in session %}
+    <!-- the following div is responsible for formatting the icons in the sidebar -->
+    <div class="w-[120px] bg-secondary h-screen fixed flex flex-col items-center pt-5">
+        <a href="{{ url_for('sleep') }}" class="my-5">
+            <img src="{{ url_for('static', filename='moon-icon.png') }}" alt="Sleep" class="w-14 h-14">
+        </a>
+        <a href="{{ url_for('record') }}" class="mt-auto ml-2"> <!--mt and ml are used for alignment, this may need fixing later, please review.-->
+            <img src="{{ url_for('static', filename='calendar-icon.png') }}" alt="Record" class="w-16 h-16">
+        </a>
+        <a href="{{ url_for('results') }}" class="mt-auto mb-5">
+            <img src="{{ url_for('static', filename='graph-icon.png') }}" alt="Results" class="w-14 h-14">
+        </a>
+        <a href="{{ url_for('logout') }}" class="mt-auto mb-5 text-xs">
+            <img src="{{ url_for('static', filename='logout-icon.png') }}" alt="Logout" class="w-14 h-14">
+        </a>
+    </div>
+    {% endif %}
     
-        <div class = "page-content">
-            {% block content %} {% endblock %}
-        </div>
-
-
-    </body>
+    <!-- ai implemented flash warning and flash succesful upon login-->
+    <div class="{% if 'user' in session %}ml-[60px]{% endif %} p-10">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="mb-4">
+                    {% for category, message in messages %}
+                        <div class="p-2 rounded {% if category == 'error' %}bg-red-500{% else %}bg-green-500{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </div>
+</body>
 </html>
