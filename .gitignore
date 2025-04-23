@@ -9,4 +9,4 @@ pycache/
 .vscode/
 
 # Ignore environment variables and secret files
-.env
+.env.DS_Store
