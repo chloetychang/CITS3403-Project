@@ -46,21 +46,27 @@
         </a>
     </div>
     {% endif %}
-    
-    <!-- ai implemented flash warning and flash succesful upon login-->
-    <div class="{% if 'user' in session %}ml-[60px]{% endif %} p-10">
+
+    <!-- flash message after user has logged in successfully -->
         {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div class="mb-4">
-                    {% for category, message in messages %}
-                        <div class="p-2 rounded {% if category == 'error' %}bg-red-500{% else %}bg-green-500{% endif %}">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
+        {% if messages %}
+        <div class="absolute top-4 w-full px-6 flex justify-center z-50">
+            {% for category, message in messages %}
+            <div class="relative bg-{{ 'red' if category == 'error' else 'green' }}-500 text-white px-6 py-3 rounded-lg shadow-lg flex justify-between items-center max-w-md w-full">
+                <span class="font-semibold">{{ message }}</span>
+                <button class="text-white hover:bg-white/10 rounded-full p-1 text-xl leading-none transition focus:outline-none"
+                        onclick="dismissFlashMessage(this)">
+                    &times;
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% endif %}
         {% endwith %}
         {% block content %}{% endblock %}
     </div>
+        <!-- Include the flash message script -->
+        <script src="{{ url_for('static', filename='js/flash.js') }}"></script>
 </body>
 </html>

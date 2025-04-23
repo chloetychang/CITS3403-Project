@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Authentication{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4c497e',
+                        secondary: '#807a8b',
+                        accent: '#807a8b',
+                        button: '#d5caa1',
+                    },
+                    fontFamily: {
+                        sans: ['Inknut Antiqua', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-primary text-white font-sans leading-normal tracking-normal">
+
+    <main class="flex items-center justify-center min-h-screen">
+        <!-- Flash message block -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="absolute top-4 w-full px-6 flex justify-center z-50">
+            {% for category, message in messages %}
+            <div class="relative bg-{{ 'red' if category == 'error' else 'green' }}-500 text-white px-6 py-3 rounded-lg shadow-lg flex justify-between items-center max-w-md w-full">                {{ message }}
+                <!-- Dismiss button -->
+                <button class="text-white hover:bg-white/10 rounded-full p-1 text-xl leading-none transition focus:outline-none"
+                onclick="dismissFlashMessage(this)">
+                &times;
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+    </main>
+    <footer class="text-center text-sm text-gray-300 mt-12 py-4">
+        &copy; 2025 MyApp. All rights reserved.
+    </footer>
+
+    <!-- Include the flash message script -->
+    <script src="{{ url_for('static', filename='js/flash.js') }}"></script>
+</body>
+</html>
