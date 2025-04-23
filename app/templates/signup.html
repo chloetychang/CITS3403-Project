@@ -8,15 +8,15 @@
     
     <form method="POST" action="{{ url_for('signup') }}" class="space-y-4">
         <div>
-            <input type="text" name="name" placeholder="Full Name" required
+            <input type="text" name="name" placeholder="Name" required value = "{{name}}"
+                   class="w-full p-3 rounded bg-gray-100 text-gray-800"> 
+        </div>
+        <div>
+            <input type="email" name="email" placeholder="Email" required value="{{email}}"
                    class="w-full p-3 rounded bg-gray-100 text-gray-800">
         </div>
         <div>
-            <input type="email" name="email" placeholder="Email" required
-                   class="w-full p-3 rounded bg-gray-100 text-gray-800">
-        </div>
-        <div>
-            <input type="password" name="password" placeholder="Password" required
+            <input type="password" name="password" placeholder="Password" required value="{{password}}"
                    class="w-full p-3 rounded bg-gray-100 text-gray-800">
         </div>
         <button type="submit"

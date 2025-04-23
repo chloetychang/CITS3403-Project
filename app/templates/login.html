@@ -8,11 +8,11 @@
     
     <form method="POST" action="{{ url_for('login') }}" class="space-y-4">
         <div>
-            <input type="email" name="email" placeholder="Email" required
+            <input type="email" name="email" placeholder="Email" required value = "{{email}}"
                    class="w-full p-3 rounded bg-gray-100 text-gray-800">
         </div>
         <div>
-            <input type="password" name="password" placeholder="Password" required
+            <input type="password" name="password" placeholder="Password" required value="{{password}}"
                    class="w-full p-3 rounded bg-gray-100 text-gray-800">
         </div>
         <button type="submit"
