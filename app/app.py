@@ -29,12 +29,32 @@ def login():
                 'email': email,
                 'name': user['name']
             }
-            flash('.         Login successful!', 'success')
+            flash('Login successful!', 'success')
             return redirect(url_for('sleep'))
         else:
-            flash('.         Invalid email or password', 'error')
+            flash('Invalid email or password', 'error')
     
-    return render_template('auth.html', is_login=True)
+    return render_template('login.html')  # Ensure this points to login.html
+
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        if email in users:
+            flash('Email already exists.', 'error')
+        else:
+            users[email] = {
+                'password': generate_password_hash(password, method='pbkdf2:sha256'),
+                'name': name
+            }
+            flash('Account created successfully! Please log in.', 'success')
+            return redirect(url_for('login'))
+
+    return render_template('signup.html')  # Ensure this points to signup.html
 
 @app.route('/logout')
 def logout():
