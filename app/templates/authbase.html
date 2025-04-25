@@ -8,6 +8,8 @@
 </head>
 <body class="bg-primary text-white font-sans leading-normal tracking-normal">
 
+    <a href=" {{ url_for('welcome') }}"> Back to Welcome </a>
+
     <main class="flex items-center justify-center min-h-screen">
         <!-- Flash message block -->
         {% with messages = get_flashed_messages(with_categories=true) %}

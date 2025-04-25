@@ -6,7 +6,7 @@ from app.mock_data import users                 # Replace users with real databa
 from werkzeug.security import generate_password_hash, check_password_hash
 
 @app.route('/')
-def home():
+def welcome():
     return render_template('welcome.html')
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -53,7 +53,7 @@ def signup():
 @app.route('/logout')
 def logout():
     session.pop('user', None)
-    return redirect(url_for('home'))
+    return redirect(url_for('welcome'))
 
 # Protected routes
 @app.route('/sleep')
