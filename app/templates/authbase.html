@@ -1,37 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}Authentication{% endblock %}</title>
     {% include 'partials/tailwind_config.html' %}
-</head>
-<body class="bg-primary text-white font-sans leading-normal tracking-normal">
+  </head>
+
+  <body class="bg-primary text-white font-sans leading-normal tracking-normal">
+    <a href=" {{ url_for('welcome') }}">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-10 h-10 mt-2 ml-2"
+      >
+        <path
+          d="M3 12L10 5V9H20.2C20.48 9 20.62 9 20.727 9.0545C20.8211 9.10243 20.8976 9.17892 20.9455 9.273C21 9.37996 21 9.51997 21 9.8V14.2C21 14.48 21 14.62 20.9455 14.727C20.8976 14.8211 20.8211 14.8976 20.727 14.9455C20.62 15 20.48 15 20.2 15H10V19L3 12Z"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </a>
 
     <main class="flex items-center justify-center min-h-screen">
-        <!-- Flash message block -->
-        {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-        <div class="absolute top-4 w-full px-6 flex justify-center z-50">
-            {% for category, message in messages %}
-            <div class="relative bg-{{ 'red' if category == 'error' else 'green' }}-500 text-white px-6 py-3 rounded-lg shadow-lg flex justify-between items-center max-w-md w-full">                {{ message }}
-                <!-- Dismiss button -->
-                <button class="text-white hover:bg-white/10 rounded-full p-1 text-xl leading-none transition focus:outline-none"
-                onclick="dismissFlashMessage(this)">
-                &times;
-                </button>
-            </div>
-            {% endfor %}
+      <!-- Flash message block -->
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %}
+      <div class="absolute top-4 w-full px-6 flex justify-center z-50">
+        {% for category, message in messages %}
+        <div
+          class="relative bg-{{ 'red' if category == 'error' else 'green' }}-500 text-white px-6 py-3 rounded-lg shadow-lg flex justify-between items-center max-w-md w-full"
+        >
+          {{ message }}
+          <!-- Dismiss button -->
+          <button
+            class="text-white hover:bg-white/10 rounded-full p-1 text-xl leading-none transition focus:outline-none"
+            onclick="dismissFlashMessage(this)"
+          >
+            &times;
+          </button>
         </div>
-        {% endif %}
-    {% endwith %}
-    {% block content %}{% endblock %}
+        {% endfor %}
+      </div>
+      {% endif %} {% endwith %} {% block content %}{% endblock %}
     </main>
+
     <footer class="text-center text-sm text-gray-300 mt-12 py-4">
-        &copy; 2025 MyApp. All rights reserved.
+      &copy; 2025 MyApp. All rights reserved.
     </footer>
 
     <!-- Include the flash message script -->
     <script src="{{ url_for('static', filename='js/flash.js') }}"></script>
-</body>
+  </body>
 </html>
