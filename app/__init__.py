@@ -4,7 +4,6 @@ from flask import Flask
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from app.config import Config
-from app import models
 
 app = Flask(__name__, static_folder='static')
 app.config.from_object(Config)                  # Configure the `app` object using our `Config` class
@@ -16,4 +15,4 @@ app.secret_key = 'monke-magic'                  # reminder to not include secret
 if __name__ == "__main__":
     app.run()
 
-from app import routes
+from app import routes, models
