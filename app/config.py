@@ -5,4 +5,4 @@ default_database_location = 'sqlite:///' + os.path.join(basedir, 'app.db')
 
 class Config:
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL') or default_database_location
-    SECRET_KEY = "penguin-magic"
+    SECRET_KEY = "penguin-magic"    # reminder to not include secret key in final version.
