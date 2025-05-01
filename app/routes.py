@@ -35,6 +35,9 @@ def login():
 def signup():
     if request.method == 'POST':
         name = request.form.get('name')
+        username = request.form.get('username', '').strip()
+        age = request.form.get('age')
+        gender = request.form.get('gender')
         email = request.form.get('email')
         password = request.form.get('password')
         
@@ -42,8 +45,12 @@ def signup():
             flash('Email already exists', 'error')
         else:
             users[email] = {
+                'name': name,
                 'password': generate_password_hash(password, method='pbkdf2:sha256'),
-                'name': name
+                'username': username,
+                'age': age,
+                'gender': gender
+                
             }
             flash('Account created successfully! Please log in.', 'success')
             return redirect(url_for('login'))
