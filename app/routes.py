@@ -44,6 +44,9 @@ def signup():
         # Check if email already exists
         if email in users:
             flash("Email already exists", "error")
+        # Check if username is already used (search all users)
+        elif any(user["username"] == username for user in users.values()):
+            flash("Username already taken", "error")
         # Create a new user
         else:
             users[email] = {
