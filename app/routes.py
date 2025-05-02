@@ -2,6 +2,7 @@
 
 from flask import render_template, redirect, url_for, session, request, flash
 from app import app
+from app.forms import LoginForm, SignupForm # Import forms
 from app.mock_data import users                 # Replace users with real database later
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -11,12 +12,11 @@ def welcome():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
-        
+    form = LoginForm() # Instantiate the form
+    if form.validate_on_submit(): # Check if the form is submitted and valid
+        email = form.email.data
+        password = form.password.data
         user = users.get(email)
-        
         # Check if users exist and password matches
         if user and check_password_hash(user['password'], password):
             session['user'] = {
@@ -27,35 +27,79 @@ def login():
             return redirect(url_for('sleep'))
         else:
             flash('Invalid email or password', 'error')
-            return redirect(url_for('login'))   # avoid resubmitting form 
+            return redirect(url_for('login'))
+    # If the request method is GET or the form is not valid, render the login template
+    return render_template('login.html', form=form)  # Pass the form to the template
+
+    # if request.method == 'POST':
+    #     email = request.form.get('email')
+    #     password = request.form.get('password')
         
-    return render_template('login.html')        # only loads form on GET
+    #     user = users.get(email)
+        
+    #     # Check if users exist and password matches
+    #     if user and check_password_hash(user['password'], password):
+    #         session['user'] = {
+    #             'email': email,
+    #             'name': user['name']
+    #         }
+    #         flash('Login successful!', 'success')
+    #         return redirect(url_for('sleep'))
+    #     else:
+    #         flash('Invalid email or password', 'error')
+    #         return redirect(url_for('login'))   # avoid resubmitting form 
+        
+    # return render_template('login.html')        # only loads form on GET
         
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    if request.method == 'POST':
-        name = request.form.get('name')
-        username = request.form.get('username', '').strip()
-        age = request.form.get('age')
-        gender = request.form.get('gender')
-        email = request.form.get('email')
-        password = request.form.get('password')
-        
+    form = SignupForm() # Instantiate the form
+    if form.validate_on_submit(): # Check if the form is submitted and valid
+        name = form.name.data
+        username = form.username.data
+        age = form.age.data
+        gender = form.gender.data
+        email = form.email.data
+        password = form.password.data
+        # Check if email already exists
         if email in users:
             flash('Email already exists', 'error')
         else:
             users[email] = {
                 'name': name,
-                'password': generate_password_hash(password, method='pbkdf2:sha256'),
                 'username': username,
                 'age': age,
-                'gender': gender
-                
+                'gender' : gender,
+                'password': generate_password_hash(password, method='pbkdf2:sha256')
             }
             flash('Account created successfully! Please log in.', 'success')
             return redirect(url_for('login'))
+    # If the request method is GET or the form is not valid, render the signup template
+    return render_template('signup.html', form=form)  # Pass the form to the template
+
+    # if request.method == 'POST':
+    #     name = request.form.get('name')
+    #     username = request.form.get('username', '').strip()
+    #     age = request.form.get('age')
+    #     gender = request.form.get('gender')
+    #     email = request.form.get('email')
+    #     password = request.form.get('password')
         
-    return render_template('signup.html')       # Ensure this points to signup.html
+    #     if email in users:
+    #         flash('Email already exists', 'error')
+    #     else:
+    #         users[email] = {
+    #             'name': name,
+    #             'password': generate_password_hash(password, method='pbkdf2:sha256'),
+    #             'username': username,
+    #             'age': age,
+    #             'gender': gender
+                
+    #         }
+    #         flash('Account created successfully! Please log in.', 'success')
+    #         return redirect(url_for('login'))
+        
+    # return render_template('signup.html')       # Ensure this points to signup.html
 
 @app.route('/logout')
 def logout():
