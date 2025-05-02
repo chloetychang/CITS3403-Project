@@ -5,7 +5,7 @@
 {% block content %}
 <div class="max-w-md w-full bg-white text-gray-800 p-8 rounded-xl shadow-xl">
     <h1 class="text-3xl font-bold mb-6 text-center">Sign Up</h1>
-    
+
     <form method="POST" action="{{ url_for('signup') }}" class="space-y-4">
         {{ form.hidden_tag() }}
         <div>
@@ -13,49 +13,49 @@
             {{ form.name(class="w-full p-3 rounded bg-gray-100 text-gray-800") }}
             {% for error in form.name.errors %}
             <p class="text-red-600 text-sm mt-1">{{ error }}</p>
-        {% endfor %}
+            {% endfor %}
         </div>
         <div>
             {{ form.username.label(class="block text-sm font-medium text-gray-700") }}
             {{ form.username(class="w-full p-3 rounded bg-gray-100 text-gray-800") }}
             {% for error in form.username.errors %}
             <p class="text-red-600 text-sm mt-1">{{ error }}</p>
-        {% endfor %}
+            {% endfor %}
         </div>
         <div>
             {{ form.age.label(class="block text-sm font-medium text-gray-700") }}
             {{ form.age(class="w-full p-3 rounded bg-gray-100 text-gray-800") }}
             {% for error in form.age.errors %}
             <p class="text-red-600 text-sm mt-1">{{ error }}</p>
-        {% endfor %}
+            {% endfor %}
         </div>
         <div>
             {{ form.gender.label(class="block text-sm font-medium text-gray-700") }}
             {{ form.gender(class="w-full p-3 rounded bg-gray-100 text-gray-800") }}
             {% for error in form.gender.errors %}
             <p class="text-red-600 text-sm mt-1">{{ error }}</p>
-        {% endfor %}
+            {% endfor %}
         </div>
         <div>
             {{ form.email.label(class="block text-sm font-medium text-gray-700") }}
             {{ form.email(class="w-full p-3 rounded bg-gray-100 text-gray-800") }}
             {% for error in form.email.errors %}
             <p class="text-red-600 text-sm mt-1">{{ error }}</p>
-        {% endfor %}
+            {% endfor %}
         </div>
         <div>
             {{ form.password.label(class="block text-sm font-medium text-gray-700") }}
             {{ form.password(class="w-full p-3 rounded bg-gray-100 text-gray-800") }}
             {% for error in form.password.errors %}
             <p class="text-red-600 text-sm mt-1">{{ error }}</p>
-        {% endfor %}
+            {% endfor %}
         </div>
         <div>
             {{ form.confirm_password.label(class="block text-sm font-medium text-gray-700") }}
             {{ form.confirm_password(class="w-full p-3 rounded bg-gray-100 text-gray-800") }}
             {% for error in form.confirm_password.errors %}
             <p class="text-red-600 text-sm mt-1">{{ error }}</p>
-        {% endfor %}
+            {% endfor %}
         </div>
         <div>
             {{ form.submit(class="w-full bg-primary text-white py-3 px-4 rounded hover:bg-indigo-800") }}
@@ -63,7 +63,7 @@
     </form>
 
     <div class="mt-6 text-center text-sm text-gray-600">
-        <p>Already have an account? 
+        <p>Already have an account?
             <a href="{{ url_for('login') }}" class="text-blue-600 hover:underline">Log In</a>
         </p>
     </div>

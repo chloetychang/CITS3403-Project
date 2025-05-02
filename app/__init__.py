@@ -1,5 +1,4 @@
 # Handles app creation and configuration
-
 from flask import Flask
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
@@ -10,7 +9,7 @@ app.config.from_object(Config)                  # Configure the `app` object usi
 db = SQLAlchemy(app)                            # Create SQLAlchemy object called db
 migrate = Migrate(app, db)                      # Create a migrate object
 
-app.secret_key = 'monke-magic'                  # reminder to not include secret key in final version.
+app.secret_key = 'monke-magic'                  # REMINDER to not include secret key in final version.
     
 if __name__ == "__main__":
     app.run()
