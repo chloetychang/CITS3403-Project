@@ -11,6 +11,9 @@
         <div>
             {{ form.email.label(class="block text-sm font-medium text-gray-700") }}
             {{ form.email(class="w-full p-3 rounded bg-gray-100 text-gray-800") }}
+            {% for error in form.email.errors %}
+                <p class="text-red-600 text-sm mt-1">{{ error }}</p>
+            {% endfor %}
         </div>
         <div>
             {{ form.password.label(class="block text-sm font-medium text-gray-700") }}
