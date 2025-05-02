@@ -12,7 +12,7 @@ class SignupForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired(), Length(max=50)])
     username = StringField('Username', validators=[DataRequired(), Length(max=50)])
     age = IntegerField('Age', validators=[DataRequired()])
-    gender = SelectField('Gender', choices=[('male', 'Male'), ('female', 'Female'), ('prefer_not_to_say', 'Prefer not to say')])
+    gender = SelectField('Gender', choices=[('', 'Select...'), ('male', 'Male'), ('female', 'Female'), ('prefer_not_to_say', 'Prefer not to say')], validators=[DataRequired(message="Please select a gender.")])
     email = StringField('Email', validators=[DataRequired(), Email(message='Please enter a valid email address')])
     # # Password validation , requires a minimum of 6 characters and must match the confirm password field
     password = PasswordField('Password', validators=[
