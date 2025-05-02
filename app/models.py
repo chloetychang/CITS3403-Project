@@ -8,7 +8,7 @@ class User(db.Model):
 
 class Entry(db.Model):
     entry_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('User.user_id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
     sleep_datetime = db.Column(db.DateTime, nullable=False)
     wake_datetime = db.Column(db.DateTime, nullable=True)
     mood = db.Column(db.Integer, nullable=True)       # mood - indexed for future calculations
