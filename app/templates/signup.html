@@ -7,36 +7,38 @@
     <h1 class="text-3xl font-bold mb-6 text-center">Sign Up</h1>
     
     <form method="POST" action="{{ url_for('signup') }}" class="space-y-4">
+        {{ form.hidden_tag() }}
         <div>
-            <input type="text" name="name" placeholder="Name" required value="{{ name }}"
-                   class="w-full p-3 rounded bg-gray-100 text-gray-800">
+            {{ form.name.label(class="block text-sm font-medium text-gray-700") }}
+            {{ form.name(class="w-full p-3 rounded bg-gray-100 text-gray-800") }}
         </div>
         <div>
-            <input type="text" name="username" placeholder="Username" required value="{{ username }}"
-                   class="w-full p-3 rounded bg-gray-100 text-gray-800">
+            {{ form.username.label(class="block text-sm font-medium text-gray-700") }}
+            {{ form.username(class="w-full p-3 rounded bg-gray-100 text-gray-800") }}
         </div>
         <div>
-            <input type="number" name="age" placeholder="Age" required value="{{ age }}"
-                   class="w-full p-3 rounded bg-gray-100 text-gray-800">
+            {{ form.age.label(class="block text-sm font-medium text-gray-700") }}
+            {{ form.age(class="w-full p-3 rounded bg-gray-100 text-gray-800") }}
         </div>
         <div>
-            <select name="gender" required class="w-full p-3 rounded bg-gray-100 text-gray-800">
-                <option value="" disabled selected>Select Gender</option>
-                <option value="Male" {% if gender == 'Male' %}selected{% endif %}>Male</option>
-                <option value="Female" {% if gender == 'Female' %}selected{% endif %}>Female</option>
-                <option value="Other" {% if gender == 'Other' %}selected{% endif %}>Other</option>
-            </select>
+            {{ form.gender.label(class="block text-sm font-medium text-gray-700") }}
+            {{ form.gender(class="w-full p-3 rounded bg-gray-100 text-gray-800") }}
         </div>
         <div>
-            <input type="email" name="email" placeholder="Email" required value="{{ email }}"
-                   class="w-full p-3 rounded bg-gray-100 text-gray-800">
+            {{ form.email.label(class="block text-sm font-medium text-gray-700") }}
+            {{ form.email(class="w-full p-3 rounded bg-gray-100 text-gray-800") }}
         </div>
         <div>
-            <input type="password" name="password" placeholder="Password" required value="{{ password }}"
-                   class="w-full p-3 rounded bg-gray-100 text-gray-800">
+            {{ form.password.label(class="block text-sm font-medium text-gray-700") }}
+            {{ form.password(class="w-full p-3 rounded bg-gray-100 text-gray-800") }}
         </div>
-        <button type="submit"
-            class="w-full bg-primary text-white py-3 px-4 rounded hover:bg-indigo-800">Sign Up</button>
+        <div>
+            {{ form.confirm_password.label(class="block text-sm font-medium text-gray-700") }}
+            {{ form.confirm_password(class="w-full p-3 rounded bg-gray-100 text-gray-800") }}
+        </div>
+        <div>
+            {{ form.submit(class="w-full bg-primary text-white py-3 px-4 rounded hover:bg-indigo-800") }}
+        </div>
     </form>
 
     <div class="mt-6 text-center text-sm text-gray-600">
