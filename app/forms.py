@@ -24,8 +24,9 @@ class SignupForm(FlaskForm):
     submit = SubmitField('Sign Up')
 
 class UploadSleepDataForm(FlaskForm):
-    entry_date = DateField('Date', format='%Y-%m-%d', validators = [DataRequired()])
+    entry_date_sleep = DateField('Date', format='%Y-%m-%d', validators = [DataRequired()])
     sleep_time = TimeField('Sleep Time', format='%H:%M', validators = [DataRequired()])
+    entry_date_wake = DateField('Date', format='%Y-%m-%d')                                  # Just in case...someone slept through the entire day
     wake_time = TimeField('Wake Time', format='%H:%M')                                      # Optional
     mood = IntegerField('Mood (1-5)', validators=[Optional(), NumberRange(min=1, max=5)])   # Optional
     submit = SubmitField('Submit')
