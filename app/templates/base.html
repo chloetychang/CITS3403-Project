@@ -8,7 +8,7 @@
 </head>
 
 <body class="bg-primary text-white font-sans min-h-screen">
-    {% if 'user' in session %}
+    {% if 'user_id' in session %}
     <!-- the following div is responsible for formatting the icons in the sidebar -->
     <div class="w-[120px] bg-secondary h-screen fixed flex flex-col items-center pt-5">
         <a href="{{ url_for('sleep') }}" class="my-5">

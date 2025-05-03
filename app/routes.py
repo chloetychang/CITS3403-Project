@@ -16,13 +16,13 @@ def login():
     if form.validate_on_submit(): # Check if the form is submitted and valid
         # Check if the email exists in the database
         user = User.query.filter_by(email=form.email.data).first()
-        if user and check_password_hash(user.password, form.password.data):
+        if user and check_password_hash(user.password_hash, form.password.data):
             # Store user info in session
             session['user_id'] = user.user_id
             session['user_name'] = user.name
 
             flash("Logged in successfully!", "success")
-            return redirect(url_for('dashboard'))  # Replace with your homepage
+            return redirect(url_for('sleep'))   # redirect to sleep page after successful login
         else:
             flash("Invalid email or password.", "error")
 
@@ -74,20 +74,20 @@ def logout():
 
 @app.route("/sleep")
 def sleep():
-    if "user" not in session:
+    if "user_id" not in session:
         return redirect(url_for("login"))
     return render_template("sleep.html")
 
 
 @app.route("/record")
 def record():
-    if "user" not in session:
+    if "user_id" not in session:
         return redirect(url_for("login"))
     return render_template("record.html")
 
 
 @app.route("/results")
 def results():
-    if "user" not in session:
+    if "user_id" not in session:
         return redirect(url_for("login"))
     return render_template("results.html")
