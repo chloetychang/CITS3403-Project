@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash
 users = {
     "test@example.com": {
         "password": generate_password_hash("password123", method='pbkdf2:sha256'),  # ← Explicit method
-        "name": "Test User"
+        "name": "Test User",
+        "username": "testuser"
     }
 }
