@@ -2,7 +2,6 @@
 from flask import render_template, redirect, url_for, session, flash
 from app import app
 from app.forms import LoginForm, SignupForm  # Import forms
-from app.mock_data import users  # Replace users with real database later
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.models import db, User, Entry  # Import models from database
 
