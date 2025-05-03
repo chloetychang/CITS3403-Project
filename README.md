@@ -47,3 +47,17 @@ flask db upgrade
 This will create the database and apply both existing migrations (initial and second).
 
 ## Instructions: How to run the tests for the application
+
+## 🚀 Getting Started
+
+### 🔐 Login
+
+You can use the following test account to log in:
+
+- **Username**: `admin`  
+- **Email**: `admin@example.com`  
+- **Password**: `admin123`
+
+### Registration
+
+New users can sign up by providing the required information. Once registered, you may log in using your new credentials.
