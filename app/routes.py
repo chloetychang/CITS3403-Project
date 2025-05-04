@@ -2,7 +2,7 @@
 from flask import render_template, redirect, url_for, session, flash
 from app import app
 from app.forms import LoginForm, SignupForm, UploadSleepDataForm  # Import forms
-from datetime import datetime
+from datetime import datetime, timezone
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.models import db, User, Entry  # Import models from database
 
@@ -96,6 +96,16 @@ def form_popup():
         # Check if the sleep time is before the wake time
         if wake_datetime and sleep_datetime >= wake_datetime:
             flash("Unsuccessful Submission - Sleep time must be before wake time.", "error")
+            return render_template("sleep.html", form=form)
+        
+        # Check if the sleep time is in the future
+        if sleep_datetime.replace(tzinfo=timezone.utc) > datetime.now(timezone.utc):
+            flash("Unsuccessful Submission - Sleep time cannot be in the future.", "error")
+            return render_template("sleep.html", form=form)
+        
+        # Check if the wake time is in the future
+        if wake_datetime and wake_datetime.replace(tzinfo=timezone.utc) > datetime.now(timezone.utc):
+            flash("Unsuccessful Submission - Wake time cannot be in the future.", "error")
             return render_template("sleep.html", form=form)
         
         # Create a new entry instance - fields as defined in forms.py
