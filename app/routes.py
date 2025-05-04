@@ -2,8 +2,6 @@
 from flask import render_template, redirect, url_for, session, flash
 from app import app
 from app.forms import LoginForm, SignupForm  # Import forms
-from app.mock_data import users  # Replace users with real database later
-from werkzeug.security import generate_password_hash, check_password_hash
 from app.models import db, User, Entry  # Import models from database
 
 @app.route("/")
@@ -16,7 +14,7 @@ def login():
     if form.validate_on_submit(): # Check if the form is submitted and valid
         # Check if the email exists in the database
         user = User.query.filter_by(email=form.email.data).first()
-        if user and check_password_hash(user.password_hash, form.password.data):
+        if user and user.check_password(form.password.data):
             # Store user info in session
             session['user_id'] = user.user_id
             session['user_name'] = user.name
@@ -44,8 +42,6 @@ def signup():
             flash("Username already taken", "error")
             return redirect(url_for('signup'))
 
-        # Generate a hashed password
-        hashed_password = generate_password_hash(form.password.data)
         # Create a new user instance to add to the database
         new_user = User(
             name=form.name.data,
@@ -53,9 +49,8 @@ def signup():
             age=form.age.data,
             gender=form.gender.data,
             email=form.email.data,
-            password_hash=hashed_password
         )
-
+        new_user.password = form.password.data  # uses setter and hashes password
         db.session.add(new_user)  # Add the new user to the session
         db.session.commit()  # Save the new user to the database
 
