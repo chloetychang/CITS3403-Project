@@ -22,7 +22,7 @@
         </div>
 
         {% include "partials/form_popup.html"  %}
-        
+
     </div>
 </div>
 
@@ -34,6 +34,16 @@
   
     function closePopup() {
       document.getElementById("popup").classList.add("hidden");
+    }
+</script>
+
+<script>
+    function clearForm() {
+      const fields = ['entry_date_sleep', 'sleep_time', 'entry_date_wake', 'wake_time', 'mood'];
+      fields.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
     }
 </script>
 
