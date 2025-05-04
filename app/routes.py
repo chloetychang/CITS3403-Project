@@ -76,7 +76,8 @@ def logout():
 def sleep():
     if "user_id" not in session:
         return redirect(url_for("login"))
-    return render_template("sleep.html")
+    form = UploadSleepDataForm()                            # Create an instance of the UploadSleepDataForm
+    return render_template("sleep.html", form=form)
 
 @app.route("/form_popup", methods=["POST"])
 def form_popup():
@@ -94,8 +95,8 @@ def form_popup():
         
         # Check if the sleep time is before the wake time
         if wake_datetime and sleep_datetime >= wake_datetime:
-            flash("Sleep time must be before wake time.", "error")
-            return render_template("form_popup.html", form = form)
+            flash("Unsuccessful Submission - Sleep time must be before wake time.", "error")
+            return render_template("sleep.html", form=form)
         
         # Create a new entry instance - fields as defined in forms.py
         new_entry = Entry(
@@ -108,9 +109,9 @@ def form_popup():
         db.session.commit()  # Save the new entry to the database
         
         flash("Sleep data recorded successfully!", "success")
-        return redirect(url_for("form_popup"))
+        return redirect(url_for("sleep"))  # Redirect to sleep page after successful submission
         
-    return render_template("form_popup.html", form = form)
+    return render_template("sleep.html", form=form)
         
 @app.route("/record")
 def record():
