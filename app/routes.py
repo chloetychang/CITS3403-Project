@@ -94,6 +94,16 @@ def form_popup():
             flash("Unsuccessful Submission - Sleep time must be before wake time.", "error")
             return render_template("sleep.html", form=form)
         
+        # Check if the sleep time is in the future
+        if sleep_datetime.replace(tzinfo=timezone.utc) > datetime.now(timezone.utc):
+            flash("Unsuccessful Submission - Sleep time cannot be in the future.", "error")
+            return render_template("sleep.html", form=form)
+        
+        # Check if the wake time is in the future
+        if wake_datetime and wake_datetime.replace(tzinfo=timezone.utc) > datetime.now(timezone.utc):
+            flash("Unsuccessful Submission - Wake time cannot be in the future.", "error")
+            return render_template("sleep.html", form=form)
+        
         # Create a new entry instance - fields as defined in forms.py
         new_entry = Entry(
             user_id = user_id,
