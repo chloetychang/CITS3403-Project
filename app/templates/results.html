@@ -31,14 +31,16 @@
         </div>
 
         <div class="flex gap-4 mb-4">
-            <a href="{{ url_for('results', week_offset=week_offset + 1) }}">
-              <button class="bg-secondary mt-4 px-4 py-2 rounded hover:bg-opacity-90 transition duration-200 shadow-lg">Previous Week</button>
-            </a>
-            {% if week_offset > 0 %}
             <a href="{{ url_for('results', week_offset=week_offset - 1) }}">
+                <button class="bg-secondary mt-4 px-4 py-2 rounded hover:bg-opacity-90 transition duration-200 shadow-lg">Previous Week</button>
+            </a>
+
+            {% if -week_offset > 0 %}
+            <a href="{{ url_for('results', week_offset=week_offset + 1) }}">
                 <button class="bg-secondary mt-4 px-4 py-2 rounded hover:bg-opacity-90 transition duration-200 shadow-lg">Next Week</button>
             </a>
             {% endif %}
+
           </div>
 
     </div>

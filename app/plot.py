@@ -12,19 +12,28 @@ def generate_sleep_plot(week_offset=0):
         Entry.sleep_datetime >= datetime.combine(one_week_ago, datetime.min.time())
     ).all()
 
-    # Group by day
-    sleep_accumulator = defaultdict(list)
+    # # Group by day
+    # sleep_accumulator = defaultdict(list)
+    # for entry in entries:
+    #     if entry.wake_datetime and entry.sleep_datetime:
+    #         duration = (entry.wake_datetime - entry.sleep_datetime).total_seconds() / 3600
+    #         day = entry.sleep_datetime.strftime('%b %d')
+    #         sleep_accumulator[day].append(duration)
+
+    # Build dict with actual date objects
+    start_of_week = datetime.today().date() + timedelta(weeks=week_offset-1)
+    
+    sleep_dict = {
+        start_of_week + timedelta(days=i): 0
+        for i in range(7)
+    }
+    # Use date keys directly
     for entry in entries:
         if entry.wake_datetime and entry.sleep_datetime:
             duration = (entry.wake_datetime - entry.sleep_datetime).total_seconds() / 3600
-            day = entry.sleep_datetime.strftime('%A')
-            sleep_accumulator[day].append(duration)
-
-    # Prepare 7-day structure
-    sleep_dict = { (today - timedelta(days=i)).strftime('%A'): 0 for i in reversed(range(7)) }
-    for day, durations in sleep_accumulator.items():
-        sleep_dict[day] = sum(durations)  # or use average if you prefer
-
+            entry_date = entry.sleep_datetime.date()
+            if entry_date in sleep_dict:
+                sleep_dict[entry_date] += duration  # Only if it's within the week
     # Plot-ready output
     x_vals = list(sleep_dict.keys())     # ['Monday', ..., 'Sunday']
     y_vals = list(sleep_dict.values())   # [7.2, 6.5, ..., 0]
