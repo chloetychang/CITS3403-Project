@@ -4,8 +4,8 @@ from app.models import Entry
 import plotly.graph_objs as go
 from plotly.offline import plot
 
-def generate_sleep_plot():
-    today = datetime.today().date()
+def generate_sleep_plot(week_offset=0):
+    today = datetime.today().date() + timedelta(weeks=week_offset)
     one_week_ago = today - timedelta(days=6)
 
     entries = Entry.query.filter(
@@ -31,10 +31,12 @@ def generate_sleep_plot():
 
     # Plotly bar chart
     fig = go.Figure(
-        data=[go.Bar(x=x_vals, y=y_vals, marker_color='lightblue')],
-        layout_title_text='Weekly Sleep Duration (hours)'
+    data=[go.Scatter(x=x_vals, y=y_vals, mode='lines+markers', line=dict(color='mediumpurple', width=3))],
     )
-    fig.update_layout(yaxis=dict(title='Hours'), xaxis=dict(title='Day'))
+    fig.update_layout(
+    yaxis=dict(title='Hours', range=[0, max(y_vals + [0]) + 1]),  # ensure starts from 0
+    xaxis=dict(title='Day')
+    )   
 
     # Return as HTML-div
     return plot(fig, output_type='div', include_plotlyjs=False)

@@ -3,7 +3,7 @@ from flask import render_template, redirect, url_for, session, flash, request, j
 from flask_login import login_user, logout_user, login_required, current_user
 from app import app
 from app.forms import LoginForm, SignupForm, UploadSleepDataForm  # Import forms
-from datetime import datetime, timezone,timedelta
+from datetime import date, datetime, timezone, timedelta
 import calendar
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.forms import LoginForm, SignupForm, UploadSleepDataForm  # Import forms
@@ -177,8 +177,20 @@ def results():
         flash("Please log in to access this page.", "error")
         return redirect(url_for("login"))
     
-    plot_div = generate_sleep_plot()
-    return render_template("results.html", plot_div=plot_div)
+    week_offset = int(request.args.get("week_offset", 0))
+    
+    # Don't allow next week if it's in the future
+    today = date.today()
+    requested_start_date = today - timedelta(weeks=week_offset)
+    if requested_start_date > today:
+        week_offset = 0  # reset if user tries to go too far forward
+    start_date = datetime.today().date() - timedelta(weeks=week_offset)
+    end_date = start_date - timedelta(days=6)
+    week_range = f"{end_date.strftime('%b %d')} – {start_date.strftime('%b %d')}"
+        
+    plot_div = generate_sleep_plot(week_offset=week_offset)
+    
+    return render_template("results.html", plot_div=plot_div, week_offset=week_offset, week_range=week_range)
 
 @app.route('/get_sleep_data')
 @login_required  # Protected page
