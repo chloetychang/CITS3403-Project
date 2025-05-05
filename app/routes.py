@@ -4,6 +4,7 @@ from app import app
 from app.forms import LoginForm, SignupForm, UploadSleepDataForm  # Import forms
 from datetime import datetime
 from app.models import db, User, Entry  # Import models from database
+from flask_login import current_user, logout_user, login_required
 
 @app.route("/")
 def welcome():
