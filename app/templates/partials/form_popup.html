@@ -7,6 +7,69 @@
                 Close
             </button>
 
+            <button onclick="clearForm()" class="bg-gray-500 text-white px-4 py-2 rounded">
+                Clear Form
+            </button>
+
+            <form method="POST" action="{{ url_for('form_popup') }}" class="space-y-4">
+                {{ form.hidden_tag() }}
+                <div>
+                    {{ form.entry_date_sleep.label(class="block text-sm font-medium text-gray-700") }}
+                    {{ form.entry_date_sleep(class="w-full p-3 rounded bg-gray-100 text-gray-800") }} {%
+                    for error in form.entry_date_sleep.errors %}
+                    <p class="text-red-600 text-sm mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <div>
+                    {{ form.sleep_time.label(class="block text-sm font-medium text-gray-700") }}
+                    {{ form.sleep_time(class="w-full p-3 rounded bg-gray-100 text-gray-800") }} {%
+                    for error in form.wake_time.errors %}
+                    <p class="text-red-600 text-sm mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <div>
+                    {{ form.entry_date_wake.label(class="block text-sm font-medium text-gray-700") }}
+                    {{ form.entry_date_wake(class="w-full p-3 rounded bg-gray-100 text-gray-800") }} {%
+                    for error in form.wake_time.errors %}
+                    <p class="text-red-600 text-sm mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <div>
+                    {{ form.wake_time.label(class="block text-sm font-medium text-gray-700") }}
+                    {{ form.wake_time(class="w-full p-3 rounded bg-gray-100 text-gray-800") }} {%
+                    for error in form.wake_time.errors %}
+                    <p class="text-red-600 text-sm mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <div>
+                    {{ form.mood.label(class="block text-sm font-medium text-gray-700") }}
+                    {{ form.mood(class="w-full p-3 rounded bg-gray-100 text-gray-800") }} {%
+                    for error in form.mood.errors %}
+                    <p class="text-red-600 text-sm mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <div>
+                    {{ form.submit(class="w-full bg-primary text-white py-3 px-4 rounded mt-4 hover:bg-indigo-800") }}
+                </div>
+
+            </form>
+
+    </div>
+</div>
+<!-- Popup Overlay -->
+<div id="popup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg h-3/4 w-1/2">
+        <h3 class="text-3xl text-black font-bold mb-6 text-center">Upload Sleep Data</h2>
+
+            <button onclick="closePopup()" class="bg-red-500 text-white px-4 py-2 rounded">
+                Close
+            </button>
+
             <form method="POST" action="{{ url_for('form_popup') }}" class="space-y-4">
                 {{ form.hidden_tag() }}
                 <div>

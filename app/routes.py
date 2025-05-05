@@ -5,8 +5,10 @@ from app import app
 from app.forms import LoginForm, SignupForm, UploadSleepDataForm  # Import forms
 from datetime import datetime, timezone
 from werkzeug.security import generate_password_hash, check_password_hash
-from app.forms import LoginForm, SignupForm  # Import forms
+from app.forms import LoginForm, SignupForm, UploadSleepDataForm  # Import forms
+from datetime import datetime
 from app.models import db, User, Entry  # Import models from database
+from flask_login import current_user, login_user, logout_user, login_required
 
 @app.route("/")
 def welcome():
@@ -18,8 +20,10 @@ def login():
     if form.validate_on_submit(): # Check if the form is submitted and valid
         # Check if the email exists in the database
         user = User.query.filter_by(email=form.email.data).first()
-        if user and check_password_hash(user.password_hash, form.password.data):
-            login_user(user) # Log the user in using Flask-Login not manual session management
+        if user and user.check_password(form.password.data):
+            # Store user info in session
+            session['user_id'] = user.user_id
+            session['user_name'] = user.name
 
             flash("Logged in successfully!", "success")
             return redirect(url_for('sleep'))   # redirect to sleep page after successful login
@@ -79,50 +83,7 @@ def sleep():
     form = UploadSleepDataForm()                            # Create an instance of the UploadSleepDataForm
     return render_template("sleep.html", form=form)
 
-@app.route("/form_popup", methods=["POST"])
-def form_popup():
-    form = UploadSleepDataForm()
-    if form.validate_on_submit():
-        # Get the user ID from flask-login
-        user_id = current_user.user_id
-        entry_date_sleep = form.entry_date_sleep.data
-        sleep_time = form.sleep_time.data
-        entry_date_wake = form.entry_date_wake.data
-        wake_time = form.wake_time.data
-        
-        sleep_datetime = datetime.combine(entry_date_sleep, sleep_time)
-        wake_datetime = datetime.combine(entry_date_wake, wake_time) if entry_date_wake and wake_time else None
-        
-        # Check if the sleep time is before the wake time
-        if wake_datetime and sleep_datetime >= wake_datetime:
-            flash("Unsuccessful Submission - Sleep time must be before wake time.", "error")
-            return render_template("sleep.html", form=form)
-        
-        # Check if the sleep time is in the future
-        if sleep_datetime.replace(tzinfo=timezone.utc) > datetime.now(timezone.utc):
-            flash("Unsuccessful Submission - Sleep time cannot be in the future.", "error")
-            return render_template("sleep.html", form=form)
-        
-        # Check if the wake time is in the future
-        if wake_datetime and wake_datetime.replace(tzinfo=timezone.utc) > datetime.now(timezone.utc):
-            flash("Unsuccessful Submission - Wake time cannot be in the future.", "error")
-            return render_template("sleep.html", form=form)
-        
-        # Create a new entry instance - fields as defined in forms.py
-        new_entry = Entry(
-            user_id = user_id,
-            sleep_datetime = sleep_datetime,
-            wake_datetime = wake_datetime,                  # Optional
-            mood = form.mood.data
-        )
-        db.session.add(new_entry) # Add the new entry to the session
-        db.session.commit()  # Save the new entry to the database
-        
-        flash("Sleep data recorded successfully!", "success")
-        return redirect(url_for("sleep"))  # Redirect to sleep page after successful submission
-        
-    return render_template("sleep.html", form=form)
-        
+
 @app.route("/record")
 @login_required # Protected page
 def record():
