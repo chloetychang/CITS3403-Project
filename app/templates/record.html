@@ -13,6 +13,10 @@
             <div class="flex justify-between mb-4">
                 <a href="{{ url_for('record') }}?month={{ prev_month }}" class="text-white hover:underline">←
                     Previous</a>
+
+                <!-- Today button in the middle -->
+                <a href="{{ url_for('record') }}?month={{ current_month }}" class="text-white hover:underline">Today</a>
+                
                 <a href="{{ url_for('record') }}?month={{ next_month }}" class="text-white hover:underline">Next →</a>
             </div>
 
@@ -32,11 +36,11 @@
                 {% endfor %}
             </div>
         </div>
-
-        <a href="/sleep" class="bg-secondary text-white font-bold py-2 px-4 rounded hover:bg-opacity-90 transition duration-200">
+        <!-- Sleep entry button to redirect to sleep page-->
+        <a href="{ url_for('sleep') }"
+            class="bg-secondary text-white font-bold py-2 px-4 rounded hover:bg-opacity-90 transition duration-200">
             Add Sleep Entry
         </a>
-        
 
     </div>
 </div>
