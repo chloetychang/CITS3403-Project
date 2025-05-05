@@ -9,6 +9,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app.forms import LoginForm, SignupForm, UploadSleepDataForm  # Import forms
 from app.models import db, User, Entry  # Import models from database
 from flask_login import current_user, login_user, logout_user, login_required
+from app.plot import generate_sleep_plot    # Import the function to generate the plot
 
 @app.route("/")
 def welcome():
@@ -163,6 +164,7 @@ def record():
     return render_template("record.html",
                            days=days,
                            year=year,
+                           month_number = month,
                            month_name=month_name,
                            prev_month=prev_month,
                            next_month=next_month)
@@ -174,7 +176,9 @@ def results():
     if not current_user.is_authenticated:
         flash("Please log in to access this page.", "error")
         return redirect(url_for("login"))
-    return render_template("results.html")
+    
+    plot_div = generate_sleep_plot()
+    return render_template("results.html", plot_div=plot_div)
 
 @app.route('/get_sleep_data')
 @login_required  # Protected page
