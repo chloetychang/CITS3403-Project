@@ -3,7 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin # To get user_id and is_authenticated
 
 class User(db.Model, UserMixin):
-    user_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(60), nullable = False)
     username = db.Column(db.String(60), unique = True, nullable = False)
     age = db.Column(db.Integer, nullable = False)
@@ -12,6 +12,10 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(120), nullable=False)    # hashed password
     # Added a relationship to the Entry model using user_id
     entries = db.relationship('Entry', backref='user', lazy=True)
+    
+    # Get user id for Flask-Login
+    def get_id(self):
+        return str(self.user_id)
     
     # Added helper methods for password hashing and checking
     @property
