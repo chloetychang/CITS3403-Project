@@ -1,7 +1,8 @@
 # Contains routing logic
 from flask import render_template, redirect, url_for, session, flash
 from app import app
-from app.forms import LoginForm, SignupForm  # Import forms
+from app.forms import LoginForm, SignupForm, UploadSleepDataForm  # Import forms
+from datetime import datetime
 from app.models import db, User, Entry  # Import models from database
 
 @app.route("/")
@@ -71,9 +72,53 @@ def logout():
 def sleep():
     if "user_id" not in session:
         return redirect(url_for("login"))
-    return render_template("sleep.html")
+    form = UploadSleepDataForm()                            # Create an instance of the UploadSleepDataForm
+    return render_template("sleep.html", form=form)
 
-
+@app.route("/form_popup", methods=["POST"])
+def form_popup():
+    form = UploadSleepDataForm()
+    if form.validate_on_submit():
+        # Get the user ID from the session
+        user_id = session.get("user_id")
+        entry_date_sleep = form.entry_date_sleep.data
+        sleep_time = form.sleep_time.data
+        entry_date_wake = form.entry_date_wake.data
+        wake_time = form.wake_time.data
+        
+        sleep_datetime = datetime.combine(entry_date_sleep, sleep_time)
+        wake_datetime = datetime.combine(entry_date_wake, wake_time) if entry_date_wake and wake_time else None
+        
+        # Check if the sleep time is before the wake time
+        if wake_datetime and sleep_datetime >= wake_datetime:
+            flash("Unsuccessful Submission - Sleep time must be before wake time.", "error")
+            return render_template("sleep.html", form=form)
+        
+        # Check if the sleep time is in the future
+        if sleep_datetime > datetime.now():
+            flash("Unsuccessful Submission - Sleep time cannot be in the future.", "error")
+            return render_template("sleep.html", form=form)
+        
+        # Check if the wake time is in the future
+        if wake_datetime and wake_datetime > datetime.now():
+            flash("Unsuccessful Submission - Wake time cannot be in the future.", "error")
+            return render_template("sleep.html", form=form)
+        
+        # Create a new entry instance - fields as defined in forms.py
+        new_entry = Entry(
+            user_id = user_id,
+            sleep_datetime = sleep_datetime,
+            wake_datetime = wake_datetime,                  # Optional
+            mood = form.mood.data
+        )
+        db.session.add(new_entry) # Add the new entry to the session
+        db.session.commit()  # Save the new entry to the database
+        
+        flash("Sleep data recorded successfully!", "success")
+        return redirect(url_for("sleep"))  # Redirect to sleep page after successful submission
+        
+    return render_template("sleep.html", form=form)
+        
 @app.route("/record")
 def record():
     if "user_id" not in session:

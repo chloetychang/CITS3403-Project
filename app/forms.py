@@ -1,7 +1,7 @@
 # Define forms using Flask-WTF
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SelectField, IntegerField, SubmitField
-from wtforms.validators import DataRequired, Email, Length, EqualTo
+from wtforms import StringField, PasswordField, SelectField, IntegerField, DateField, TimeField, SubmitField
+from wtforms.validators import DataRequired, Email, Length, EqualTo, Optional, NumberRange
 
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email(message='Please enter a valid email address')])
@@ -22,3 +22,11 @@ class SignupForm(FlaskForm):
     ])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired()])
     submit = SubmitField('Sign Up')
+
+class UploadSleepDataForm(FlaskForm):
+    entry_date_sleep = DateField('Sleep Date', format='%Y-%m-%d', validators = [DataRequired()])
+    sleep_time = TimeField('Time You Fell Asleep', format='%H:%M', validators = [DataRequired()])
+    entry_date_wake = DateField('Wake Date', format='%Y-%m-%d', validators=[Optional()])                                  # Just in case...someone slept through the entire day
+    wake_time = TimeField('Time You Woke Up', format='%H:%M', validators=[Optional()])                                      # Optional
+    mood = IntegerField('How Did You Feel? (1 = Terrible, 5 = Refreshed)', validators=[Optional(), NumberRange(min=1, max=5)])   # Optional
+    submit = SubmitField('Submit')
