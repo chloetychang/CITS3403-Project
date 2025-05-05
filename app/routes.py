@@ -1,9 +1,14 @@
 # Contains routing logic
 from flask import render_template, redirect, url_for, session, flash
+from flask_login import login_user, logout_user, login_required, current_user
 from app import app
+from app.forms import LoginForm, SignupForm, UploadSleepDataForm  # Import forms
+from datetime import datetime, timezone
+from werkzeug.security import generate_password_hash, check_password_hash
 from app.forms import LoginForm, SignupForm, UploadSleepDataForm  # Import forms
 from datetime import datetime
 from app.models import db, User, Entry  # Import models from database
+from flask_login import current_user, login_user, logout_user, login_required
 
 @app.route("/")
 def welcome():
@@ -17,8 +22,7 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user and user.check_password(form.password.data):
             # Store user info in session
-            session['user_id'] = user.user_id
-            session['user_name'] = user.name
+            login_user(user)  # Log the user in using Flask-Login
 
             flash("Logged in successfully!", "success")
             return redirect(url_for('sleep'))   # redirect to sleep page after successful login
@@ -51,7 +55,7 @@ def signup():
             gender=form.gender.data,
             email=form.email.data,
         )
-        new_user.password = form.password.data  # uses setter and hashes password
+
         db.session.add(new_user)  # Add the new user to the session
         db.session.commit()  # Save the new user to the database
 
@@ -63,17 +67,21 @@ def signup():
 
 @app.route('/logout')
 def logout():
-    session.clear() # Clear the session
+    logout_user()  # Log the user out using Flask-Login
     flash("You have been logged out.", "success")
     return redirect(url_for('login'))
 
 
 @app.route("/sleep")
+@login_required # Protected page - added decorator to ensure user is logged in
 def sleep():
-    if "user_id" not in session:
+    # Check if the user is logged in using Flask-Login
+    if not current_user.is_authenticated:
+        flash("Please log in to access this page.", "error")
         return redirect(url_for("login"))
     form = UploadSleepDataForm()                            # Create an instance of the UploadSleepDataForm
     return render_template("sleep.html", form=form)
+
 
 @app.route("/form_popup", methods=["POST"])
 def form_popup():
@@ -85,25 +93,25 @@ def form_popup():
         sleep_time = form.sleep_time.data
         entry_date_wake = form.entry_date_wake.data
         wake_time = form.wake_time.data
-        
+
         sleep_datetime = datetime.combine(entry_date_sleep, sleep_time)
         wake_datetime = datetime.combine(entry_date_wake, wake_time) if entry_date_wake and wake_time else None
-        
+
         # Check if the sleep time is before the wake time
         if wake_datetime and sleep_datetime >= wake_datetime:
             flash("Unsuccessful Submission - Sleep time must be before wake time.", "error")
             return render_template("sleep.html", form=form)
-        
+
         # Check if the sleep time is in the future
         if sleep_datetime > datetime.now():
             flash("Unsuccessful Submission - Sleep time cannot be in the future.", "error")
             return render_template("sleep.html", form=form)
-        
+
         # Check if the wake time is in the future
         if wake_datetime and wake_datetime > datetime.now():
             flash("Unsuccessful Submission - Wake time cannot be in the future.", "error")
             return render_template("sleep.html", form=form)
-        
+
         # Create a new entry instance - fields as defined in forms.py
         new_entry = Entry(
             user_id = user_id,
@@ -113,21 +121,28 @@ def form_popup():
         )
         db.session.add(new_entry) # Add the new entry to the session
         db.session.commit()  # Save the new entry to the database
-        
+
         flash("Sleep data recorded successfully!", "success")
         return redirect(url_for("sleep"))  # Redirect to sleep page after successful submission
-        
+
     return render_template("sleep.html", form=form)
-        
+
+
 @app.route("/record")
+@login_required # Protected page
 def record():
-    if "user_id" not in session:
+    # Check if the user is logged in using Flask-Login
+    if not current_user.is_authenticated:
+        flash("Please log in to access this page.", "error")
         return redirect(url_for("login"))
     return render_template("record.html")
 
 
 @app.route("/results")
+@login_required # Protected page
 def results():
-    if "user_id" not in session:
+    # Check if the user is logged in using Flask-Login
+    if not current_user.is_authenticated:
+        flash("Please log in to access this page.", "error")
         return redirect(url_for("login"))
     return render_template("results.html")
