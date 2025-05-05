@@ -163,6 +163,7 @@ def record():
     return render_template("record.html",
                            days=days,
                            year=year,
+                           month_number = month,
                            month_name=month_name,
                            prev_month=prev_month,
                            next_month=next_month)
