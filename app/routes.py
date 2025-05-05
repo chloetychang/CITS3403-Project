@@ -185,7 +185,7 @@ def results():
     if requested_start_date > today:
         week_offset = 0  # reset if user tries to go too far forward
     start_date = datetime.today().date() + timedelta(weeks=week_offset-1)
-    end_date = datetime.today().date() + timedelta(weeks=week_offset)
+    end_date = datetime.today().date() - timedelta(days=1) + timedelta(weeks=week_offset) 
     week_range = f"{start_date.strftime('%b %d')} – {end_date.strftime('%b %d')}"
         
     plot_div = generate_sleep_plot(week_offset=week_offset)

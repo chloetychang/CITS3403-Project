@@ -12,14 +12,6 @@ def generate_sleep_plot(week_offset=0):
         Entry.sleep_datetime >= datetime.combine(one_week_ago, datetime.min.time())
     ).all()
 
-    # # Group by day
-    # sleep_accumulator = defaultdict(list)
-    # for entry in entries:
-    #     if entry.wake_datetime and entry.sleep_datetime:
-    #         duration = (entry.wake_datetime - entry.sleep_datetime).total_seconds() / 3600
-    #         day = entry.sleep_datetime.strftime('%b %d')
-    #         sleep_accumulator[day].append(duration)
-
     # Build dict with actual date objects
     start_of_week = datetime.today().date() + timedelta(weeks=week_offset-1)
     
