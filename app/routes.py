@@ -19,9 +19,7 @@ def login():
         # Check if the email exists in the database
         user = User.query.filter_by(email=form.email.data).first()
         if user and check_password_hash(user.password_hash, form.password.data):
-            # Store user info in session
-            session['user_id'] = user.user_id
-            session['user_name'] = user.name
+            login_user(user) # Log the user in using Flask-Login not manual session management
 
             flash("Logged in successfully!", "success")
             return redirect(url_for('sleep'))   # redirect to sleep page after successful login
@@ -66,7 +64,7 @@ def signup():
 
 @app.route('/logout')
 def logout():
-    session.clear() # Clear the session
+    logout_user()  # Log the user out using Flask-Login
     flash("You have been logged out.", "success")
     return redirect(url_for('login'))
 
@@ -82,8 +80,8 @@ def sleep():
 def form_popup():
     form = UploadSleepDataForm()
     if form.validate_on_submit():
-        # Get the user ID from the session
-        user_id = session.get("user_id")
+        # Get the user ID from flask-login
+        user_id = current_user.user_id
         entry_date_sleep = form.entry_date_sleep.data
         sleep_time = form.sleep_time.data
         entry_date_wake = form.entry_date_wake.data
