@@ -33,38 +33,12 @@
 
         <!-- Add entry button -->
         <button class="bg-secondary text-white font-bold py-2 px-4 rounded hover:bg-opacity-90 transition duration-200">
-            Add Manual Entry
+            Add Sleep Entry
             <!-- this is where the supposed csv file upload implementation is to be made -->
         </button>
     </div>
 </div>
 
-<!-- Modal HTML -->
-<div id="dayModal" class="fixed hidden top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
-  <div class="bg-white p-6 rounded shadow-md text-black w-96">
-    <h3 class="text-xl font-bold mb-4">Sleep Entry for <span id="modalDate"></span></h3>
-    <div id="modalContent">Loading or No data...</div>
-    <div class="mt-4 text-right">
-      <button onclick="closeModal()" class="bg-gray-700 text-white px-4 py-2 rounded">Close</button>
-    </div>
-  </div>
-</div>
 
-<!-- Modal Script -->
-<script>
-    function openDayModal(day) {
-      const modal = document.getElementById("dayModal");
-      const modalDate = document.getElementById("modalDate");
-    
-      // ✅ This is the corrected way to combine dynamic + Jinja
-      modalDate.textContent = day + " " + "{{ month_name }} {{ year }}";
-    
-      modal.classList.remove("hidden");
-    }
-    
-    function closeModal() {
-      document.getElementById("dayModal").classList.add("hidden");
-    }
-</script>
     
 {% endblock %}
