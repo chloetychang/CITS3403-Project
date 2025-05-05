@@ -1,9 +1,11 @@
 # Contains routing logic
 from flask import render_template, redirect, url_for, session, flash
+from flask_login import login_user, logout_user, login_required, current_user
 from app import app
 from app.forms import LoginForm, SignupForm, UploadSleepDataForm  # Import forms
 from datetime import datetime, timezone
 from werkzeug.security import generate_password_hash, check_password_hash
+from app.forms import LoginForm, SignupForm  # Import forms
 from app.models import db, User, Entry  # Import models from database
 
 @app.route("/")
@@ -44,8 +46,6 @@ def signup():
             flash("Username already taken", "error")
             return redirect(url_for('signup'))
 
-        # Generate a hashed password
-        hashed_password = generate_password_hash(form.password.data)
         # Create a new user instance to add to the database
         new_user = User(
             name=form.name.data,
@@ -53,7 +53,6 @@ def signup():
             age=form.age.data,
             gender=form.gender.data,
             email=form.email.data,
-            password_hash=hashed_password
         )
 
         db.session.add(new_user)  # Add the new user to the session
