@@ -1,12 +1,12 @@
 # Contains routing logic
-from flask import render_template, redirect, url_for, session, flash
+from flask import render_template, redirect, url_for, session, flash, request, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 from app import app
 from app.forms import LoginForm, SignupForm, UploadSleepDataForm  # Import forms
-from datetime import datetime, timezone
+from datetime import datetime, timezone,timedelta
+import calendar
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.forms import LoginForm, SignupForm, UploadSleepDataForm  # Import forms
-from datetime import datetime
 from app.models import db, User, Entry  # Import models from database
 from flask_login import current_user, login_user, logout_user, login_required
 
@@ -129,14 +129,43 @@ def form_popup():
 
 
 @app.route("/record")
-@login_required # Protected page
+@login_required  # Protected page
 def record():
     # Check if the user is logged in using Flask-Login
     if not current_user.is_authenticated:
         flash("Please log in to access this page.", "error")
         return redirect(url_for("login"))
-    return render_template("record.html")
+    
+    # Get ?month=YYYY-MM from query string
+    month_str = request.args.get("month")
+    if month_str:
+        try:
+            year, month = map(int, month_str.split("-"))
+            current_date = datetime(year, month, 1)
+        except:
+            current_date = datetime.now()
+    else:
+        current_date = datetime.now()
 
+    year = current_date.year
+    month = current_date.month
+    month_name = current_date.strftime("%B")
+
+    # Get how many days in the month
+    days_in_month = calendar.monthrange(year, month)[1]
+    days = list(range(1, days_in_month + 1))
+
+    # Get prev and next month strings for navigation
+    prev_month = (current_date.replace(day=1) - timedelta(days=1)).strftime("%Y-%m")
+    next_month = (current_date.replace(day=28) + timedelta(days=4)).replace(day=1).strftime("%Y-%m")
+    current_month = datetime.now().strftime("%Y-%m")  # Pass today for "Today" button
+
+    return render_template("record.html",
+                           days=days,
+                           year=year,
+                           month_name=month_name,
+                           prev_month=prev_month,
+                           next_month=next_month)
 
 @app.route("/results")
 @login_required # Protected page
@@ -146,3 +175,9 @@ def results():
         flash("Please log in to access this page.", "error")
         return redirect(url_for("login"))
     return render_template("results.html")
+
+@app.route('/get_sleep_data')
+@login_required  # Protected page
+def get_sleep_data():
+    date_str = request.args.get('date')
+    pass

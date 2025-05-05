@@ -5,26 +5,78 @@
 {% block content %}
 <div class="max-w-4xl mx-auto">
     <h1 class="text-3xl font-bold mb-6">Sleep Records</h1>
-    
-    <!-- calendar div, buttons need to be given function which allows popup to appear and upload times -->
+
+    <!-- Calendar -->
     <div class="bg-white bg-opacity-10 p-6 rounded-lg">
         <div class="mb-6">
-            <h2 class="text-xl font-bold mb-3">August 2023</h2>
+            <!-- Navigation -->
+            <div class="flex justify-between mb-4">
+                <a href="{{ url_for('record') }}?month={{ prev_month }}" class="text-white hover:underline">← Previous</a>
+                <a href="{{ url_for('record') }}?month={{ current_month }}" class="text-white hover:underline">Today</a>
+                <a href="{{ url_for('record') }}?month={{ next_month }}" class="text-white hover:underline">Next →</a>
+            </div>
+
+            <h2 class="text-xl font-bold mb-3">{{ month_name }} {{ year }}</h2>
+
+            <!-- Calendar Grid -->
             <div class="grid grid-cols-7 gap-2 text-center">
-                {% set width_percentages = [30, 40, 50, 60, 40, 70, 80, 30, 40, 50, 60, 40, 70, 80, 30, 40, 50, 60, 40, 70, 80, 30, 40, 50, 60, 40, 70, 80, 30, 40, 50] %}
-                {% for day in range(1, 32) %}
-                <div class="p-2 bg-white bg-opacity-5 rounded hover:bg-opacity-20 cursor-pointer">
+                {% for day in days %}
+                <div class="p-2 bg-white bg-opacity-5 rounded hover:bg-opacity-20 cursor-pointer"
+                    onclick="openPopup('{{ year }}', '{{ month_number }}', '{{ day }}')">
                     {{ day }}
-                    <!--<div class="h-1 mt-1 bg-green-400 rounded-full" style="width: {{ width_percentages[loop.index0] }}%"></div>-->
                 </div>
                 {% endfor %}
             </div>
         </div>
-        
-        <button class="bg-secondary text-white font-bold py-2 px-4 rounded hover:bg-opacity-90 transition duration-200">
-            Add Manual Entry
-            <!-- this is where the supposed csv file upload implementation is to be made -->
-        </button>
+
+        <a href="{{ url_for('sleep') }}"
+            class="bg-secondary text-white font-bold py-2 px-4 rounded hover:bg-opacity-90 transition duration-200">
+            Add Sleep Entry
+        </a>
     </div>
 </div>
+
+{% include "partials/record_popup.html" %}
+
+<script>
+function openPopup(year, month, day) {
+    const popup = document.getElementById("recordPopup");
+    const modalDate = document.getElementById("modalDate");
+    const modalContent = document.getElementById("modalContent");
+
+    // Format date
+    const paddedMonth = month.padStart(2, '0');
+    const paddedDay = day.padStart(2, '0');
+    const formattedDate = `${year}-${paddedMonth}-${paddedDay}`;
+
+    modalDate.textContent = formattedDate;
+    modalContent.innerHTML = "Loading...";
+
+    fetch(`/get_sleep_data?date=${formattedDate}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.length === 0) {
+                modalContent.innerHTML = "<p>No records found.</p>";
+            } else {
+                modalContent.innerHTML = data.map(entry => `
+                    <div class="mb-2 border-b pb-2">
+                        <p><strong>Sleep:</strong> ${entry.sleep_time}</p>
+                        <p><strong>Wake:</strong> ${entry.wake_time}</p>
+                        <p><strong>Mood:</strong> ${entry.mood}</p>
+                    </div>
+                `).join('');
+            }
+        })
+        .catch(err => {
+            modalContent.innerHTML = "<p>Error loading data.</p>";
+            console.error(err);
+        });
+
+    popup.classList.remove("hidden");
+}
+
+function closePopup() {
+    document.getElementById("recordPopup").classList.add("hidden");
+}
+</script>
 {% endblock %}

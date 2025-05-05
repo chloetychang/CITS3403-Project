@@ -1,0 +1,17 @@
+<!-- Popup Overlay -->
+<div id="recordPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md max-h-[80vh] overflow-y-auto text-black relative">
+        <!-- Close (X) Button -->
+        <button onclick="closePopup()" class="absolute top-2 right-2 text-gray-600 hover:text-red-600 text-xl font-bold">
+            &times;
+        </button>
+
+        <!-- Modal Title -->
+        <h3 class="text-2xl font-bold mb-4 text-center">Sleep Entry for <span id="modalDate"></span></h3>
+
+        <!-- Modal Content -->
+        <div id="modalContent" class="space-y-4 text-sm md:text-base">
+            Loading or No data...
+        </div>
+    </div>
+</div>
