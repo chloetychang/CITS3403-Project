@@ -1,5 +1,5 @@
 # Contains routing logic
-from flask import render_template, redirect, url_for, session, flash, request
+from flask import render_template, redirect, url_for, session, flash, request, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 from app import app
 from app.forms import LoginForm, SignupForm, UploadSleepDataForm  # Import forms
@@ -135,7 +135,7 @@ def record():
     if not current_user.is_authenticated:
         flash("Please log in to access this page.", "error")
         return redirect(url_for("login"))
-
+    
     # Get ?month=YYYY-MM from query string
     month_str = request.args.get("month")
     if month_str:
@@ -158,6 +158,7 @@ def record():
     # Get prev and next month strings for navigation
     prev_month = (current_date.replace(day=1) - timedelta(days=1)).strftime("%Y-%m")
     next_month = (current_date.replace(day=28) + timedelta(days=4)).replace(day=1).strftime("%Y-%m")
+    current_month = datetime.now().strftime("%Y-%m")  # Pass today for "Today" button
 
     return render_template("record.html",
                            days=days,
@@ -174,3 +175,9 @@ def results():
         flash("Please log in to access this page.", "error")
         return redirect(url_for("login"))
     return render_template("results.html")
+
+@app.route('/get_sleep_data')
+@login_required  # Protected page
+def get_sleep_data():
+    date_str = request.args.get('date')
+    pass
