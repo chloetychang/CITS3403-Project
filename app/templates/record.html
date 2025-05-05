@@ -6,25 +6,65 @@
 <div class="max-w-4xl mx-auto">
     <h1 class="text-3xl font-bold mb-6">Sleep Records</h1>
     
-    <!-- calendar div, buttons need to be given function which allows popup to appear and upload times -->
+    <!-- Calendar container -->
     <div class="bg-white bg-opacity-10 p-6 rounded-lg">
         <div class="mb-6">
-            <h2 class="text-xl font-bold mb-3">August 2023</h2>
+            <!-- Month navigation -->
+            <div class="flex justify-between mb-4">
+                <a href="{{ url_for('record') }}?month={{ prev_month }}" class="text-white hover:underline">← Previous</a>
+                <a href="{{ url_for('record') }}?month={{ next_month }}" class="text-white hover:underline">Next →</a>
+            </div>
+
+            <!-- Dynamic month heading -->
+            <h2 class="text-xl font-bold mb-3">{{ month_name }} {{ year }}</h2>
+
+            <!-- Calendar grid -->
             <div class="grid grid-cols-7 gap-2 text-center">
                 {% set width_percentages = [30, 40, 50, 60, 40, 70, 80, 30, 40, 50, 60, 40, 70, 80, 30, 40, 50, 60, 40, 70, 80, 30, 40, 50, 60, 40, 70, 80, 30, 40, 50] %}
-                {% for day in range(1, 32) %}
-                <div class="p-2 bg-white bg-opacity-5 rounded hover:bg-opacity-20 cursor-pointer">
+                {% for day in days %}
+                <div class="p-2 bg-white bg-opacity-5 rounded hover:bg-opacity-20 cursor-pointer"
+                     onclick="openDayModal({{ day }})">
                     {{ day }}
                     <!--<div class="h-1 mt-1 bg-green-400 rounded-full" style="width: {{ width_percentages[loop.index0] }}%"></div>-->
                 </div>
                 {% endfor %}
             </div>
         </div>
-        
+
+        <!-- Add entry button -->
         <button class="bg-secondary text-white font-bold py-2 px-4 rounded hover:bg-opacity-90 transition duration-200">
             Add Manual Entry
             <!-- this is where the supposed csv file upload implementation is to be made -->
         </button>
     </div>
 </div>
+
+<!-- Modal HTML -->
+<div id="dayModal" class="fixed hidden top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white p-6 rounded shadow-md text-black w-96">
+    <h3 class="text-xl font-bold mb-4">Sleep Entry for <span id="modalDate"></span></h3>
+    <div id="modalContent">Loading or No data...</div>
+    <div class="mt-4 text-right">
+      <button onclick="closeModal()" class="bg-gray-700 text-white px-4 py-2 rounded">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Script -->
+<script>
+    function openDayModal(day) {
+      const modal = document.getElementById("dayModal");
+      const modalDate = document.getElementById("modalDate");
+    
+      // ✅ This is the corrected way to combine dynamic + Jinja
+      modalDate.textContent = day + " " + "{{ month_name }} {{ year }}";
+    
+      modal.classList.remove("hidden");
+    }
+    
+    function closeModal() {
+      document.getElementById("dayModal").classList.add("hidden");
+    }
+</script>
+    
 {% endblock %}
