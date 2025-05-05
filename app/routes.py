@@ -22,8 +22,7 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user and user.check_password(form.password.data):
             # Store user info in session
-            session['user_id'] = user.user_id
-            session['user_name'] = user.name
+            login_user(user)  # Log the user in using Flask-Login
 
             flash("Logged in successfully!", "success")
             return redirect(url_for('sleep'))   # redirect to sleep page after successful login
