@@ -27,7 +27,7 @@ def generate_sleep_plot(week_offset=0):
             if entry_date in sleep_dict:
                 sleep_dict[entry_date] += duration  # Only if it's within the week
     # Plot-ready output
-    x_vals = list(sleep_dict.keys())     # ['Monday', ..., 'Sunday']
+    x_vals = list(sleep_dict.keys())     # Dates
     y_vals = list(sleep_dict.values())   # [7.2, 6.5, ..., 0]
 
     # Plotly bar chart
