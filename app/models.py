@@ -1,7 +1,8 @@
-from app import db
+from app import db, login_manager
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin # To get user_id and is_authenticated
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     user_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(60), nullable = False)
     username = db.Column(db.String(60), unique = True, nullable = False)
@@ -34,6 +35,13 @@ class User(db.Model):
         users = User.query.all()
         for user in users:
             print(user)
+
+# Login manager setup
+# This function is called to load a user from the user_id stored in the session
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
 class Entry(db.Model):
     entry_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)

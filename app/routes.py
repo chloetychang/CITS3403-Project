@@ -63,7 +63,7 @@ def signup():
 
 @app.route('/logout')
 def logout():
-    session.clear() # Clear the session
+    logout_user()  # Log the user out using Flask-Login
     flash("You have been logged out.", "success")
     return redirect(url_for('login'))
 
@@ -79,8 +79,8 @@ def sleep():
 def form_popup():
     form = UploadSleepDataForm()
     if form.validate_on_submit():
-        # Get the user ID from the session
-        user_id = session.get("user_id")
+        # Get the user ID from flask-login
+        user_id = current_user.user_id
         entry_date_sleep = form.entry_date_sleep.data
         sleep_time = form.sleep_time.data
         entry_date_wake = form.entry_date_wake.data
