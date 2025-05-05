@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-
 {% block title %}Sleep{% endblock %}
 <!-- should this be changed to homepage? or the name of our application/website? please review -->
 {% block content %}
@@ -13,13 +12,37 @@
             Based on peer reviewed research.<br>
             do we even need text here
         </p>
-
         <div class="my-12">
             <button onclick="openPopup()" class="bg-button text-secondary text-2xl font-bold py-4 px-8 rounded-full 
                          hover:bg-opacity-90 transition duration-200 shadow-lg">
                 Upload Sleep Data ⬆
             </button>
         </div>
+
+        {% include "partials/form_popup.html"  %}
+
     </div>
 </div>
+
+<!-- JavaScript -->
+<script>
+// For 'Close Form' Button
+    function openPopup() {
+      document.getElementById("popup").classList.remove("hidden");
+    }
+
+    function closePopup() {
+      document.getElementById("popup").classList.add("hidden");
+    }
+
+// For 'Clear Form' Button
+    function clearForm() {
+      const fields = ['entry_date_sleep', 'sleep_time', 'entry_date_wake', 'wake_time', 'mood'];
+      fields.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) element.value = '';                        // If element exists on the page, clear its value
+      });
+    }
+</script>
+
 {% endblock %}
