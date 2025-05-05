@@ -69,8 +69,11 @@ def logout():
 
 
 @app.route("/sleep")
+@login_required # Protected page - added decorator to ensure user is logged in
 def sleep():
-    if "user_id" not in session:
+    # Check if the user is logged in using Flask-Login
+    if not current_user.is_authenticated:
+        flash("Please log in to access this page.", "error")
         return redirect(url_for("login"))
     form = UploadSleepDataForm()                            # Create an instance of the UploadSleepDataForm
     return render_template("sleep.html", form=form)
@@ -120,14 +123,20 @@ def form_popup():
     return render_template("sleep.html", form=form)
         
 @app.route("/record")
+@login_required # Protected page
 def record():
-    if "user_id" not in session:
+    # Check if the user is logged in using Flask-Login
+    if not current_user.is_authenticated:
+        flash("Please log in to access this page.", "error")
         return redirect(url_for("login"))
     return render_template("record.html")
 
 
 @app.route("/results")
+@login_required # Protected page
 def results():
-    if "user_id" not in session:
+    # Check if the user is logged in using Flask-Login
+    if not current_user.is_authenticated:
+        flash("Please log in to access this page.", "error")
         return redirect(url_for("login"))
     return render_template("results.html")
