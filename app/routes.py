@@ -4,7 +4,7 @@ from app import app
 from app.forms import LoginForm, SignupForm, UploadSleepDataForm  # Import forms
 from datetime import datetime
 from app.models import db, User, Entry  # Import models from database
-from flask_login import current_user, logout_user, login_required
+from flask_login import current_user, login_user, logout_user, login_required
 
 @app.route("/")
 def welcome():
@@ -17,9 +17,7 @@ def login():
         # Check if the email exists in the database
         user = User.query.filter_by(email=form.email.data).first()
         if user and user.check_password(form.password.data):
-            # Store user info in session
-            session['user_id'] = user.user_id
-            session['user_name'] = user.name
+            login_user(user)
 
             flash("Logged in successfully!", "success")
             return redirect(url_for('sleep'))   # redirect to sleep page after successful login
