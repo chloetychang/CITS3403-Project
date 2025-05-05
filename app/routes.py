@@ -95,12 +95,12 @@ def form_popup():
             return render_template("sleep.html", form=form)
         
         # Check if the sleep time is in the future
-        if sleep_datetime.replace(tzinfo=timezone.utc) > datetime.now(timezone.utc):
+        if sleep_datetime > datetime.now():
             flash("Unsuccessful Submission - Sleep time cannot be in the future.", "error")
             return render_template("sleep.html", form=form)
         
         # Check if the wake time is in the future
-        if wake_datetime and wake_datetime.replace(tzinfo=timezone.utc) > datetime.now(timezone.utc):
+        if wake_datetime and wake_datetime > datetime.now():
             flash("Unsuccessful Submission - Wake time cannot be in the future.", "error")
             return render_template("sleep.html", form=form)
         
