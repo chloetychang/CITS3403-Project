@@ -7,6 +7,7 @@ Flask==2.2.5
 Flask-Migrate==4.1.0
 Flask-SQLAlchemy==3.1.1
 Flask-WTF==1.2.2
+Flask-login==0.6.3
 idna==3.10
 importlib_metadata==8.6.1
 itsdangerous==2.2.0
