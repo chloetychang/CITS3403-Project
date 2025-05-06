@@ -3,12 +3,13 @@ from flask import render_template, redirect, url_for, session, flash, request, j
 from flask_login import login_user, logout_user, login_required, current_user
 from app import app
 from app.forms import LoginForm, SignupForm, UploadSleepDataForm  # Import forms
-from datetime import datetime, timezone,timedelta
+from datetime import date, datetime, timezone, timedelta
 import calendar
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.forms import LoginForm, SignupForm, UploadSleepDataForm  # Import forms
 from app.models import db, User, Entry  # Import models from database
 from flask_login import current_user, login_user, logout_user, login_required
+from app.plot import generate_sleep_plot    # Import the function to generate the plot
 
 @app.route("/")
 def welcome():
@@ -170,6 +171,7 @@ def record():
                         next_month=next_month,
                         current_month=datetime.now().strftime("%Y-%m"))
 
+
 @app.route("/results")
 @login_required # Protected page
 def results():
@@ -177,7 +179,21 @@ def results():
     if not current_user.is_authenticated:
         flash("Please log in to access this page.", "error")
         return redirect(url_for("login"))
-    return render_template("results.html")
+    
+    week_offset = int(request.args.get("week_offset", 0))
+    
+    # Don't allow next week if it's in the future
+    today = date.today()
+    requested_start_date = today + timedelta(weeks=week_offset)
+    if requested_start_date > today:
+        week_offset = 0  # reset if user tries to go too far forward
+    start_date = datetime.today().date() + timedelta(weeks=week_offset-1)
+    end_date = datetime.today().date() - timedelta(days=1) + timedelta(weeks=week_offset) 
+    week_range = f"{start_date.strftime('%b %d (%A)')} – {end_date.strftime('%b %d (%A)')}"
+        
+    plot_div = generate_sleep_plot(week_offset=week_offset)
+    
+    return render_template("results.html", plot_div=plot_div, week_offset=week_offset, week_range=week_range)
 
 @app.route('/get_sleep_data')
 def get_sleep_data():
