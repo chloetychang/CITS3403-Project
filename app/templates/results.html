@@ -3,6 +3,8 @@
 {% block title %}Results{% endblock %}
 
 {% block content %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
 <!-- Main container -->
 <div class="max-w-4xl mx-auto relative">
 
@@ -20,40 +22,29 @@
     <!-- i separate the graphic and upload pages for easier access, i also found it less painful to implement -->
     <div class="bg-white bg-opacity-10 p-6 rounded-lg mb-6">
         <h2 class="text-xl font-bold mb-4">Weekly Overview</h2>
+        <p class="text-sm text-gray-300 mb-4">{{ week_range }}</p>
 
-        <!-- Graph Box -->
-        <div class="h-64 bg-white bg-opacity-5 rounded p-4 relative">
-
-            <!-- Y-axis line -->
-            <div class="absolute left-12 top-0 bottom-12 w-px bg-white bg-opacity-50"></div>
-            <!-- Y-axis labels -->
-            <div class="absolute left-2 top-0 text-xs text-white text-opacity-60">12h</div>
-            <div class="absolute left-2 top-[14%] text-xs text-white text-opacity-60">10h</div>
-            <div class="absolute left-2 top-[28%] text-xs text-white text-opacity-60">8h</div>
-            <div class="absolute left-2 top-[42%] text-xs text-white text-opacity-60">6h</div>
-            <div class="absolute left-2 top-[56%] text-xs text-white text-opacity-60">4h</div>
-            <div class="absolute left-2 bottom-12 text-xs text-white text-opacity-60">0h</div>
-
-            <!-- X-axis line -->
-            <div class="absolute left-12 right-4 bottom-12 h-px bg-white bg-opacity-50"></div>
-            <!-- X-axis labels (Mon to Sun evenly spaced) -->
-            <div class="absolute bottom-8 left-[12%] text-xs text-white text-opacity-60">Mon</div>
-            <div class="absolute bottom-8 left-[26%] text-xs text-white text-opacity-60">Tue</div>
-            <div class="absolute bottom-8 left-[40%] text-xs text-white text-opacity-60">Wed</div>
-            <div class="absolute bottom-8 left-[54%] text-xs text-white text-opacity-60">Thu</div>
-            <div class="absolute bottom-8 left-[68%] text-xs text-white text-opacity-60">Fri</div>
-            <div class="absolute bottom-8 left-[82%] text-xs text-white text-opacity-60">Sat</div>
-            <div class="absolute bottom-8 left-[96%] text-xs text-white text-opacity-60 transform -translate-x-full">Sun</div>
-
-            <!-- Placeholder text centered -->
-            <div class="flex items-center justify-center h-full">
-                <div class="text-center">
-                    <p class="text-lg text-white text-opacity-60">[Graph Placeholder]</p>
-                    <p class="text-sm text-white text-opacity-40">Graph will display sleep/per day</p>
-                </div>
+        <div class="overflow-x-auto">
+            <div class="min-h-[400px]">
+                {{ plot_div | safe }}
             </div>
         </div>
+
+        <div class="flex gap-4 mb-4">
+            <a href="{{ url_for('results', week_offset=week_offset - 1) }}">
+                <button class="bg-secondary mt-4 px-4 py-2 rounded hover:bg-opacity-90 transition duration-200 shadow-lg">Previous Week</button>
+            </a>
+
+            {% if -week_offset > 0 %}
+            <a href="{{ url_for('results', week_offset=week_offset + 1) }}">
+                <button class="bg-secondary mt-4 px-4 py-2 rounded hover:bg-opacity-90 transition duration-200 shadow-lg">Next Week</button>
+            </a>
+            {% endif %}
+
+          </div>
+
     </div>
+
     <!-- Sleep Statistics Section -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
@@ -70,4 +61,5 @@
         </div>
     </div>
 </div>
+
 {% endblock %}
