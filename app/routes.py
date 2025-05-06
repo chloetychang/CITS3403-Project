@@ -56,6 +56,7 @@ def signup():
             gender=form.gender.data,
             email=form.email.data,
         )
+        new_user.password = form.password.data 
 
         db.session.add(new_user)  # Add the new user to the session
         db.session.commit()  # Save the new user to the database
