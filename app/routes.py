@@ -162,12 +162,15 @@ def record():
     current_month = datetime.now().strftime("%Y-%m")  # Pass today for "Today" button
 
     return render_template("record.html",
-                           days=days,
-                           year=year,
-                           month_number = month,
-                           month_name=month_name,
-                           prev_month=prev_month,
-                           next_month=next_month)
+                        days=days,
+                        year=year,
+                        month=month,
+                        month_name=month_name,
+                        month_number=f"{month:02}",
+                        prev_month=prev_month,
+                        next_month=next_month,
+                        current_month=datetime.now().strftime("%Y-%m"))
+
 
 @app.route("/results")
 @login_required # Protected page
@@ -193,7 +196,39 @@ def results():
     return render_template("results.html", plot_div=plot_div, week_offset=week_offset, week_range=week_range)
 
 @app.route('/get_sleep_data')
-@login_required  # Protected page
 def get_sleep_data():
-    date_str = request.args.get('date')
-    pass
+    date_str = request.args.get('date')  # Expected format: 'YYYY-MM-DD'
+    if not date_str:
+        return jsonify({"error": "Date parameter is missing"}), 400
+
+    try:
+        selected_date = datetime.strptime(date_str, "%Y-%m-%d").date()
+    except (ValueError, TypeError):
+        return jsonify({"error": "Invalid date format"}), 400
+
+    try:
+        # Filter entries where the sleep_datetime date matches the selected date
+        entries = Entry.query.filter(
+            db.func.date(Entry.sleep_datetime) == selected_date
+        ).all()
+
+        if not entries:
+            return jsonify([])  # Return an empty list if no entries are found
+
+        result = []
+        for entry in entries:
+            result.append({
+                "sleep_date": entry.sleep_datetime.strftime("%d %B %Y"),
+                "sleep_time": entry.sleep_datetime.strftime("%H:%M"),
+                "wake_date": entry.wake_datetime.strftime("%d %B %Y") if entry.wake_datetime else None,
+                "wake_time": entry.wake_datetime.strftime("%H:%M") if entry.wake_datetime else None,
+                "mood": entry.mood
+            })
+
+        return jsonify(result)
+
+    except Exception as e:
+        # Log the error for debugging
+        app.logger.error(f"Error fetching sleep data: {e}")
+        return jsonify({"error": "An error occurred while fetching data"}), 500
+    retuurn 
