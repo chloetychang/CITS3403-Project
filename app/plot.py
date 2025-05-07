@@ -3,13 +3,15 @@ from collections import defaultdict
 from app.models import Entry
 import plotly.graph_objs as go
 from plotly.offline import plot
+from flask_login import current_user
 
 def generate_sleep_plot(week_offset=0):
     start_of_week = datetime.today().date() + timedelta(weeks=week_offset)
     end_of_week = start_of_week + timedelta(days=6)
-
-    # Query entries between start and end of the target week
+    
+    # Query entries only from the current user, as well as between start and end of the target week
     entries = Entry.query.filter(
+        Entry.user_id == current_user.user_id,
         Entry.sleep_datetime >= datetime.combine(start_of_week, datetime.min.time()),
         Entry.sleep_datetime <= datetime.combine(end_of_week, datetime.max.time())
     ).all()
