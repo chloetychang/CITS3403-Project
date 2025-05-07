@@ -5,7 +5,6 @@ from app import app
 from app.forms import LoginForm, SignupForm, UploadSleepDataForm  # Import forms
 from datetime import date, datetime, timezone, timedelta
 import calendar
-from werkzeug.security import generate_password_hash, check_password_hash
 from app.forms import LoginForm, SignupForm, UploadSleepDataForm  # Import forms
 from app.models import db, User, Entry  # Import models from database
 from flask_login import current_user, login_user, logout_user, login_required
@@ -89,8 +88,8 @@ def sleep():
 def form_popup():
     form = UploadSleepDataForm()
     if form.validate_on_submit():
-        # Get the user ID from the session
-        user_id = session.get("user_id")
+        # Get the user ID via Flask-Login
+        user_id = current_user.user_id
         entry_date_sleep = form.entry_date_sleep.data
         sleep_time = form.sleep_time.data
         entry_date_wake = form.entry_date_wake.data
