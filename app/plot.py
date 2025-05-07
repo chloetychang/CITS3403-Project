@@ -41,13 +41,33 @@ def generate_sleep_plot(week_offset=0):
     xaxis=dict(title='Day')
     )  
     
-    # Calculate average sleep for each day
+    # Average Sleep Duration - Weekly: Calculate average hours of sleep in a week
     total_sleep = sum(sleep_dict.values())
     days_with_data = sum(1 for hours in sleep_dict.values() if hours > 0)
     if days_with_data > 0:
         avg_sleep = total_sleep / days_with_data
     else:
         avg_sleep = 0 
+        
+    # Sleep Consistency: Check if sleep duration is consistent by looking at how many days of sleep data falls within a certain range
+    ## Calculate median sleep time of the week (time that user went to bed)
+    sleep_dict_duration_consistency = [v for v in sleep_dict.values() if v > 0]
+    sorted_sleep_dict = sorted(sleep_dict_duration_consistency)          
+    n = len(sorted_sleep_dict)
+    
+    if n > 0 and n % 2 == 1:
+        median_sleep = sorted_sleep_dict[n // 2]
+    elif n > 0 and n % 2 == 0:
+        median_sleep = (sorted_sleep_dict[n // 2 - 1] + sorted_sleep_dict[n // 2]) / 2
+    else:
+        median_sleep = 0
+    
+    # Count how many days fall within +/- 30 minutes of the median
+    counting_sleep_consistency = sum(1 for hours in sleep_dict_duration_consistency if abs(hours - median_sleep) <= 0.5)
+    if counting_sleep_consistency > 0 and n > 0:
+        duration_consistency = (counting_sleep_consistency / n) * 100
+    else: 
+        duration_consistency = 0
 
-    # Return as HTML-div
-    return plot(fig, output_type='div', include_plotlyjs=False), avg_sleep
+    # Plot: Return as HTML-div, plus other metrics
+    return plot(fig, output_type='div', include_plotlyjs=False), avg_sleep, duration_consistency
