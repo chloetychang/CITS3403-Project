@@ -226,7 +226,7 @@ def get_sleep_data():
                 "sleep_duration": formatted_duration
             })
         return jsonify(result)
-
+    # Handle any exceptions that may occur
     except Exception as e:
         app.logger.error(f"Error fetching sleep data: {e}")
         return jsonify({"error": "An error occurred while fetching data"}), 500
