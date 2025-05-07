@@ -68,8 +68,10 @@
                 } else {
                     modalContent.innerHTML = data.map(entry => `
                     <div class="mb-2 border-b pb-2">
-                        <p><strong>Sleep:</strong> ${entry.sleep_time}</p>
-                        <p><strong>Wake:</strong> ${entry.wake_time}</p>
+                        <p><strong>Sleep Date:</strong> ${entry.sleep_date}</p>
+                        <p><strong>Sleep Time:</strong> ${entry.sleep_time}</p>
+                        <p><strong>Wake Date:</strong> ${entry.wake_date || "N/A"}</p>
+                        <p><strong>Wake Time:</strong> ${entry.wake_time || "N/A"}</p>
                         <p><strong>Mood:</strong> ${entry.mood}</p>
                     </div>
                 `).join('');
