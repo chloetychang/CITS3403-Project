@@ -24,7 +24,7 @@ def generate_sleep_plot(week_offset=0):
     for entry in entries:
         if entry.wake_datetime and entry.sleep_datetime:
             duration = (entry.wake_datetime - entry.sleep_datetime).total_seconds() / 3600
-            entry_date = entry.sleep_datetime.date()
+            entry_date = entry.wake_datetime.date()
             if entry_date in sleep_dict:
                 sleep_dict[entry_date] += duration  # Only if it's within the week
                 
