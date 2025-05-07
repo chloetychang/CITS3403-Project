@@ -187,13 +187,13 @@ def results():
     requested_start_date = today + timedelta(weeks=week_offset)
     if requested_start_date > today:
         week_offset = 0  # reset if user tries to go too far forward
-    start_date = datetime.today().date() + timedelta(weeks=week_offset-1)
-    end_date = datetime.today().date() - timedelta(days=1) + timedelta(weeks=week_offset) 
+    start_date = date.today() + timedelta(weeks=week_offset)
+    end_date = start_date + timedelta(days=6)
     week_range = f"{start_date.strftime('%b %d (%A)')} – {end_date.strftime('%b %d (%A)')}"
         
-    plot_div = generate_sleep_plot(week_offset=week_offset)
+    sleep_plot_div = generate_sleep_plot(week_offset)
     
-    return render_template("results.html", plot_div=plot_div, week_offset=week_offset, week_range=week_range)
+    return render_template("results.html", plot_div=sleep_plot_div, week_offset=week_offset, week_range=week_range)
 
 @app.route('/get_sleep_data')
 def get_sleep_data():

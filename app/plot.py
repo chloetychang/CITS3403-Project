@@ -5,15 +5,14 @@ import plotly.graph_objs as go
 from plotly.offline import plot
 
 def generate_sleep_plot(week_offset=0):
-    today = datetime.today().date() + timedelta(weeks=week_offset)
-    one_week_ago = today - timedelta(days=6)
+    start_of_week = datetime.today().date() + timedelta(weeks=week_offset)
+    end_of_week = start_of_week + timedelta(days=6)
 
+    # Query entries between start and end of the target week
     entries = Entry.query.filter(
-        Entry.sleep_datetime >= datetime.combine(one_week_ago, datetime.min.time())
+        Entry.sleep_datetime >= datetime.combine(start_of_week, datetime.min.time()),
+        Entry.sleep_datetime <= datetime.combine(end_of_week, datetime.max.time())
     ).all()
-
-    # Build dict with actual date objects
-    start_of_week = datetime.today().date() + timedelta(weeks=week_offset-1)
     
     sleep_dict = {
         start_of_week + timedelta(days=i): 0
@@ -26,6 +25,7 @@ def generate_sleep_plot(week_offset=0):
             entry_date = entry.sleep_datetime.date()
             if entry_date in sleep_dict:
                 sleep_dict[entry_date] += duration  # Only if it's within the week
+                
     # Plot-ready output
     x_vals = list(sleep_dict.keys())     # Dates
     y_vals = list(sleep_dict.values())   # [7.2, 6.5, ..., 0]
