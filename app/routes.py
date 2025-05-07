@@ -191,9 +191,9 @@ def results():
     end_date = start_date + timedelta(days=6)
     week_range = f"{start_date.strftime('%b %d (%A)')} – {end_date.strftime('%b %d (%A)')}"
         
-    sleep_plot_div = generate_sleep_plot(week_offset)
+    sleep_plot_div, avg_sleep = generate_sleep_plot(week_offset)
     
-    return render_template("results.html", plot_div=sleep_plot_div, week_offset=week_offset, week_range=week_range)
+    return render_template("results.html", plot_div=sleep_plot_div, average_sleep = avg_sleep, week_offset=week_offset, week_range=week_range)
 
 @app.route('/get_sleep_data')
 def get_sleep_data():

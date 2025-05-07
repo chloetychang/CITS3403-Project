@@ -39,7 +39,15 @@ def generate_sleep_plot(week_offset=0):
     fig.update_layout(
     yaxis=dict(title='Hours', range=[0, max(y_vals + [0]) + 1]),  # ensure starts from 0
     xaxis=dict(title='Day')
-    )   
+    )  
+    
+    # Calculate average sleep for each day
+    total_sleep = sum(sleep_dict.values())
+    days_with_data = sum(1 for hours in sleep_dict.values() if hours > 0)
+    if days_with_data > 0:
+        avg_sleep = total_sleep / days_with_data
+    else:
+        avg_sleep = 0 
 
     # Return as HTML-div
-    return plot(fig, output_type='div', include_plotlyjs=False)
+    return plot(fig, output_type='div', include_plotlyjs=False), avg_sleep
