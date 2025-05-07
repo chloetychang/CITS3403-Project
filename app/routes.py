@@ -217,17 +217,26 @@ def get_sleep_data():
 
         result = []
         for entry in entries:
+            # Calculate sleep duration if wake_datetime is available
+            if entry.wake_datetime:
+                duration = entry.wake_datetime - entry.sleep_datetime
+                duration_hours = duration.total_seconds() // 3600
+                duration_minutes = (duration.total_seconds() % 3600) // 60
+                formatted_duration = f"{int(duration_hours)}h {int(duration_minutes)}m"
+            else:
+                formatted_duration = "N/A"
+
             result.append({
                 "sleep_date": entry.sleep_datetime.strftime("%d %B %Y"),
                 "sleep_time": entry.sleep_datetime.strftime("%H:%M"),
                 "wake_date": entry.wake_datetime.strftime("%d %B %Y") if entry.wake_datetime else None,
                 "wake_time": entry.wake_datetime.strftime("%H:%M") if entry.wake_datetime else None,
-                "mood": entry.mood
+                "mood": entry.mood,
+                "duration": formatted_duration
             })
 
         return jsonify(result)
 
     except Exception as e:
-        # Log the error for debugging
         app.logger.error(f"Error fetching sleep data: {e}")
         return jsonify({"error": "An error occurred while fetching data"}), 500
