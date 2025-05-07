@@ -180,7 +180,7 @@ def results():
         flash("Please log in to access this page.", "error")
         return redirect(url_for("login"))
     
-    week_offset = int(request.args.get("week_offset", 0))
+    week_offset = int(request.args.get("week_offset", -1))          # Default to -1 if not provided - previous week's (past 7 days) data
     
     # Don't allow next week if it's in the future
     today = date.today()
