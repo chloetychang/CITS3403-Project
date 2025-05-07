@@ -232,4 +232,3 @@ def get_sleep_data():
         # Log the error for debugging
         app.logger.error(f"Error fetching sleep data: {e}")
         return jsonify({"error": "An error occurred while fetching data"}), 500
-    retuurn 
