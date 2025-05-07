@@ -195,6 +195,7 @@ def results():
     
     return render_template("results.html", plot_div=plot_div, week_offset=week_offset, week_range=week_range)
 
+# Fetch sleep data for a specific date
 @app.route('/get_sleep_data')
 def get_sleep_data():
     date_str = request.args.get('date')  # Expected format: 'YYYY-MM-DD'
@@ -225,7 +226,7 @@ def get_sleep_data():
                 formatted_duration = f"{int(duration_hours)}h {int(duration_minutes)}m"
             else:
                 formatted_duration = "N/A"
-
+            # Format the fields for results
             result.append({
                 "sleep_date": entry.sleep_datetime.strftime("%d %B %Y"),
                 "sleep_time": entry.sleep_datetime.strftime("%H:%M"),
@@ -236,7 +237,7 @@ def get_sleep_data():
             })
 
         return jsonify(result)
-
+    # Handle any exceptions that may occur
     except Exception as e:
         app.logger.error(f"Error fetching sleep data: {e}")
         return jsonify({"error": "An error occurred while fetching data"}), 500
