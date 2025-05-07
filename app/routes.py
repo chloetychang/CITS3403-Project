@@ -233,7 +233,7 @@ def get_sleep_data():
                 "wake_date": entry.wake_datetime.strftime("%d %B %Y") if entry.wake_datetime else None,
                 "wake_time": entry.wake_datetime.strftime("%H:%M") if entry.wake_datetime else None,
                 "mood": entry.mood,
-                "duration": formatted_duration
+                "sleep_duration": formatted_duration
             })
 
         return jsonify(result)
