@@ -39,7 +39,7 @@ flask run
 
 (For development, so the server does not have to be stopped and reran as we create modifications, run `flask run --debug`)
 
-### Initialise the Database
+### Initialise the Database 
 To initialise the database, run: 
 ```bash
 flask db upgrade
