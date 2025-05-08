@@ -50,12 +50,8 @@
                         {% endif %}
                     {% else %}
                         bg-white bg-opacity-5 hover:bg-opacity-20
-                    {% endif %}"
-                    onclick="openPopup('{{ year }}', '{{ month_number }}', '{{ day }}')">
+                    {% endif %}" onclick="openPopup('{{ year }}', '{{ month_number }}', '{{ day }}')">
                     <p>{{ day }}</p>
-                    {% if sleep_duration is not none %}
-                    <p class="text-sm text-gray-200">{{ sleep_duration|round(1) }} hrs</p>
-                    {% endif %}
                 </div>
                 {% endfor %}
             </div>
