@@ -159,16 +159,16 @@ def record():
     end_of_month = (start_of_month + timedelta(days=32)).replace(day=1) - timedelta(days=1)
     entries = Entry.query.filter(
         Entry.user_id == current_user.user_id,
-        Entry.sleep_datetime >= start_of_month,
-        Entry.sleep_datetime <= end_of_month
+        Entry.wake_datetime >= start_of_month,
+        Entry.wake_datetime <= end_of_month
     ).all()
 
-    # Calculate sleep durations for each day
+    # Calculate sleep durations for each day based on wake-up date
     sleep_data = {}
     for entry in entries:
         if entry.wake_datetime and entry.sleep_datetime:
             duration = (entry.wake_datetime - entry.sleep_datetime).total_seconds() / 3600
-            date_key = entry.sleep_datetime.date().strftime("%Y-%m-%d")
+            date_key = entry.wake_datetime.date().strftime("%Y-%m-%d")  # Use wake-up date as the key
             sleep_data[date_key] = sleep_data.get(date_key, 0) + duration
 
     return render_template(
@@ -198,9 +198,9 @@ def get_sleep_data():
         return jsonify({"error": "Invalid date format"}), 400
 
     try:
-        # Filter entries where the sleep_datetime date matches the selected date
+        # Filter entries where the wake_datetime date matches the selected date
         entries = Entry.query.filter(
-            db.func.date(Entry.sleep_datetime) == selected_date
+            db.func.date(Entry.wake_datetime) == selected_date
         ).all()
 
         if not entries:
@@ -216,6 +216,7 @@ def get_sleep_data():
                 formatted_duration = f"{int(duration_hours)}h {int(duration_minutes)}m"
             else:
                 formatted_duration = "N/A"
+
             # Format the fields for results
             result.append({
                 "sleep_date": entry.sleep_datetime.strftime("%d %B %Y"),
@@ -226,12 +227,9 @@ def get_sleep_data():
                 "sleep_duration": formatted_duration
             })
         return jsonify(result)
-    
-    # Handle any exceptions that may occur
     except Exception as e:
-        app.logger.error(f"Error fetching sleep data: {e}")
         return jsonify({"error": "An error occurred while fetching data"}), 500
-    
+
 @app.route("/results")
 @login_required # Protected page
 def results():

@@ -79,16 +79,16 @@
         const modalDate = document.getElementById("modalDate");
         const modalContent = document.getElementById("modalContent");
 
-        // Format date
+        // Format date (reflecting wake-up date)
         const paddedMonth = month.padStart(2, '0');
         const paddedDay = day.padStart(2, '0');
-        const formattedDate = `${year}-${paddedMonth}-${paddedDay}`;
+        const formattedDate = `${year}-${paddedMonth}-${paddedDay}`; // Wake-up date
 
         // Display loading message
         modalDate.textContent = formattedDate;
         modalContent.innerHTML = "Loading...";
 
-        // Check if the selected date is today
+        // Fetch sleep data for the wake-up date
         fetch(`/get_sleep_data?date=${formattedDate}`)
             .then(response => response.json())
             .then(data => {
