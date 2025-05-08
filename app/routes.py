@@ -144,8 +144,9 @@ def record():
     month = current_date.month
     month_name = current_date.strftime("%B")
 
-    # Get the number of days in the month
+    # Get the number of days in the month and the starting weekday
     days_in_month = calendar.monthrange(year, month)[1]
+    first_weekday = calendar.monthrange(year, month)[0]  # 0 = Monday, 6 = Sunday
     days = list(range(1, days_in_month + 1))
 
     # Get navigation links
@@ -179,7 +180,8 @@ def record():
         prev_month=prev_month,
         next_month=next_month,
         current_month=datetime.now().strftime("%Y-%m"),
-        sleep_data=sleep_data
+        sleep_data=sleep_data,
+        first_weekday=first_weekday  # Pass the starting weekday to the template
     )
 
 

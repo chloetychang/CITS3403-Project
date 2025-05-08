@@ -21,6 +21,21 @@
 
             <!-- Calendar Grid -->
             <div class="grid grid-cols-7 gap-2 text-center">
+                <!-- Day Labels -->
+                <div class="font-bold">M</div>
+                <div class="font-bold">T</div>
+                <div class="font-bold">W</div>
+                <div class="font-bold">T</div>
+                <div class="font-bold">F</div>
+                <div class="font-bold">S</div>
+                <div class="font-bold">S</div>
+
+                <!-- Empty cells for days before the first day of the month -->
+                {% for _ in range(first_weekday) %}
+                <div></div>
+                {% endfor %}
+
+                <!-- Calendar Days -->
                 {% for day in days %}
                 {% set date_key = year ~ '-' ~ month_number ~ '-' ~ ("%02d" % day) %}
                 {% set sleep_duration = sleep_data.get(date_key, None) %}
