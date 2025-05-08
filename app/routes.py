@@ -131,25 +131,33 @@ def form_popup():
 
 @app.route("/record")
 @login_required
+@login_required
 def record():
+    # Get the current month or the one from the query string
     # Get the current month or the one from the query string
     month_str = request.args.get("month")
     if month_str:
+        year, month = map(int, month_str.split("-"))
+        current_date = datetime(year, month, 1)
         year, month = map(int, month_str.split("-"))
         current_date = datetime(year, month, 1)
     else:
         current_date = datetime.now()
 
     # Get the current year and month
+    # Get the current year and month
     year = current_date.year
     month = current_date.month
     month_name = current_date.strftime("%B")
 
     # Get the number of days in the month and the starting weekday
+    # Get the number of days in the month and the starting weekday
     days_in_month = calendar.monthrange(year, month)[1]
+    first_weekday = calendar.monthrange(year, month)[0]  # 0 = Monday, 6 = Sunday
     first_weekday = calendar.monthrange(year, month)[0]  # 0 = Monday, 6 = Sunday
     days = list(range(1, days_in_month + 1))
 
+    # Get navigation links
     # Get navigation links
     prev_month = (current_date.replace(day=1) - timedelta(days=1)).strftime("%Y-%m")
     next_month = (current_date.replace(day=28) + timedelta(days=4)).replace(day=1).strftime("%Y-%m")
@@ -171,6 +179,38 @@ def record():
             date_key = entry.sleep_datetime.date().strftime("%Y-%m-%d")
             sleep_data[date_key] = sleep_data.get(date_key, 0) + duration
 
+    # Query sleep data for the current month
+    start_of_month = datetime(year, month, 1)
+    end_of_month = (start_of_month + timedelta(days=32)).replace(day=1) - timedelta(days=1)
+    entries = Entry.query.filter(
+        Entry.user_id == current_user.user_id,
+        Entry.sleep_datetime >= start_of_month,
+        Entry.sleep_datetime <= end_of_month
+    ).all()
+
+    # Calculate sleep durations for each day
+    sleep_data = {}
+    for entry in entries:
+        if entry.wake_datetime and entry.sleep_datetime:
+            duration = (entry.wake_datetime - entry.sleep_datetime).total_seconds() / 3600
+            date_key = entry.sleep_datetime.date().strftime("%Y-%m-%d")
+            sleep_data[date_key] = sleep_data.get(date_key, 0) + duration
+
+    return render_template(
+        "record.html",
+        days=days,
+        year=year,
+        month=month,
+        month_name=month_name,
+        month_number=f"{month:02}",
+        prev_month=prev_month,
+        next_month=next_month,
+        current_month=datetime.now().strftime("%Y-%m"),
+        sleep_data=sleep_data,
+        first_weekday=first_weekday  # Pass the starting weekday to the template
+    )
+
+# Fetch sleep data for a specific date
     return render_template(
         "record.html",
         days=days,
@@ -217,6 +257,15 @@ def get_sleep_data():
             else:
                 formatted_duration = "N/A"
             # Format the fields for results
+            # Calculate sleep duration if wake_datetime is available
+            if entry.wake_datetime:
+                duration = entry.wake_datetime - entry.sleep_datetime
+                duration_hours = duration.total_seconds() // 3600
+                duration_minutes = (duration.total_seconds() % 3600) // 60
+                formatted_duration = f"{int(duration_hours)}h {int(duration_minutes)}m"
+            else:
+                formatted_duration = "N/A"
+            # Format the fields for results
             result.append({
                 "sleep_date": entry.sleep_datetime.strftime("%d %B %Y"),
                 "sleep_time": entry.sleep_datetime.strftime("%H:%M"),
@@ -224,9 +273,12 @@ def get_sleep_data():
                 "wake_time": entry.wake_datetime.strftime("%H:%M") if entry.wake_datetime else None,
                 "mood": entry.mood,
                 "sleep_duration": formatted_duration
+                "mood": entry.mood,
+                "sleep_duration": formatted_duration
             })
         return jsonify(result)
-
+    
+    # Handle any exceptions that may occur
     except Exception as e:
         app.logger.error(f"Error fetching sleep data: {e}")
         return jsonify({"error": "An error occurred while fetching data"}), 500
