@@ -130,21 +130,13 @@ def form_popup():
 
 
 @app.route("/record")
-@login_required  # Protected page
+@login_required
 def record():
-    # Check if the user is logged in using Flask-Login
-    if not current_user.is_authenticated:
-        flash("Please log in to access this page.", "error")
-        return redirect(url_for("login"))
-    
-    # Get ?month=YYYY-MM from query string
+    # Get the current month or the one from the query string
     month_str = request.args.get("month")
     if month_str:
-        try:
-            year, month = map(int, month_str.split("-"))
-            current_date = datetime(year, month, 1)
-        except:
-            current_date = datetime.now()
+        year, month = map(int, month_str.split("-"))
+        current_date = datetime(year, month, 1)
     else:
         current_date = datetime.now()
 
@@ -152,24 +144,43 @@ def record():
     month = current_date.month
     month_name = current_date.strftime("%B")
 
-    # Get how many days in the month
+    # Get the number of days in the month
     days_in_month = calendar.monthrange(year, month)[1]
     days = list(range(1, days_in_month + 1))
 
-    # Get prev and next month strings for navigation
+    # Get navigation links
     prev_month = (current_date.replace(day=1) - timedelta(days=1)).strftime("%Y-%m")
     next_month = (current_date.replace(day=28) + timedelta(days=4)).replace(day=1).strftime("%Y-%m")
-    current_month = datetime.now().strftime("%Y-%m")  # Pass today for "Today" button
 
-    return render_template("record.html",
-                        days=days,
-                        year=year,
-                        month=month,
-                        month_name=month_name,
-                        month_number=f"{month:02}",
-                        prev_month=prev_month,
-                        next_month=next_month,
-                        current_month=datetime.now().strftime("%Y-%m"))
+    # Query sleep data for the current month
+    start_of_month = datetime(year, month, 1)
+    end_of_month = (start_of_month + timedelta(days=32)).replace(day=1) - timedelta(days=1)
+    entries = Entry.query.filter(
+        Entry.user_id == current_user.user_id,
+        Entry.sleep_datetime >= start_of_month,
+        Entry.sleep_datetime <= end_of_month
+    ).all()
+
+    # Calculate sleep durations for each day
+    sleep_data = {}
+    for entry in entries:
+        if entry.wake_datetime and entry.sleep_datetime:
+            duration = (entry.wake_datetime - entry.sleep_datetime).total_seconds() / 3600
+            date_key = entry.sleep_datetime.date().strftime("%Y-%m-%d")
+            sleep_data[date_key] = sleep_data.get(date_key, 0) + duration
+
+    return render_template(
+        "record.html",
+        days=days,
+        year=year,
+        month=month,
+        month_name=month_name,
+        month_number=f"{month:02}",
+        prev_month=prev_month,
+        next_month=next_month,
+        current_month=datetime.now().strftime("%Y-%m"),
+        sleep_data=sleep_data
+    )
 
 
 @app.route("/results")

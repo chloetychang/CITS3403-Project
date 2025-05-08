@@ -22,9 +22,25 @@
             <!-- Calendar Grid -->
             <div class="grid grid-cols-7 gap-2 text-center">
                 {% for day in days %}
-                <div class="p-2 bg-white bg-opacity-5 rounded hover:bg-opacity-20 cursor-pointer"
+                {% set date_key = year ~ '-' ~ month_number ~ '-' ~ ("%02d" % day) %}
+                {% set sleep_duration = sleep_data.get(date_key, None) %}
+                <div class="p-2 rounded cursor-pointer
+                    {% if sleep_duration is not none %}
+                        {% if sleep_duration >= 7 %}
+                            bg-green-500
+                        {% elif sleep_duration >= 5 %}
+                            bg-yellow-500
+                        {% elif sleep_duration < 5 %}
+                            bg-red-500
+                        {% endif %}
+                    {% else %}
+                        bg-white bg-opacity-5 hover:bg-opacity-20
+                    {% endif %}"
                     onclick="openPopup('{{ year }}', '{{ month_number }}', '{{ day }}')">
-                    {{ day }}
+                    <p>{{ day }}</p>
+                    {% if sleep_duration is not none %}
+                    <p class="text-sm text-gray-200">{{ sleep_duration|round(1) }} hrs</p>
+                    {% endif %}
                 </div>
                 {% endfor %}
             </div>
