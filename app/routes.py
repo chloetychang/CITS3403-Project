@@ -185,30 +185,6 @@ def record():
         first_weekday=first_weekday  # Pass the starting weekday to the template
     )
 
-
-@app.route("/results")
-@login_required # Protected page
-def results():
-    # Check if the user is logged in using Flask-Login
-    if not current_user.is_authenticated:
-        flash("Please log in to access this page.", "error")
-        return redirect(url_for("login"))
-    
-    week_offset = int(request.args.get("week_offset", 0))
-    
-    # Don't allow next week if it's in the future
-    today = date.today()
-    requested_start_date = today + timedelta(weeks=week_offset)
-    if requested_start_date > today:
-        week_offset = 0  # reset if user tries to go too far forward
-    start_date = datetime.today().date() + timedelta(weeks=week_offset-1)
-    end_date = datetime.today().date() - timedelta(days=1) + timedelta(weeks=week_offset) 
-    week_range = f"{start_date.strftime('%b %d (%A)')} – {end_date.strftime('%b %d (%A)')}"
-        
-    plot_div = generate_sleep_plot(week_offset=week_offset)
-    
-    return render_template("results.html", plot_div=plot_div, week_offset=week_offset, week_range=week_range)
-
 # Fetch sleep data for a specific date
 @app.route('/get_sleep_data')
 def get_sleep_data():
