@@ -21,10 +21,37 @@
 
             <!-- Calendar Grid -->
             <div class="grid grid-cols-7 gap-2 text-center">
+                <!-- Day Labels -->
+                <div class="font-bold">M</div>
+                <div class="font-bold">T</div>
+                <div class="font-bold">W</div>
+                <div class="font-bold">T</div>
+                <div class="font-bold">F</div>
+                <div class="font-bold">S</div>
+                <div class="font-bold">S</div>
+
+                <!-- Empty cells for days before the first day of the month -->
+                {% for _ in range(first_weekday) %}
+                <div></div>
+                {% endfor %}
+
+                <!-- Calendar Days -->
                 {% for day in days %}
-                <div class="p-2 bg-white bg-opacity-5 rounded hover:bg-opacity-20 cursor-pointer"
-                    onclick="openPopup('{{ year }}', '{{ month_number }}', '{{ day }}')">
-                    {{ day }}
+                {% set date_key = year ~ '-' ~ month_number ~ '-' ~ ("%02d" % day) %}
+                {% set sleep_duration = sleep_data.get(date_key, None) %}
+                <div class="p-2 rounded cursor-pointer
+                    {% if sleep_duration is not none %}
+                        {% if sleep_duration >= 7 %}
+                            bg-green-500
+                        {% elif sleep_duration >= 5 %}
+                            bg-yellow-500
+                        {% elif sleep_duration < 5 %}
+                            bg-red-500
+                        {% endif %}
+                    {% else %}
+                        bg-white bg-opacity-5 hover:bg-opacity-20
+                    {% endif %}" onclick="openPopup('{{ year }}', '{{ month_number }}', '{{ day }}')">
+                    <p>{{ day }}</p>
                 </div>
                 {% endfor %}
             </div>
@@ -43,8 +70,8 @@
 <script>
 
     function openPopup(year, month, day) {
+        // Get the popup element and today's date
         const popup = document.getElementById("recordPopup");
-        // get todays date
         const today = new Date();
         const todayYear = today.getFullYear();
         const todayMonth = String(today.getMonth() + 1).padStart(2, '0');
@@ -57,24 +84,32 @@
         const paddedDay = day.padStart(2, '0');
         const formattedDate = `${year}-${paddedMonth}-${paddedDay}`;
 
+        // Display loading message
         modalDate.textContent = formattedDate;
         modalContent.innerHTML = "Loading...";
 
+        // Check if the selected date is today
         fetch(`/get_sleep_data?date=${formattedDate}`)
             .then(response => response.json())
             .then(data => {
                 if (data.length === 0) {
                     modalContent.innerHTML = "<p>No records found.</p>";
                 } else {
+                    // Display fields in the modal (popup)
                     modalContent.innerHTML = data.map(entry => `
                     <div class="mb-2 border-b pb-2">
-                        <p><strong>Sleep:</strong> ${entry.sleep_time}</p>
-                        <p><strong>Wake:</strong> ${entry.wake_time}</p>
+                        <p><strong>Sleep Date:</strong> ${entry.sleep_date}</p>
+                        <p><strong>Sleep Time:</strong> ${entry.sleep_time}</p>
+                        <p><strong>Wake Date:</strong> ${entry.wake_date || "N/A"}</p>
+                        <p><strong>Wake Time:</strong> ${entry.wake_time || "N/A"}</p>
+                        <p><strong>Sleep Duration:</strong> ${entry.sleep_duration || "N/A"}</p>
                         <p><strong>Mood:</strong> ${entry.mood}</p>
+
                     </div>
                 `).join('');
                 }
             })
+            // If there is an error, show a message
             .catch(err => {
                 modalContent.innerHTML = "<p>Error loading data.</p>";
                 console.error(err);
@@ -82,7 +117,7 @@
 
         popup.classList.remove("hidden");
     }
-
+    // Close the popup
     function closePopup() {
         document.getElementById("recordPopup").classList.add("hidden");
     }
