@@ -8,13 +8,12 @@
         <h1 class="text-3xl font-bold">Sleep Records</h1>
         <!-- Date Search Form -->
         <form method="GET" action="{{ url_for('record') }}" class="flex items-center">
-            <input type="month" name="month" class="p-1 text-sm rounded bg-white text-black mr-2" required>
+            <input type="month" name="month" class="p-2 rounded bg-white text-black mr-2" required>
             <button type="submit"
-                class="bg-secondary text-white font-bold py-1 px-3 text-sm rounded hover:bg-opacity-90 transition duration-200">
+                class="bg-secondary text-white font-bold py-2 px-4 rounded hover:bg-opacity-90 transition duration-200">
                 Go
             </button>
         </form>
-    </div>
     </div>
     <!-- Calendar -->
     <div class="bg-white bg-opacity-10 p-6 rounded-lg">
