@@ -2,6 +2,11 @@ from app import db, login_manager
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin # To get user_id and is_authenticated
 
+shared_entries = db.Table('shared_entries',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.user_id'), primary_key=True),
+    db.Column('entry_id', db.Integer, db.ForeignKey('entry.entry_id'), primary_key=True)
+)
+
 class User(db.Model, UserMixin):
     user_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(60), nullable = False)
@@ -10,8 +15,13 @@ class User(db.Model, UserMixin):
     gender = db.Column(db.String(22), nullable = False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(120), nullable=False)    # hashed password
+    
     # Added a relationship to the Entry model using user_id
     entries = db.relationship('Entry', backref='user', lazy=True)
+    
+     # Entries shared with this user
+    shared_entries = db.relationship('Entry', secondary='shared_entries', lazy='subquery',
+                                      backref=db.backref('shared_with', lazy=True))
     
     # Get user id for Flask-Login
     def get_id(self):
@@ -55,6 +65,12 @@ class Entry(db.Model):
     # sleep duration - calculated from sleep and wake datetime (field not required here)
     # sleep quality - calculated from mood and sleep duration (field not required here)
 
+    # Add a method to share this entry with another user
+    def share_with_user(self, user):
+        if user not in self.shared_with:
+            self.shared_with.append(user)
+            db.session.commit()
+    
     # Debugging: String representation of the Entry object
     def __repr__(self):
         return (f"<Entry(entry_id={self.entry_id}, user_id={self.user_id}, "
@@ -66,3 +82,4 @@ class Entry(db.Model):
         entries = Entry.query.all()
         for entry in entries:
             print(entry)
+            
