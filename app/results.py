@@ -2,17 +2,10 @@ import plotly.graph_objs as go
 from plotly.offline import plot
 from app.get_weekly_entries import get_weekly_entries
 
+# Sleep Plot
 def generate_sleep_plot(week_offset=0):
     # Get metrics for the week - logic in app.get_weekly_entries
-    entries, sleep_dict = get_weekly_entries(week_offset)
-    
-    # Use date keys directly
-    for entry in entries:
-        if entry.wake_datetime and entry.sleep_datetime:
-            duration = (entry.wake_datetime - entry.sleep_datetime).total_seconds() / 3600
-            entry_date = entry.wake_datetime.date()
-            if entry_date in sleep_dict:
-                sleep_dict[entry_date] += duration  # Only if it's within the week
+    _, sleep_dict = get_weekly_entries(week_offset)
                 
     # Plot-ready output
     x_vals = list(sleep_dict.keys())     # Dates
@@ -28,6 +21,7 @@ def generate_sleep_plot(week_offset=0):
     )  
     return plot(fig, output_type='div', include_plotlyjs=False)
 
+# Sleep Metrics
 def generate_sleep_metrics(week_offset=0):
     # Get metrics for the week - logic in app.get_weekly_entries
     _, sleep_dict = get_weekly_entries(week_offset)
@@ -63,6 +57,7 @@ def generate_sleep_metrics(week_offset=0):
     # Plot: Return as HTML-div, plus other metrics
     return avg_sleep, duration_consistency
 
+# Mood Metrics
 def generate_mood_metrics(week_offset=0):
     # Get metrics for the week - logic in app.get_weekly_entries
     entries, _ = get_weekly_entries(week_offset)
