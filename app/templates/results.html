@@ -63,9 +63,26 @@ content %}
     <!-- Mood Insights -->
     <div class="bg-violet-300 shadow-md p-6 rounded-lg mt-5 mb-6 space-y-2">
         <h2 class="text-xl mb-4">Mood Insights 💡</h2>
-        <p> Your average mood score for the week is <span class="font-bold">{{ "%.1f"|format(average_mood) }}</span>. </p>
+        <p> Your average mood score for the week is 
+            <span class="font-bold">
+            {% if average_mood is number %}
+                {{ "%.1f"|format(average_mood) }}
+            {% else %}
+                {{ average_mood }}
+            {% endif %}
+            </span>. 
+        </p>
+
+        <p> You obtained your highest mood score of 
+            <span class="font-bold">
+            {% if average_mood is number %}
+                {{ "%.1f"|format(max_mood) }}
+            {% else %}
+                {{ max_mood }}
+            {% endif %}
+            </span> on [day]. 
             
-        <p> You obtained your highest mood score of ___ on [day]. You slept for ___ hours, from ___ to ___. </p>
+            You slept for ___ hours, from ___ to ___. </p>
     </div>
 
     <!-- REM Cycle Estimation Graph -->

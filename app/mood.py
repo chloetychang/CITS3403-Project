@@ -22,6 +22,14 @@ def generate_mood_insights(week_offset=0):
     }
     
     count_mood = sum([1 if entry.mood is not None else 0 for entry in entries])
-    average_mood = sum(entry.mood for entry in entries if entry.mood is not None) / count_mood
-    
-    return average_mood
+    if count_mood == 0:
+        average_mood = "____"
+    else:
+        average_mood = sum(entry.mood for entry in entries if entry.mood is not None) / count_mood
+        
+    if count_mood == 0:
+        max_mood = "____"
+    else: 
+        max_mood = max(entry.mood for entry in entries if entry.mood is not None)
+        
+    return average_mood, max_mood
