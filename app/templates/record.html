@@ -5,9 +5,9 @@
 {% block content %}
 <div class="max-w-4xl mx-auto">
     <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold">Sleep Records</h1>
+        <h1 class="text-3xl font-bold mt-8">Sleep Records</h1>
         <!-- Date Search Form -->
-        <form method="GET" action="{{ url_for('record') }}" class="flex items-center">
+        <form method="GET" action="{{ url_for('record') }}" class="flex items-center mt-8">
             <input type="month" name="month" class="p-2 rounded bg-white text-black mr-2" required>
             <button type="submit"
                 class="bg-secondary text-white font-bold py-2 px-4 rounded hover:bg-opacity-90 transition duration-200">
