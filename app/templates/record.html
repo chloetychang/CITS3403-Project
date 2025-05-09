@@ -4,11 +4,21 @@
 
 {% block content %}
 <div class="max-w-4xl mx-auto">
-    <h1 class="text-3xl font-bold mb-6">Sleep Records</h1>
-
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold">Sleep Records</h1>
+        <!-- Date Search Form -->
+        <form method="GET" action="{{ url_for('record') }}" class="flex items-center">
+            <input type="month" name="month" class="p-2 rounded bg-white text-black mr-2" required>
+            <button type="submit"
+                class="bg-secondary text-white font-bold py-2 px-4 rounded hover:bg-opacity-90 transition duration-200">
+                Go
+            </button>
+        </form>
+    </div>
     <!-- Calendar -->
     <div class="bg-white bg-opacity-10 p-6 rounded-lg">
         <div class="mb-6">
+
             <!-- Navigation -->
             <div class="flex justify-between mb-4">
                 <a href="{{ url_for('record') }}?month={{ prev_month }}" class="text-white hover:underline">←

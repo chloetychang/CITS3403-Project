@@ -136,8 +136,12 @@ def record():
     # Get the current month or the one from the query string
     month_str = request.args.get("month")
     if month_str:
-        year, month = map(int, month_str.split("-"))
-        current_date = datetime(year, month, 1)
+        try:
+            year, month = map(int, month_str.split("-"))
+            current_date = datetime(year, month, 1)
+        except ValueError:
+            flash("Invalid month format.", "error")
+            return redirect(url_for("record"))
     else:
         current_date = datetime.now()
 
