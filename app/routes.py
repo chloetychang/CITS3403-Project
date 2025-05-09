@@ -255,6 +255,6 @@ def results():
     week_range = f"{start_date.strftime('%b %d (%A)')} – {end_date.strftime('%b %d (%A)')}"
         
     sleep_plot_div, avg_sleep, duration_consistency = generate_sleep_plot(week_offset)
-    avg_mood, max_mood, max_day = generate_mood_insights(week_offset)
+    avg_mood, max_mood, max_day, hours, highest_day_sleep, highest_day_wake = generate_mood_insights(week_offset)
     
-    return render_template("results.html", week_offset=week_offset, week_range=week_range, plot_div=sleep_plot_div, average_sleep=avg_sleep, duration_consistency_percentage=duration_consistency, average_mood=avg_mood, highest_mood=max_mood, highest_day=max_day)
+    return render_template("results.html", week_offset=week_offset, week_range=week_range, plot_div=sleep_plot_div, average_sleep=avg_sleep, duration_consistency_percentage=duration_consistency, average_mood=avg_mood, highest_mood=max_mood, highest_day=max_day, mood_duration=hours, highest_mood_sleep = highest_day_sleep, highest_mood_wake = highest_day_wake)
