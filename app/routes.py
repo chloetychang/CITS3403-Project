@@ -8,8 +8,7 @@ import calendar
 from app.forms import LoginForm, SignupForm, UploadSleepDataForm  # Import forms
 from app.models import db, User, Entry  # Import models from database
 from flask_login import current_user, login_user, logout_user, login_required
-from app.plot import generate_sleep_plot    # Import the function to generate the plot
-from app.mood import generate_mood_insights  # Import the function to generate mood insights
+from app.results import generate_sleep_plot, generate_sleep_metrics, generate_mood_metrics
 
 @app.route("/")
 def welcome():
@@ -254,7 +253,8 @@ def results():
     end_date = start_date + timedelta(days=6)
     week_range = f"{start_date.strftime('%b %d (%A)')} – {end_date.strftime('%b %d (%A)')}"
         
-    sleep_plot_div, avg_sleep, duration_consistency = generate_sleep_plot(week_offset)
-    avg_mood, max_mood, max_day, hours, highest_day_sleep, highest_day_wake = generate_mood_insights(week_offset)
+    sleep_plot_div = generate_sleep_plot(week_offset)
+    avg_sleep, duration_consistency = generate_sleep_metrics(week_offset)
+    avg_mood, max_mood, max_day, hours, highest_day_sleep, highest_day_wake = generate_mood_metrics(week_offset)
     
     return render_template("results.html", week_offset=week_offset, week_range=week_range, plot_div=sleep_plot_div, average_sleep=avg_sleep, duration_consistency_percentage=duration_consistency, average_mood=avg_mood, highest_mood=max_mood, highest_day=max_day, mood_duration=hours, highest_mood_sleep = highest_day_sleep, highest_mood_wake = highest_day_wake)

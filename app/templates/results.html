@@ -63,7 +63,7 @@ content %}
     <!-- Mood Insights -->
     <div class="bg-violet-300 shadow-md p-6 rounded-lg mt-5 mb-6 space-y-2">
         <h2 class="text-xl font-bold mb-4">Mood Insights 💡</h2>
-        <p> Your average mood score for the week is
+        <p> Your average mood score for all recorded entries of the week is
             <span class="font-bold">
                 {% if average_mood is number %}
                 {{ "%.1f"|format(average_mood) }}
@@ -94,7 +94,7 @@ content %}
 
     <!-- REM Cycle Estimation Graph -->
     <div class="bg-white bg-opacity-10 p-6 rounded-lg mt-5 mb-6">
-        <h2 class="text-xl font-bold mb-4"> Your REM Cycle on [day featured in Mood Insights] </h2>
+        <h2 class="text-xl font-bold mb-4"> Your REM Cycle on {{ highest_day }} </h2>
         <p class="text-sm text-gray-300 mb-4">
             Disclaimer: Estimated REM cycle pattern based on typical sleep
             architecture. Not personalized to your physiology.

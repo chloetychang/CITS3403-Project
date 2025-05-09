@@ -1,25 +1,11 @@
-from datetime import datetime, timedelta
-from collections import defaultdict
-from app.models import Entry
 import plotly.graph_objs as go
 from plotly.offline import plot
-from flask_login import current_user
+from app.get_weekly_entries import get_weekly_entries
 
 def generate_sleep_plot(week_offset=0):
-    start_of_week = datetime.today().date() + timedelta(weeks=week_offset)
-    end_of_week = start_of_week + timedelta(days=6)
+    # Get metrics for the week - logic in app.get_weekly_entries
+    entries, sleep_dict = get_weekly_entries(week_offset)
     
-    # Query entries only from the current user, as well as between start and end of the target week
-    entries = Entry.query.filter(
-        Entry.user_id == current_user.user_id,
-        Entry.wake_datetime >= datetime.combine(start_of_week, datetime.min.time()),
-        Entry.wake_datetime <= datetime.combine(end_of_week, datetime.max.time())
-    ).all()
-    
-    sleep_dict = {
-        start_of_week + timedelta(days=i): 0
-        for i in range(7)
-    }
     # Use date keys directly
     for entry in entries:
         if entry.wake_datetime and entry.sleep_datetime:
@@ -40,6 +26,11 @@ def generate_sleep_plot(week_offset=0):
     yaxis=dict(title='Hours', range=[0, max(y_vals + [0]) + 1]),  # ensure starts from 0
     xaxis=dict(title='Day')
     )  
+    return plot(fig, output_type='div', include_plotlyjs=False)
+
+def generate_sleep_metrics(week_offset=0):
+    # Get metrics for the week - logic in app.get_weekly_entries
+    _, sleep_dict = get_weekly_entries(week_offset)
     
     # Average Sleep Duration - Weekly: Calculate average hours of sleep in a week
     total_sleep = sum(sleep_dict.values())
@@ -70,4 +61,27 @@ def generate_sleep_plot(week_offset=0):
         duration_consistency = 0
 
     # Plot: Return as HTML-div, plus other metrics
-    return plot(fig, output_type='div', include_plotlyjs=False), avg_sleep, duration_consistency
+    return avg_sleep, duration_consistency
+
+def generate_mood_metrics(week_offset=0):
+    # Get metrics for the week - logic in app.get_weekly_entries
+    entries, _ = get_weekly_entries(week_offset)
+    
+    count_mood = sum([1 if entry.mood is not None else 0 for entry in entries])
+    
+    if count_mood == 0:
+        average_mood = "____"
+        max_mood = "____"
+        highest_day = "____"
+        hours = "____"
+        highest_day_sleep= "____"
+        highest_day_wake = "____"
+    else:
+        average_mood = sum(entry.mood for entry in entries if entry.mood is not None) / count_mood
+        max_mood = max(entry.mood for entry in entries if entry.mood is not None)
+        highest_day = max(entries, key=lambda entry: entry.mood).wake_datetime.strftime('%Y-%m-%d (%A)')
+        hours = (max(entries, key=lambda entry: entry.mood).wake_datetime - max(entries, key=lambda entry: entry.mood).sleep_datetime).total_seconds() / 3600
+        highest_day_sleep = max(entries, key=lambda entry: entry.mood).sleep_datetime
+        highest_day_wake = max(entries, key=lambda entry: entry.mood).wake_datetime
+        
+    return average_mood, max_mood, highest_day, hours, highest_day_sleep, highest_day_wake
