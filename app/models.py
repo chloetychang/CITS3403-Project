@@ -2,10 +2,20 @@ from app import db, login_manager
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin # To get user_id and is_authenticated
 
+# Many-to-many relationship between User and Entry
+# One User Can Access Multiple Entries From Database
+# One Entry Can Be Shared with Multiple Users
 shared_entries = db.Table('shared_entries',
     db.Column('user_id', db.Integer, db.ForeignKey('user.user_id'), primary_key=True),
     db.Column('entry_id', db.Integer, db.ForeignKey('entry.entry_id'), primary_key=True)
 )
+
+# To get entries shared with user 1
+# user = User.query.get(2)
+# shared_entries = user.shared_entries  # Returns [Entry 1, Entry 2]
+# To get all users who have access to entry 1
+# entry = Entry.query.get(1)
+# shared_users = entry.shared_with  # Returns [User 2]
 
 class User(db.Model, UserMixin):
     user_id = db.Column(db.Integer, primary_key=True)
@@ -70,7 +80,11 @@ class Entry(db.Model):
         if user not in self.shared_with:
             self.shared_with.append(user)
             db.session.commit()
-    
+            
+# entry = Entry.query.get(entry_id)  # Get the entry to share
+# user_to_share = User.query.get(user_id)  # Get the user to share with
+# entry.share_with_user(user_to_share)  # Share the entry
+
     # Debugging: String representation of the Entry object
     def __repr__(self):
         return (f"<Entry(entry_id={self.entry_id}, user_id={self.user_id}, "
@@ -82,4 +96,3 @@ class Entry(db.Model):
         entries = Entry.query.all()
         for entry in entries:
             print(entry)
-            
