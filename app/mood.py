@@ -31,5 +31,10 @@ def generate_mood_insights(week_offset=0):
         max_mood = "____"
     else: 
         max_mood = max(entry.mood for entry in entries if entry.mood is not None)
+    
+    if count_mood == 0:
+        highest_day = "____"
+    else:
+        highest_day = max(entries, key=lambda entry: entry.mood).wake_datetime.strftime('%Y-%m-%d (%A)')
         
-    return average_mood, max_mood
+    return average_mood, max_mood, highest_day

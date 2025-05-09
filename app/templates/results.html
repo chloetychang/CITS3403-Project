@@ -76,11 +76,11 @@ content %}
         <p> You obtained your highest mood score of 
             <span class="font-bold">
             {% if average_mood is number %}
-                {{ "%.1f"|format(max_mood) }}
+                {{ "%.1f"|format(highest_mood) }}
             {% else %}
                 {{ max_mood }}
             {% endif %}
-            </span> on [day]. 
+            </span> on {{ highest_day }}. 
             
             You slept for ___ hours, from ___ to ___. </p>
     </div>
