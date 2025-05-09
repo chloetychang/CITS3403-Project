@@ -12,8 +12,8 @@ def generate_sleep_plot(week_offset=0):
     # Query entries only from the current user, as well as between start and end of the target week
     entries = Entry.query.filter(
         Entry.user_id == current_user.user_id,
-        Entry.sleep_datetime >= datetime.combine(start_of_week, datetime.min.time()),
-        Entry.sleep_datetime <= datetime.combine(end_of_week, datetime.max.time())
+        Entry.wake_datetime >= datetime.combine(start_of_week, datetime.min.time()),
+        Entry.wake_datetime <= datetime.combine(end_of_week, datetime.max.time())
     ).all()
     
     sleep_dict = {
