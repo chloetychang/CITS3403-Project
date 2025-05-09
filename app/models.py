@@ -3,19 +3,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin # To get user_id and is_authenticated
 
 # Many-to-many relationship between User and Entry
-# One User Can Access Multiple Entries From Database
-# One Entry Can Be Shared with Multiple Users
+# One User Can Access Multiple Entries From Database and One Entry Can Be Shared with Multiple Users
 shared_entries = db.Table('shared_entries',
     db.Column('user_id', db.Integer, db.ForeignKey('user.user_id'), primary_key=True),
     db.Column('entry_id', db.Integer, db.ForeignKey('entry.entry_id'), primary_key=True)
 )
-
-# To get entries shared with user 1
-# user = User.query.get(2)
-# shared_entries = user.shared_entries  # Returns [Entry 1, Entry 2]
-# To get all users who have access to entry 1
-# entry = Entry.query.get(1)
-# shared_users = entry.shared_with  # Returns [User 2]
 
 class User(db.Model, UserMixin):
     user_id = db.Column(db.Integer, primary_key=True)
@@ -75,7 +67,7 @@ class Entry(db.Model):
     # sleep duration - calculated from sleep and wake datetime (field not required here)
     # sleep quality - calculated from mood and sleep duration (field not required here)
 
-    # Add a method to share this entry with another user
+    # Method to share entry with another user in the database
     def share_with_user(self, user):
         if user not in self.shared_with:
             self.shared_with.append(user)
