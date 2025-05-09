@@ -2,6 +2,13 @@ from app import db, login_manager
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin # To get user_id and is_authenticated
 
+# Many-to-many relationship between User and Entry
+# One User Can Access Multiple Entries From Database and One Entry Can Be Shared with Multiple Users
+shared_entries = db.Table('shared_entries',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.user_id'), primary_key=True),
+    db.Column('entry_id', db.Integer, db.ForeignKey('entry.entry_id'), primary_key=True)
+)
+
 class User(db.Model, UserMixin):
     user_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(60), nullable = False)
@@ -10,8 +17,13 @@ class User(db.Model, UserMixin):
     gender = db.Column(db.String(22), nullable = False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(120), nullable=False)    # hashed password
+    
     # Added a relationship to the Entry model using user_id
     entries = db.relationship('Entry', backref='user', lazy=True)
+    
+     # Entries shared with this user
+    shared_entries = db.relationship('Entry', secondary='shared_entries', lazy='subquery',
+                                      backref=db.backref('shared_with', lazy=True))
     
     # Get user id for Flask-Login
     def get_id(self):
@@ -54,6 +66,16 @@ class Entry(db.Model):
     mood = db.Column(db.Integer, nullable=True)       # mood - indexed for future calculations
     # sleep duration - calculated from sleep and wake datetime (field not required here)
     # sleep quality - calculated from mood and sleep duration (field not required here)
+
+    # Method to share entry with another user in the database
+    def share_with_user(self, user):
+        if user not in self.shared_with:
+            self.shared_with.append(user)
+            db.session.commit()
+            
+# entry = Entry.query.get(entry_id)  # Get the entry to share
+# user_to_share = User.query.get(user_id)  # Get the user to share with
+# entry.share_with_user(user_to_share)  # Share the entry
 
     # Debugging: String representation of the Entry object
     def __repr__(self):
