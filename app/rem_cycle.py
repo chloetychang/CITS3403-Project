@@ -41,7 +41,7 @@ def simulate_rem_cycle(start, end):
 
     cycle_pattern = [1, 2, 3, 2, 1, 4]  # Light -> Moderate -> Deep -> REM
     cycle_length = 90
-    stage_map = {1: "Stage 1", 2: "Stage 2", 3: "Stage 3", 4: "REM"}
+    stage_map = {1: "N1: Light", 2: "N2: Moderate", 3: "N3: Deep", 4: "REM"}
     stages = []
 
     for _ in range(total_minutes // cycle_length):
@@ -70,7 +70,7 @@ def generate_rem_plot(rem_data):
         yaxis=dict(
             title='Sleep Stage',
             categoryorder='array',
-            categoryarray=["REM", "Stage 1", "Stage 2", "Stage 3"]
+            categoryarray=["REM", "N1: Light", "N2: Moderate", "N3: Deep"]
         ),
         xaxis_title='Time',
         height=500
