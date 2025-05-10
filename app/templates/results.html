@@ -1,64 +1,119 @@
-{% extends "base.html" %}
-
-{% block title %}Results{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}Results{% endblock %} {% block
+content %}
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
 <!-- Main container -->
 <div class="max-w-4xl mx-auto relative">
-
     <!-- Title and Share Button Row -->
     <div class="flex justify-between items-start mb-6">
-        <h1 class="text-3xl font-bold">Your Sleep Analysis</h1>
+        <h1 class="text-3xl font-bold mt-8">Your Sleep Analysis</h1>
 
         <!-- Move the button here to top right -->
-        <button class="bg-button text-secondary text-sm md:text-base font-bold py-2 px-6 rounded-full 
-                       hover:bg-opacity-90 transition duration-200 shadow-lg">
+        <button
+            class="bg-button text-secondary text-sm md:text-base font-bold py-2 px-6 rounded-full hover:bg-opacity-90 transition duration-200 shadow-lg mt-8">
             Share Sleep Results ⬆
         </button>
     </div>
-    
-    <!-- i separate the graphic and upload pages for easier access, i also found it less painful to implement -->
+
+    <!-- Separate the graphic and upload pages for easier access -->
     <div class="bg-white bg-opacity-10 p-6 rounded-lg mb-6">
         <h2 class="text-xl font-bold mb-4">Weekly Overview</h2>
         <p class="text-sm text-gray-300 mb-4">{{ week_range }}</p>
 
         <div class="overflow-x-auto">
-            <div class="min-h-[400px]">
-                {{ plot_div | safe }}
-            </div>
+            <div class="min-h-[400px]">{{ plot_div | safe }}</div>
         </div>
 
         <div class="flex gap-4 mb-4">
             <a href="{{ url_for('results', week_offset=week_offset - 1) }}">
-                <button class="bg-secondary mt-4 px-4 py-2 rounded hover:bg-opacity-90 transition duration-200 shadow-lg">Previous Week</button>
+                <button
+                    class="bg-secondary mt-4 px-4 py-2 rounded hover:bg-opacity-90 transition duration-200 shadow-lg">
+                    Previous Week
+                </button>
             </a>
 
             {% if -week_offset > 0 %}
             <a href="{{ url_for('results', week_offset=week_offset + 1) }}">
-                <button class="bg-secondary mt-4 px-4 py-2 rounded hover:bg-opacity-90 transition duration-200 shadow-lg">Next Week</button>
+                <button
+                    class="bg-secondary mt-4 px-4 py-2 rounded hover:bg-opacity-90 transition duration-200 shadow-lg">
+                    Next Week
+                </button>
             </a>
             {% endif %}
-
-          </div>
-
+        </div>
     </div>
 
     <!-- Sleep Statistics Section -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
         <!-- Average Sleep Duration Box -->
         <div class="bg-white bg-opacity-10 p-4 rounded-lg">
             <h3 class="font-bold mb-2">Average Sleep Duration</h3>
-            <p class="text-2xl font-bold">7.2 hours</p>
+            <p class="text-2xl font-bold">{{ "%.1f"|format(average_sleep) }} hours</p>
         </div>
 
         <!-- Sleep Consistency Box -->
         <div class="bg-white bg-opacity-10 p-4 rounded-lg">
-            <h3 class="font-bold mb-2">Sleep Consistency</h3>
-            <p class="text-2xl font-bold">85%</p>
+            <h3 class="font-bold mb-2">Sleep Duration Consistency</h3>
+            <p class="text-2xl font-bold">
+                {{ "%.1f"|format(duration_consistency_percentage) }}%
+            </p>
         </div>
+    </div>
+
+    <!-- Mood Insights -->
+    <div class="bg-violet-300 shadow-md p-6 rounded-lg mt-5 mb-6 space-y-2">
+        <h2 class="text-xl text-violet-600 font-bold mb-4">Mood Insights 💡</h2>
+        <p> Your average mood score for all recorded entries of the week is
+            <span class="inline-block bg-purple-100 text-indigo-900 px-2 py-0.5 rounded-full font-bold">
+                {% if average_mood is number %}
+                {{ "%.1f"|format(average_mood) }}
+                {% else %}
+                {{ average_mood }}
+                {% endif %}
+            </span>.
+        </p>
+
+        <p> You obtained your highest mood score of
+            <span class="font-bold">
+                {% if highest_mood is number %}
+                {{ "%.1f"|format(highest_mood) }}
+                {% else %}
+                {{ highest_mood }}
+                {% endif %}
+            </span> on {{ highest_day }}.
+
+            You slept for <span class="font-bold">
+                {{ mood_duration }}
+            </span> hours, from <span class="font-bold">
+                {{ highest_mood_sleep }}
+            </span> to <span class="font-bold">
+                {{ highest_mood_wake }}
+            </span> .
+        </p>
+
+        <p class="text-[13px] italic text-gray-700 pt-2"> Note: In the case where there are two entries with the same
+            mood score, the entry with the higher duration will be displayed. </p>
+    </div>
+
+    <!-- REM Cycle Estimation Graph -->
+    <div class="bg-white bg-opacity-10 p-6 rounded-lg mt-5 mb-6">
+        <h2 class="text-xl font-bold mb-4"> Your REM Cycle on {{ highest_day }} </h2>
+
+        <p class="text-sm text-gray-300 mt-4 mb-4">
+            Sleep typically occurs in ~90-minute cycles, rotating through light, moderate, deep, and REM stages.
+            REM sleep becomes more frequent toward morning and is associated with dreaming and emotional regulation.
+        </p>
+
+        <div class="overflow-x-auto">
+            <div class="min-h-[400px]">{{ rem_plot_div | safe }}</div>
+        </div>
+
+        <p class="text-sm text-gray-300 mt-4 mb-2">
+            Disclaimer: Estimated REM cycle pattern based on typical sleep
+            architecture. Not personalized to your physiology.
+        </p>
+
+        <p class="text-sm text-pink-300 pt-2 font-bold"> Coming soon: Personalization using real sleep data! </p>
     </div>
 </div>
 
