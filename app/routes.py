@@ -224,6 +224,7 @@ def get_sleep_data():
 
             # Format the fields for results
             result.append({
+                "entry_id": entry.entry_id,
                 "sleep_date": entry.sleep_datetime.strftime("%d %B %Y"),
                 "sleep_time": entry.sleep_datetime.strftime("%H:%M"),
                 "wake_date": entry.wake_datetime.strftime("%d %B %Y") if entry.wake_datetime else None,

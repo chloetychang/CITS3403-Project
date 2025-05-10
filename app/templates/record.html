@@ -141,19 +141,21 @@
                 method: 'DELETE',
             })
                 .then(response => {
-                    if (response.ok) {
-                        // Refresh the popup content or close it
-                        alert("Entry deleted successfully");
-                        closePopup();
-                        // Reload the page to update the calendar
-                        location.reload();
-                    } else {
-                        alert("Error deleting entry");
+                    if (!response.ok) {
+                        return response.json().then(data => {
+                            throw new Error(data.error || 'Error deleting entry');
+                        });
                     }
+                    return response.json();
+                })
+                .then(() => {
+                    alert("Entry deleted successfully");
+                    closePopup();
+                    location.reload();
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert("An error occurred while deleting the entry");
+                    alert(error.message || "An error occurred while deleting the entry");
                 });
         }
     }
