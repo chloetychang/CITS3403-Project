@@ -64,6 +64,15 @@ def generate_mood_metrics(week_offset=0):
     
     count_mood = sum([1 if entry.mood is not None else 0 for entry in entries])
     
+    # Get the entry with the highest mood, and break ties by duration
+    if entries:
+        best_entry = max(
+            entries,
+            key=lambda e: (e.mood, (e.wake_datetime - e.sleep_datetime).total_seconds())
+        )
+    else:
+        best_entry = None
+    
     if count_mood == 0:
         average_mood = "____"
         max_mood = "____"
@@ -74,9 +83,10 @@ def generate_mood_metrics(week_offset=0):
     else:
         average_mood = sum(entry.mood for entry in entries if entry.mood is not None) / count_mood
         max_mood = max(entry.mood for entry in entries if entry.mood is not None)
-        highest_day = max(entries, key=lambda entry: entry.mood).wake_datetime.strftime('%Y-%m-%d (%A)')
-        hours = (max(entries, key=lambda entry: entry.mood).wake_datetime - max(entries, key=lambda entry: entry.mood).sleep_datetime).total_seconds() / 3600
-        highest_day_sleep = max(entries, key=lambda entry: entry.mood).sleep_datetime
-        highest_day_wake = max(entries, key=lambda entry: entry.mood).wake_datetime
+        # Now extract what you need
+        highest_day = best_entry.wake_datetime.strftime('%Y-%m-%d (%A)')
+        hours = (best_entry.wake_datetime - best_entry.sleep_datetime).total_seconds() / 3600
+        highest_day_sleep = best_entry.sleep_datetime
+        highest_day_wake = best_entry.wake_datetime
         
     return average_mood, max_mood, highest_day, hours, highest_day_sleep, highest_day_wake

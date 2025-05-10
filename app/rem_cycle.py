@@ -5,25 +5,35 @@ import plotly.graph_objects as go
 from flask_login import current_user
 
 def rem_cycle(week_offset=0):
-    # Step 1: Compute the week range
+    # Compute the week range
     start_of_week = datetime.today().date() + timedelta(weeks=week_offset)
     end_of_week = start_of_week + timedelta(days=6)
 
-    # Step 2: Get the best mood entry within that week
-    best_entry = Entry.query.filter(
+    # Get the best mood entry within that week
+    entries = Entry.query.filter(
         Entry.user_id == current_user.user_id,
         Entry.wake_datetime >= datetime.combine(start_of_week, datetime.min.time()),
         Entry.wake_datetime <= datetime.combine(end_of_week, datetime.max.time()),
         Entry.sleep_datetime.isnot(None),
         Entry.wake_datetime.isnot(None),
         Entry.mood.isnot(None)
-    ).order_by(Entry.mood.desc()).first()
+    ).all()
 
-    if best_entry:
-        best_sleep_datetime = best_entry.sleep_datetime
-        best_wake_datetime = best_entry.wake_datetime
-        return best_sleep_datetime, best_wake_datetime
-    return None, None
+    # Get max mood value
+    max_mood = max((e.mood for e in entries), default=None)
+
+    # Filter to only entries with that mood
+    mood_candidates = [e for e in entries if e.mood == max_mood]
+
+    # Choose the one with longest sleep duration
+    if mood_candidates:
+        best_entry = max(
+            mood_candidates,
+            key=lambda e: (e.wake_datetime - e.sleep_datetime).total_seconds()
+        )
+        return best_entry.sleep_datetime, best_entry.wake_datetime
+    else:
+        return None, None
 
 def simulate_rem_cycle(start, end):
     total_minutes = int((end - start).total_seconds() // 60)
