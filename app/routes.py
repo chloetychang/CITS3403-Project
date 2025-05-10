@@ -224,6 +224,7 @@ def get_sleep_data():
 
             # Format the fields for results
             result.append({
+                "entry_id": entry.entry_id,
                 "sleep_date": entry.sleep_datetime.strftime("%d %B %Y"),
                 "sleep_time": entry.sleep_datetime.strftime("%H:%M"),
                 "wake_date": entry.wake_datetime.strftime("%d %B %Y") if entry.wake_datetime else None,
@@ -235,6 +236,24 @@ def get_sleep_data():
     except Exception as e:
         return jsonify({"error": "An error occurred while fetching data"}), 500
 
+# Delete a sleep entry in the database
+@app.route('/delete_sleep_entry/<int:entry_id>', methods=['DELETE'])
+@login_required
+def delete_sleep_entry(entry_id):
+    entry = Entry.query.get_or_404(entry_id)
+    
+    # Make sure the user owns this entry
+    if entry.user_id != current_user.user_id:
+        return jsonify({"error": "Unauthorized"}), 403
+    
+    try:
+        db.session.delete(entry)
+        db.session.commit()
+        return jsonify({"message": "Entry deleted successfully"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+    
 @app.route("/results")
 @login_required # Protected page
 def results():
