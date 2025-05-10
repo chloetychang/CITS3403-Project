@@ -4,17 +4,16 @@ import pandas as pd
 import plotly.graph_objects as go
 from flask_login import current_user
 
-def rem_cycle(weekoffset=0):
+def rem_cycle(week_offset=0):
     # Step 1: Compute the week range
-    today = datetime.today().date()
-    week_start = today - timedelta(days=today.weekday()) + timedelta(weeks=weekoffset)
-    week_end = week_start + timedelta(days=7)
+    start_of_week = datetime.today().date() + timedelta(weeks=week_offset)
+    end_of_week = start_of_week + timedelta(days=6)
 
     # Step 2: Get the best mood entry within that week
     best_entry = Entry.query.filter(
         Entry.user_id == current_user.user_id,
-        Entry.sleep_datetime >= week_start,
-        Entry.sleep_datetime < week_end,
+        Entry.wake_datetime >= datetime.combine(start_of_week, datetime.min.time()),
+        Entry.wake_datetime <= datetime.combine(end_of_week, datetime.max.time()),
         Entry.sleep_datetime.isnot(None),
         Entry.wake_datetime.isnot(None),
         Entry.mood.isnot(None)
