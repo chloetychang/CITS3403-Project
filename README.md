@@ -30,8 +30,15 @@ pip install -r requirements.txt
 
 When a dependency has been added, the requirements file should be updated with the command `pip freeze > requirements.txt`.
 
+### Before Launching the Application
+Before running the application, ensure you set a secret key for Flask. You can do this by exporting an environment variable. Run the following command in your terminal:
+```bash
+export FLASK_APP_SECRET_KEY='your_secret_key_here'
+```
+Replace `'your_secret_key_here'` with a strong, random string.
+
 ### Launching the Application
-After setting up the virtual environment and installing the dependencies, run the command:
+After setting up the virtual environment, installing the dependencies, and setting your unique secret key run the command:
 
 ```bash
 flask run
@@ -50,8 +57,7 @@ This will create the database and apply both existing migrations (initial and se
 
 ## 🚀 Getting Started
 
-### 🔐 Login
-
+### Login
 You can use the following test account to log in:
 
 - **Username**: `admin`  
@@ -59,5 +65,4 @@ You can use the following test account to log in:
 - **Password**: `admin123`
 
 ### Registration
-
 New users can sign up by providing the required information. Once registered, you may log in using your new credentials.
