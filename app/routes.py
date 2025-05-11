@@ -205,6 +205,7 @@ def get_sleep_data():
     try:
         # Filter entries where the wake_datetime date matches the selected date
         entries = Entry.query.filter(
+            Entry.user_id == current_user.user_id,
             db.func.date(Entry.wake_datetime) == selected_date
         ).all()
 
