@@ -5,4 +5,4 @@ default_database_location = 'sqlite:///' + os.path.join(basedir, 'app.db')
 
 class Config:
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL') or default_database_location
-    SECRET_KEY = os.environ.get('SECRET_KEY', 'default-secret-key')  # Use env variable
+    SECRET_KEY = os.environ.get('SECRET_KEY') # Configures the secret key for the app
