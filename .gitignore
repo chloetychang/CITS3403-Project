@@ -10,3 +10,4 @@ pycache/
 
 # Ignore environment variables and secret files
 .env.DS_Store
+.DS_Store
