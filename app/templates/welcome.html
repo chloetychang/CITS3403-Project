@@ -3,88 +3,89 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sleep Tracker | NapNinjas</title>
+    <title>Sleep Tracker</title>
     {% include 'partials/tailwind_config.html' %}
   </head>
 
-  <body class="bg-primary text-white font-sans min-h-screen">
-    <div class="max-w-6xl mx-auto px-6 py-12 space-y-16">
+  <body class="bg-primary text-white font-sans min-h-screen flex items-center justify-center">
+    <div class="max-w-6xl w-full px-6 py-6 space-y-8">
 
-      <h1 class="text-4xl font-bold text-center text-yellow-300">Welcome to Sleep Tracker</h1>
-      <p class="text-md text-center max-w-2xl mx-auto">
-        Get insights into your sleep patterns, build better habits, and feel more energised every day.
-      </p>
-
-      <!-- Section 1: NapNinjas Intro -->
-      <div class="flex flex-col md:flex-row items-center bg-white/10 rounded-2xl p-8 gap-8">
-        <div class="md:w-1/2 text-center md:text-left">
-          <h2 class="text-2xl font-semibold text-green-300 mb-3">Who Are We?</h2>
-          <p class="text-md leading-relaxed">
-            <strong>NapNinjas</strong> is on a mission to help people achieve better sleep using science-backed strategies and smart technology.
-            Our SleepTracker app is your guide to deep rest and energetic mornings.
-          </p>
-        </div>
-        <div class="md:w-1/2 flex justify-center">
-          <img src="{{ url_for('static', filename='images/napninjas_logo.jpg') }}"
-               alt="NapNinjas Logo"
-               class="w-64 rounded-xl shadow-xl" />
-        </div>
-      </div>
-
-      <!-- Section 2: Why Sleep Matters -->
-      <div class="flex flex-col md:flex-row-reverse items-center bg-white/5 rounded-2xl p-8 gap-8">
-        <div class="md:w-1/2 text-center md:text-left">
-          <h2 class="text-2xl font-semibold text-pink-300 mb-3">Why Sleep Is Important</h2>
-          <p class="text-md leading-relaxed">
-            Sleep improves memory, boosts mood, strengthens the immune system, and enhances productivity.
-            With SleepTracker, you'll learn when to sleep, how to sleep, and how to wake up refreshed.
-          </p>
-        </div>
-        <div class="md:w-1/2 flex justify-center">
-          <img src="static/images/sleep_cycle.jpg"
-               alt="Sleep Cycle Diagram"
-               class="w-72 rounded-xl shadow-lg" />
-        </div>
-      </div>
-
-      <!-- Section 3: Features -->
-      <div class="flex flex-col md:flex-row items-center bg-white/10 rounded-2xl p-8 gap-8">
-        <div class="md:w-1/2 text-center md:text-left">
-          <h2 class="text-2xl font-semibold text-sky-300 mb-3">What SleepTracker Does</h2>
-          <p class="text-md leading-relaxed">
-            SleepTracker uses AI-driven analysis to monitor your sleep cycles, detect trends,
-            and offer personalized suggestions for better rest. It's more than a tracker—it's your sleep coach.
-          </p>
-        </div>
-        <div class="md:w-1/2 flex justify-center">
-          <img src="{{ url_for('static', filename='images/sleep_tracker.jpg') }}"
-               alt="Sleep Tracker Dashboard"
-               class="w-72 rounded-xl shadow-lg" />
-        </div>
-      </div>
-
-      <!-- NapNinjas Callout (no yellow background) -->
-      <div class="bg-white/10 text-white rounded-xl text-center py-10 px-6 space-y-3 shadow-lg">
-        <h2 class="text-2xl font-bold text-yellow-300">Join the NapNinjas Movement 🥷</h2>
-        <p class="text-md max-w-2xl mx-auto">
-          Don’t just track your sleep—transform it. NapNinjas empowers you with the tools, science, and insights
-          to sleep smarter and live sharper. Wake up ready to win the day.
+      <!-- Welcome Section -->
+      <div class="text-center space-y-2">
+        <h1 class="text-3xl font-bold text-gray-200">Welcome to Sleep Tracker</h1>
+        <p class="text-sm max-w-xl mx-auto text-gray-300">
+          Track your sleep and get weekly insights to improve rest.
         </p>
       </div>
 
-      <!-- CTA Buttons -->
-      <div class="flex justify-center space-x-6 mt-8">
-        <a href="{{ url_for('signup') }}">
-          <button class="bg-button text-secondary text-xl font-semibold py-3 px-6 rounded-full hover:bg-opacity-90 transition duration-200 shadow-md">
-            Sign Up
-          </button>
-        </a>
-        <a href="{{ url_for('login') }}">
-          <button class="bg-button text-secondary text-xl font-semibold py-3 px-6 rounded-full hover:bg-opacity-90 transition duration-200 shadow-md">
-            Log In
-          </button>
-        </a>
+      <!-- Info Sections (Centered) -->
+      <div class="grid md:grid-cols-3 gap-4 justify-center text-center">
+
+        <!-- Who Are We -->
+        <div class="bg-white/10 rounded-xl p-4">
+          <h2 class="text-lg font-semibold text-yellow-500 mb-1 flex justify-center items-center gap-1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87M16 7a4 4 0 11-8 0 4 4 0 018 0zM21 7a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+            Who Are We?
+          </h2>
+          <p class="text-xs text-gray-300">
+            A clean, student-built tool designed to help you better understand your sleep habits.
+          </p>
+        </div>
+
+        <!-- Why Sleep -->
+        <div class="bg-white/10 rounded-xl p-4">
+          <h2 class="text-lg font-semibold text-yellow-500 mb-1 flex justify-center items-center gap-1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 0112.21 3 7 7 0 1012 21c4.97 0 9-4.03 9-9z" />
+            </svg>
+            Why Sleep?
+          </h2>
+          <p class="text-xs text-gray-300">
+            Sleep fuels your body and mind. Awareness is the first step to better rest.
+          </p>
+        </div>
+
+        <!-- What We Offer -->
+        <div class="bg-white/10 rounded-xl p-4">
+          <h2 class="text-lg font-semibold text-yellow-500 mb-1 flex justify-center items-center gap-1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6a2 2 0 012-2h2a2 2 0 012 2v6m4 0v-4a2 2 0 00-2-2h-2m-4 0H5a2 2 0 00-2 2v4m0 0h18" />
+            </svg>
+            What We Offer
+          </h2>
+          <p class="text-xs text-gray-300">
+            Weekly summaries and trend tracking. No complexity, just clarity.
+          </p>
+        </div>
+
       </div>
+
+      <!-- Join the Movement Section with CTA Buttons -->
+      <div class="text-center pt-4 space-y-4">
+        <h2 class="text-lg font-bold text-yellow-500 flex justify-center items-center gap-1">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7M3 10h2a2 2 0 012 2v0a2 2 0 01-2 2H3m18 0h-2a2 2 0 01-2-2v0a2 2 0 012-2h2" />
+          </svg>
+          Join the Movement
+        </h2>
+
+        <!-- Moved CTA Buttons -->
+        <div class="flex justify-center space-x-4">
+          <a href="{{ url_for('signup') }}">
+            <button class="bg-button text-secondary text-sm font-semibold py-2 px-4 rounded-full hover:bg-opacity-90 transition duration-200 shadow-md">
+              Sign Up
+            </button>
+          </a>
+          <a href="{{ url_for('login') }}">
+            <button class="bg-button text-secondary text-sm font-semibold py-2 px-4 rounded-full hover:bg-opacity-90 transition duration-200 shadow-md">
+              Log In
+            </button>
+          </a>
+        </div>
+      </div>
+
     </div>
   </body>
 </html>
