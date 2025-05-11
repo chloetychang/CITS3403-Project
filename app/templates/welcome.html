@@ -62,30 +62,25 @@
 
       </div>
 
-      <!-- Join the Movement Section with CTA Buttons -->
-      <div class="text-center pt-4 space-y-4">
-        <h2 class="text-lg font-bold text-yellow-500 flex justify-center items-center gap-1">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7M3 10h2a2 2 0 012 2v0a2 2 0 01-2 2H3m18 0h-2a2 2 0 01-2-2v0a2 2 0 012-2h2" />
-          </svg>
-          Join the Movement
-        </h2>
+      <!-- CTA Section -->
+<div class="text-center pt-4 space-y-4">
+  <h2 class="text-lg font-bold text-yellow-500 flex justify-center items-center gap-1">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7M3 10h2a2 2 0 012 2v0a2 2 0 01-2 2H3m18 0h-2a2 2 0 01-2-2v0a2 2 0 012-2h2" />
+    </svg>
+    Join the Movement
+  </h2>
 
-        <!-- Moved CTA Buttons -->
-        <div class="flex justify-center space-x-4">
-          <a href="{{ url_for('signup') }}">
-            <button class="bg-button text-secondary text-sm font-semibold py-2 px-4 rounded-full hover:bg-opacity-90 transition duration-200 shadow-md">
-              Sign Up
-            </button>
-          </a>
-          <a href="{{ url_for('login') }}">
-            <button class="bg-button text-secondary text-sm font-semibold py-2 px-4 rounded-full hover:bg-opacity-90 transition duration-200 shadow-md">
-              Log In
-            </button>
-          </a>
-        </div>
-      </div>
-
-    </div>
-  </body>
-</html>
+  <div class="flex justify-center space-x-4">
+    <a href="{{ url_for('signup') }}">
+      <button class="bg-button text-secondary text-xl font-bold py-4 px-8 rounded-full hover:bg-opacity-90 transition duration-200 shadow-md">
+        Sign Up
+      </button>
+    </a>
+    <a href="{{ url_for('login') }}">
+      <button class="bg-button text-secondary text-xl font-bold py-4 px-8 rounded-full hover:bg-opacity-90 transition duration-200 shadow-md">
+        Log In
+      </button>
+    </a>
+  </div>
+</div>
