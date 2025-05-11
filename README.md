@@ -33,7 +33,7 @@ When a dependency has been added, the requirements file should be updated with t
 ### Before Launching the Application
 Before running the application, ensure you set a secret key for Flask. You can do this by exporting an environment variable. Run the following command in your terminal:
 ```bash
-export FLASK_APP_SECRET_KEY='your_secret_key_here'
+export SECRET_KEY='your_secret_key_here'
 ```
 Replace `'your_secret_key_here'` with a strong, random string.
 
