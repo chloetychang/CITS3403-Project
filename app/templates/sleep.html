@@ -1,48 +1,65 @@
 {% extends "base.html" %}
 {% block title %}Sleep{% endblock %}
-<!-- should this be changed to homepage? or the name of our application/website? please review -->
+
+{% block head %}
+<style>
+  .spotlight-cone::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90vw;
+    max-width: 400px;
+    height: 500px;
+    background: radial-gradient(ellipse at center, #e4d6abcc 0%, #e4d6ab00 70%);
+    clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
+    opacity: 1;
+    z-index: 0;
+    filter: blur(1px);
+  }
+
+  .spotlight-base {
+    width: 300px;
+    height: 80px;
+    background-color: #e4d6abcc;
+    border-radius: 50%;
+    margin: -40px auto 0;
+    filter: blur(10px);
+    opacity: 0.8;
+  }
+
+  .icon-cone {
+    font-size: 6rem;
+    color: #e4d6ab;
+    margin-bottom: 10px;
+  }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="flex flex-col items-center justify-center min-h-[80vh]">
-    <div class="text-center max-w-2xl">
-        <h1 class="text-4xl font-bold mb-6">Sleep</h1>
-        
-        <p class="text-lg mb-8">
-            Upload your sleep data and habits to formulate a sleep plan.<br>
-            Create a profile to store your records.<br>
-            Based on peer reviewed research.<br>
-            do we even need text here
-        </p>
-        <div class="my-12">
-            <button onclick="openPopup()" class="bg-button text-secondary text-2xl font-bold py-4 px-8 rounded-full 
-                         hover:bg-opacity-90 transition duration-200 shadow-lg">
-                Upload Sleep Data ⬆
-            </button>
-        </div>
+<!-- Spotlight Section -->
+<div class="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 sm:px-8 text-[#e0e0e0]">
 
-        {% include "partials/form_popup.html"  %}
+  <!-- Icon & Text under spotlight -->
+  <div class="relative spotlight-cone w-full h-[420px] sm:h-[480px] md:h-[520px] flex flex-col justify-center items-center text-center">
+    <div class="absolute top-20 text-[3.5rem] sm:text-[4rem] md:text-[5rem] text-[#e4d6ab]">🌙</div>
+    <h1 class="text-[2.5rem] sm:text-[3rem] md:text-[4rem] font-extrabold mt-16">Sleep</h1>
+    <p class="mt-4 text-center text-sm sm:text-base md:text-lg leading-relaxed px-4 md:px-0 text-[#cfcfcf]">
+      Upload your sleep data and<br>
+      habits to formulate a sleep plan.<br>
+      Create a profile to store your records.<br>
+      <span class="text-[#f5f5f5] font-semibold">Based on peer reviewed research.</span>
+    </p>
+    <div class="spotlight-base"></div>
+  </div>
 
-    </div>
+  <!-- Upload Button -->
+  <div class="mt-3">
+    <button class="bg-[#e4d6ab] text-[#221f4d] text-sm sm:text-base font-bold px-4 py-2 sm:px-6 sm:py-2.5 rounded-full shadow-md hover:bg-opacity-90 transition">
+      ⬆ Upload Sleep Data
+    </button>
+  </div>
+
 </div>
-
-<!-- JavaScript -->
-<script>
-// For 'Close Form' Button
-    function openPopup() {
-      document.getElementById("popup").classList.remove("hidden");
-    }
-
-    function closePopup() {
-      document.getElementById("popup").classList.add("hidden");
-    }
-
-// For 'Clear Form' Button
-    function clearForm() {
-      const fields = ['entry_date_sleep', 'sleep_time', 'entry_date_wake', 'wake_time', 'mood'];
-      fields.forEach(id => {
-        const element = document.getElementById(id);
-        if (element) element.value = '';                        // If element exists on the page, clear its value
-      });
-    }
-</script>
-
 {% endblock %}
