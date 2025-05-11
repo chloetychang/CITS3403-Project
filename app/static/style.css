@@ -1,0 +1,66 @@
+.spotlight-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.spotlight-cone {
+  position: relative;
+  width: 100%;
+  height: 400px;
+}
+
+.spotlight-cone::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 260px;
+  height: 500px; /* increased from ~400px */
+  background: radial-gradient(ellipse at center, #e4d6ab 0%, transparent 70%);
+  opacity: 0.95;
+  filter: blur(10px);
+  border-radius: 50%/30%;
+  z-index: 0;
+}
+
+
+.spotlight-heading {
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-weight: bold;
+  z-index: 2;
+}
+
+.spotlight-circle {
+  position: absolute;
+  top: 350px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 60px;
+  background-color: #f7eec7cc;
+  border-radius: 50%;
+  opacity: 0.95;
+  z-index: 0;
+  filter: blur(2px);
+}
+
+.spotlight-bottom-circle {
+  position: absolute;
+  top: 360px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 60px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  filter: blur(12px);
+  z-index: 0;
+}
