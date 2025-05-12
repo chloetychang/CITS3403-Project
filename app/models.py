@@ -9,6 +9,21 @@ shared_entries = db.Table('shared_entries',
     db.Column('entry_id', db.Integer, db.ForeignKey('entry.entry_id'), primary_key=True)
 )
 
+friends_association = db.Table(
+    'friends_association',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.user_id'), primary_key=True),
+    db.Column('friend_id', db.Integer, db.ForeignKey('user.user_id'), primary_key=True)
+)
+
+class FriendRequest(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
+    recipient_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
+    status = db.Column(db.String(20), default='pending')  # 'pending', 'accepted', 'declined'
+    
+    sender = db.relationship('User', foreign_keys=[sender_id], backref='sent_requests')
+    recipient = db.relationship('User', foreign_keys=[recipient_id], backref='received_requests')
+
 class User(db.Model, UserMixin):
     user_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(60), nullable = False)
@@ -17,6 +32,15 @@ class User(db.Model, UserMixin):
     gender = db.Column(db.String(22), nullable = False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(120), nullable=False)    # hashed password
+
+    friends = db.relationship(
+    'User',
+    secondary=friends_association,
+    primaryjoin=(user_id == friends_association.c.user_id),
+    secondaryjoin=(user_id == friends_association.c.friend_id),
+    lazy='dynamic',
+    backref=db.backref('friend_of', lazy='dynamic')
+)
     
     # Added a relationship to the Entry model using user_id
     entries = db.relationship('Entry', backref='user', lazy=True)
@@ -88,3 +112,4 @@ class Entry(db.Model):
         entries = Entry.query.all()
         for entry in entries:
             print(entry)
+
