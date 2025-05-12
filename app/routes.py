@@ -8,7 +8,6 @@ import calendar
 from app.forms import LoginForm, SignupForm, UploadSleepDataForm  # Import forms
 from app.models import db, User, Entry  # Import models from database
 from flask_login import current_user, login_user, logout_user, login_required
-from app.plot import generate_sleep_plot    # Import the function to generate the plot
 from app.forms import SearchUsernameForm  
 from app.models import FriendRequest  # Import the FriendRequest model
 from app.results import generate_sleep_plot, generate_sleep_metrics, generate_mood_metrics
@@ -277,8 +276,32 @@ def results():
     end_date = start_date + timedelta(days=6)
     week_range = f"{start_date.strftime('%b %d (%A)')} – {end_date.strftime('%b %d (%A)')}"
     
-
-    return render_template("results.html", plot_div=plot_div, week_offset=week_offset, week_range=week_range)
+    sleep_plot_div = generate_sleep_plot(week_offset)                           # Sleep Plot - Generates Weekly Overview of Sleep Duration
+    avg_sleep, duration_consistency = generate_sleep_metrics(week_offset)       # Sleep Metrics
+    avg_mood, max_mood, max_day, hours, highest_day_sleep, highest_day_wake = generate_mood_metrics(week_offset)     # Mood Metrics
+    
+    best_sleep, best_wake = rem_cycle(week_offset)
+    if best_sleep and best_wake:
+        rem_data = simulate_rem_cycle(best_sleep, best_wake)
+        rem_plot_div = generate_rem_plot(rem_data)
+    else:
+        rem_plot_div = "<p>No mood-based REM data for this week.</p>" 
+    
+    return render_template(
+        "results.html", 
+        week_offset=week_offset, 
+        week_range=week_range, 
+        plot_div=sleep_plot_div, 
+        average_sleep=avg_sleep, 
+        duration_consistency_percentage=duration_consistency, 
+        average_mood=avg_mood, 
+        highest_mood=max_mood, 
+        highest_day=max_day, 
+        mood_duration=hours, 
+        highest_mood_sleep = highest_day_sleep, 
+        highest_mood_wake = highest_day_wake, 
+        rem_plot_div=rem_plot_div
+    )
 
 @app.route('/share', methods=['GET', 'POST'])
 @login_required
@@ -434,31 +457,3 @@ def unfriend(friend_id):
     
     flash("Friend removed successfully", "info")
     return jsonify({'status': 'success', 'message': 'Friend removed successfully'})
-
-    sleep_plot_div = generate_sleep_plot(week_offset)                           # Sleep Plot - Generates Weekly Overview of Sleep Duration
-    avg_sleep, duration_consistency = generate_sleep_metrics(week_offset)       # Sleep Metrics
-    avg_mood, max_mood, max_day, hours, highest_day_sleep, highest_day_wake = generate_mood_metrics(week_offset)     # Mood Metrics
-    
-    best_sleep, best_wake = rem_cycle(week_offset)
-    if best_sleep and best_wake:
-        rem_data = simulate_rem_cycle(best_sleep, best_wake)
-        rem_plot_div = generate_rem_plot(rem_data)
-    else:
-        rem_plot_div = "<p>No mood-based REM data for this week.</p>" 
-    
-    return render_template(
-        "results.html", 
-        week_offset=week_offset, 
-        week_range=week_range, 
-        plot_div=sleep_plot_div, 
-        average_sleep=avg_sleep, 
-        duration_consistency_percentage=duration_consistency, 
-        average_mood=avg_mood, 
-        highest_mood=max_mood, 
-        highest_day=max_day, 
-        mood_duration=hours, 
-        highest_mood_sleep = highest_day_sleep, 
-        highest_mood_wake = highest_day_wake, 
-        rem_plot_div=rem_plot_div
-    )
-
