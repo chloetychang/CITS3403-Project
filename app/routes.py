@@ -241,13 +241,13 @@ def get_sleep_data():
 @app.route('/delete_sleep_entry/<int:entry_id>', methods=['DELETE'])
 @login_required
 def delete_sleep_entry(entry_id):
-    entry = Entry.query.get_or_404(entry_id)
-    
-    # Make sure the user owns this entry
-    if entry.user_id != current_user.user_id:
-        return jsonify({"error": "Unauthorized"}), 403
-    
     try:
+        entry = Entry.query.get_or_404(entry_id)
+        
+        # Check if the user owns this entry
+        if entry.user_id != current_user.user_id:
+            return jsonify({"error": "Unauthorized"}), 403
+        
         db.session.delete(entry)
         db.session.commit()
         return jsonify({"message": "Entry deleted successfully"}), 200

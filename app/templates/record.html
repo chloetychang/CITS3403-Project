@@ -136,12 +136,13 @@
 
         popup.classList.remove("hidden");
     }
-
-    // Delete sleep entry
     function deleteEntry(entryId) {
         if (confirm("Are you sure you want to delete this sleep entry? This action cannot be undone.")) {
             fetch(`/delete_sleep_entry/${entryId}`, {
                 method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token() }}'
+                }
             })
                 .then(response => {
                     if (!response.ok) {
@@ -162,7 +163,6 @@
                 });
         }
     }
-
     // Close the popup
     function closePopup() {
         document.getElementById("recordPopup").classList.add("hidden");
