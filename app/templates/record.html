@@ -72,7 +72,6 @@
 {% include "partials/record_popup.html" %}
 
 <script>
-
     function openPopup(year, month, day) {
         // Get the popup element and today's date
         const popup = document.getElementById("recordPopup");
@@ -138,9 +137,15 @@
 
     // Delete sleep entry
     function deleteEntry(entryId) {
+        // CSRF token for security
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        
         if (confirm("Are you sure you want to delete this sleep entry? This action cannot be undone.")) {
             fetch(`/delete_sleep_entry/${entryId}`, {
                 method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': csrfToken
+                }
             })
                 .then(response => {
                     if (!response.ok) {
