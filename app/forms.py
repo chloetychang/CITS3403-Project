@@ -3,6 +3,9 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SelectField, IntegerField, DateField, TimeField, SubmitField
 from wtforms.validators import DataRequired, Email, Length, EqualTo, Optional, NumberRange
 
+class RecordDateSearchForm(FlaskForm):
+    pass  # No fields needed, just for CSRF protection
+
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email(message='Please enter a valid email address')])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=6)])
