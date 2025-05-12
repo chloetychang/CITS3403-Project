@@ -2,10 +2,10 @@
 from flask import render_template, redirect, url_for, flash, request, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 from app import app
-from app.forms import LoginForm, SignupForm, UploadSleepDataForm, RecordDateSearchForm  # Import forms
+from app.forms import LoginForm, SignupForm, UploadSleepDataForm, RecordDateSearchForm, SearchUsernameForm # Import forms
 from datetime import date, datetime, timedelta
 import calendar
-from app.models import db, User, Entry  # Import models from database
+from app.models import db, User, Entry, FriendRequest  # Import models from database
 from flask_login import current_user, login_user, logout_user, login_required
 from app.results import generate_sleep_plot, generate_sleep_metrics, generate_mood_metrics
 from app.rem_cycle import rem_cycle, simulate_rem_cycle, generate_rem_plot
@@ -301,7 +301,157 @@ def results():
         rem_plot_div=rem_plot_div
     )
 
-@app.route("/share")
+@app.route('/share', methods=['GET', 'POST'])
 @login_required
 def share():
-    return render_template("share.html")
+    search_term = request.args.get('search', '')
+    search_results = []
+
+    # If there's a search term in the query parameters, perform the search
+    if search_term:
+        # Search for usernames containing the search term (case-insensitive)
+        search_results = User.query.filter(
+            User.username.ilike(f'%{search_term}%'),
+            User.user_id != current_user.user_id  # Exclude current user
+        ).all()
+
+        if not search_results:
+            flash("No users found with that username", "info")
+
+    # Get friends and pending requests
+    friends = current_user.friends.all()
+
+    pending_requests = []
+    friend_requests = FriendRequest.query.filter(
+        FriendRequest.recipient_id == current_user.user_id,
+        FriendRequest.status == 'pending'
+    ).all()
+
+    # Add sender's name to each request for display
+    for friend_request in friend_requests:
+        sender = User.query.get(friend_request.sender_id)
+        if sender:
+            # Add these attributes for the template
+            friend_request.sender_name = sender.username
+            friend_request.request_id = friend_request.id  # Make sure ID is accessible
+            pending_requests.append(friend_request)
+
+    return render_template('share.html',
+                         friends=friends,
+                         pending_requests=pending_requests,
+                         search_results=search_results)
+
+@app.route('/send_friend_request/<int:user_id>', methods=['POST'])
+@login_required
+def send_friend_request(user_id):
+    recipient = User.query.get(user_id)
+
+    if not recipient:
+        flash("User not found", "error")
+        return redirect(url_for('share'))
+
+    if recipient.user_id == current_user.user_id:
+        flash("You can't send a friend request to yourself", "error")
+        return redirect(url_for('share'))
+
+    # Check if request already exists
+    existing_request = FriendRequest.query.filter_by(
+        sender_id=current_user.user_id,
+        recipient_id=user_id
+    ).first()
+
+    if existing_request:
+        flash("Friend request already sent", "info")
+        return redirect(url_for('share'))
+
+    # Create new request
+    new_request = FriendRequest(
+        sender_id=current_user.user_id,
+        recipient_id=user_id
+    )
+
+    db.session.add(new_request)
+    db.session.commit()
+
+    flash("Friend request sent successfully!", "success")
+    return redirect(url_for('share'))
+
+@app.route('/handle_friend_request/<int:request_id>', methods=['POST'])
+@login_required
+def handle_friend_request(request_id):
+    # Parse the JSON data from the request
+    data = request.json
+    action = data.get('action')
+
+    # Find the friend request
+    friend_request = FriendRequest.query.get(request_id)
+
+    if not friend_request:
+        return jsonify({'error': 'Request not found'}), 404
+
+    # Make sure the current user is the recipient of the request
+    if friend_request.recipient_id != current_user.user_id:
+        return jsonify({'error': 'Unauthorized'}), 403
+
+    if action == 'accept':
+        # Update request status
+        friend_request.status = 'accepted'
+
+        # Add to friends list (both ways since it's a mutual friendship)
+        sender = User.query.get(friend_request.sender_id)
+
+        # Add the sender to current user's friends
+        if sender not in current_user.friends:
+            current_user.friends.append(sender)
+
+        # Add current user to sender's friends
+        if current_user not in sender.friends:
+            sender.friends.append(current_user)
+
+        db.session.commit()
+
+        flash("Friend request accepted!", "success")
+        return jsonify({'status': 'success', 'message': 'Friend request accepted'})
+
+    elif action == 'decline':
+        # Update request status
+        friend_request.status = 'declined'
+        db.session.commit()
+
+        flash("Friend request declined", "info")
+        return jsonify({'status': 'success', 'message': 'Friend request declined'})
+
+    else:
+        return jsonify({'error': 'Invalid action'}), 400
+
+@app.route('/unfriend/<int:friend_id>', methods=['POST'])
+@login_required
+def unfriend(friend_id):
+    # Get the friend user object
+    friend = User.query.get(friend_id)
+
+    if not friend:
+        return jsonify({'error': 'User not found'}), 404
+
+    # Remove from current_user's friends list
+    if friend in current_user.friends:
+        current_user.friends.remove(friend)
+
+    # Remove current_user from friend's friends list (mutual friendship)
+    if current_user in friend.friends:
+        friend.friends.remove(current_user)
+
+    # Clean up any existing friend requests between these users (in both directions)
+    # This allows them to send friend requests to each other again in the future
+    FriendRequest.query.filter(
+        ((FriendRequest.sender_id == current_user.user_id) & 
+         (FriendRequest.recipient_id == friend_id)) |
+        ((FriendRequest.sender_id == friend_id) & 
+         (FriendRequest.recipient_id == current_user.user_id))
+    ).delete()
+
+    # Commit the changes
+    db.session.commit()
+
+    flash("Friend removed successfully", "info")
+    return jsonify({'status': 'success', 'message': 'Friend removed successfully'})
