@@ -5,7 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{% block title %}Sleep Tracker{% endblock %}</title>
   {% include 'partials/tailwind_config.html' %}
-  {% block head %}{% endblock %}
+  {% block scripts %}
+<script>
+  function toggleModal(show) {
+    const modal = document.getElementById("sleepModal");
+    modal.classList.toggle("hidden", !show);
+  }
+</script>
+{% endblock %}
 </head>
 
 <body class="bg-primary text-white font-sans min-h-screen flex">
