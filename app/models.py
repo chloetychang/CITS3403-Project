@@ -112,4 +112,3 @@ class Entry(db.Model):
         entries = Entry.query.all()
         for entry in entries:
             print(entry)
-

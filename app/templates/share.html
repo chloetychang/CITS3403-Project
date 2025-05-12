@@ -15,6 +15,7 @@
     <!-- Search Form -->
     <div class="mb-8">
         <form method="GET" action="{{ url_for('share') }}" class="flex">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <input 
                 type="text" 
                 name="search" 
@@ -37,6 +38,7 @@
             <div class="flex justify-between items-center p-3 bg-white bg-opacity-5 rounded">
                 <span>{{ user.username }}</span>
                 <form method="POST" action="{{ url_for('send_friend_request', user_id=user.user_id) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                     <button type="submit" 
                             class="bg-secondary hover:bg-secondary-dark text-white font-bold py-1 px-4 rounded transition">
                         Send Request
@@ -130,6 +132,11 @@
 </div>
 
 <script>
+    // CSRF Token for AJAX requests
+    function getCSRFToken() {
+        return document.querySelector('input[name=csrf_token]').value;
+    }
+
     function viewFriendData(friendId) {
         console.log("Viewing friend:", friendId);
         // Implement functionality to display friend's sleep data
@@ -148,6 +155,7 @@
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()
             },
             body: JSON.stringify({ action: action })
         })
@@ -180,6 +188,7 @@
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken()
                 }
             })
             .then(response => {

@@ -2,14 +2,11 @@
 from flask import render_template, redirect, url_for, flash, request, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 from app import app
-from app.forms import LoginForm, SignupForm, UploadSleepDataForm  # Import forms
+from app.forms import LoginForm, SignupForm, UploadSleepDataForm, RecordDateSearchForm, SearchUsernameForm # Import forms
 from datetime import date, datetime, timedelta
 import calendar
-from app.forms import LoginForm, SignupForm, UploadSleepDataForm  # Import forms
-from app.models import db, User, Entry  # Import models from database
+from app.models import db, User, Entry, FriendRequest  # Import models from database
 from flask_login import current_user, login_user, logout_user, login_required
-from app.forms import SearchUsernameForm  
-from app.models import FriendRequest  # Import the FriendRequest model
 from app.results import generate_sleep_plot, generate_sleep_metrics, generate_mood_metrics
 from app.rem_cycle import rem_cycle, simulate_rem_cycle, generate_rem_plot
 
@@ -135,6 +132,7 @@ def form_popup():
 @app.route("/record")
 @login_required
 def record():
+    form = RecordDateSearchForm()
     # Get the current month or the one from the query string
     month_str = request.args.get("month")
     if month_str:
@@ -243,13 +241,13 @@ def get_sleep_data():
 @app.route('/delete_sleep_entry/<int:entry_id>', methods=['DELETE'])
 @login_required
 def delete_sleep_entry(entry_id):
-    entry = Entry.query.get_or_404(entry_id)
-    
-    # Make sure the user owns this entry
-    if entry.user_id != current_user.user_id:
-        return jsonify({"error": "Unauthorized"}), 403
-    
     try:
+        entry = Entry.query.get_or_404(entry_id)
+        
+        # Check if the user owns this entry
+        if entry.user_id != current_user.user_id:
+            return jsonify({"error": "Unauthorized"}), 403
+        
         db.session.delete(entry)
         db.session.commit()
         return jsonify({"message": "Entry deleted successfully"}), 200
@@ -308,7 +306,7 @@ def results():
 def share():
     search_term = request.args.get('search', '')
     search_results = []
-    
+
     # If there's a search term in the query parameters, perform the search
     if search_term:
         # Search for usernames containing the search term (case-insensitive)
@@ -316,19 +314,19 @@ def share():
             User.username.ilike(f'%{search_term}%'),
             User.user_id != current_user.user_id  # Exclude current user
         ).all()
-        
+
         if not search_results:
             flash("No users found with that username", "info")
 
     # Get friends and pending requests
     friends = current_user.friends.all()
-    
+
     pending_requests = []
     friend_requests = FriendRequest.query.filter(
         FriendRequest.recipient_id == current_user.user_id,
         FriendRequest.status == 'pending'
     ).all()
-    
+
     # Add sender's name to each request for display
     for friend_request in friend_requests:
         sender = User.query.get(friend_request.sender_id)
@@ -337,7 +335,7 @@ def share():
             friend_request.sender_name = sender.username
             friend_request.request_id = friend_request.id  # Make sure ID is accessible
             pending_requests.append(friend_request)
-    
+
     return render_template('share.html',
                          friends=friends,
                          pending_requests=pending_requests,
@@ -347,34 +345,34 @@ def share():
 @login_required
 def send_friend_request(user_id):
     recipient = User.query.get(user_id)
-    
+
     if not recipient:
         flash("User not found", "error")
         return redirect(url_for('share'))
-    
+
     if recipient.user_id == current_user.user_id:
         flash("You can't send a friend request to yourself", "error")
         return redirect(url_for('share'))
-    
+
     # Check if request already exists
     existing_request = FriendRequest.query.filter_by(
         sender_id=current_user.user_id,
         recipient_id=user_id
     ).first()
-    
+
     if existing_request:
         flash("Friend request already sent", "info")
         return redirect(url_for('share'))
-    
+
     # Create new request
     new_request = FriendRequest(
         sender_id=current_user.user_id,
         recipient_id=user_id
     )
-    
+
     db.session.add(new_request)
     db.session.commit()
-    
+
     flash("Friend request sent successfully!", "success")
     return redirect(url_for('share'))
 
@@ -384,45 +382,45 @@ def handle_friend_request(request_id):
     # Parse the JSON data from the request
     data = request.json
     action = data.get('action')
-    
+
     # Find the friend request
     friend_request = FriendRequest.query.get(request_id)
-    
+
     if not friend_request:
         return jsonify({'error': 'Request not found'}), 404
-    
+
     # Make sure the current user is the recipient of the request
     if friend_request.recipient_id != current_user.user_id:
         return jsonify({'error': 'Unauthorized'}), 403
-    
+
     if action == 'accept':
         # Update request status
         friend_request.status = 'accepted'
-        
+
         # Add to friends list (both ways since it's a mutual friendship)
         sender = User.query.get(friend_request.sender_id)
-        
+
         # Add the sender to current user's friends
         if sender not in current_user.friends:
             current_user.friends.append(sender)
-        
+
         # Add current user to sender's friends
         if current_user not in sender.friends:
             sender.friends.append(current_user)
-            
+
         db.session.commit()
-        
+
         flash("Friend request accepted!", "success")
         return jsonify({'status': 'success', 'message': 'Friend request accepted'})
-        
+
     elif action == 'decline':
         # Update request status
         friend_request.status = 'declined'
         db.session.commit()
-        
+
         flash("Friend request declined", "info")
         return jsonify({'status': 'success', 'message': 'Friend request declined'})
-    
+
     else:
         return jsonify({'error': 'Invalid action'}), 400
 
@@ -431,18 +429,18 @@ def handle_friend_request(request_id):
 def unfriend(friend_id):
     # Get the friend user object
     friend = User.query.get(friend_id)
-    
+
     if not friend:
         return jsonify({'error': 'User not found'}), 404
-    
+
     # Remove from current_user's friends list
     if friend in current_user.friends:
         current_user.friends.remove(friend)
-    
+
     # Remove current_user from friend's friends list (mutual friendship)
     if current_user in friend.friends:
         friend.friends.remove(current_user)
-    
+
     # Clean up any existing friend requests between these users (in both directions)
     # This allows them to send friend requests to each other again in the future
     FriendRequest.query.filter(
@@ -451,9 +449,9 @@ def unfriend(friend_id):
         ((FriendRequest.sender_id == friend_id) & 
          (FriendRequest.recipient_id == current_user.user_id))
     ).delete()
-    
+
     # Commit the changes
     db.session.commit()
-    
+
     flash("Friend removed successfully", "info")
     return jsonify({'status': 'success', 'message': 'Friend removed successfully'})
