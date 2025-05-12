@@ -3,12 +3,14 @@ from flask import Flask
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_wtf.csrf import CSRFProtect 
 from app.config import Config
 
 app = Flask(__name__, static_folder="static")
 app.config.from_object(Config)  # Configure the `app` object using our `Config` class
 db = SQLAlchemy(app)  # Create SQLAlchemy object called db
 migrate = Migrate(app, db)  # Create a migrate object
+csrf = CSRFProtect(app)  # Add CSRF Protect
 
 login_manager = LoginManager()  # Create a login manager object
 login_manager.init_app(app)  # Initialize the login manager with the app
