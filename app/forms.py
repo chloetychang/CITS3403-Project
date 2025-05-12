@@ -33,3 +33,10 @@ class UploadSleepDataForm(FlaskForm):
     wake_time = TimeField('Time You Woke Up', format='%H:%M', validators=[Optional()])                                      # Optional
     mood = IntegerField('How Did You Feel? (1 = Terrible, 5 = Refreshed)', validators=[Optional(), NumberRange(min=1, max=5)])   # Optional
     submit = SubmitField('Submit')
+
+class SearchUsernameForm(FlaskForm):
+    username = StringField('Username', validators=[
+        DataRequired(), 
+        Length(min=2, max=50)
+    ])
+    submit = SubmitField('Search')
