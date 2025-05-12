@@ -2,10 +2,9 @@
 from flask import render_template, redirect, url_for, flash, request, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 from app import app
-from app.forms import LoginForm, SignupForm, UploadSleepDataForm  # Import forms
+from app.forms import LoginForm, SignupForm, UploadSleepDataForm, RecordDateSearchForm  # Import forms
 from datetime import date, datetime, timedelta
 import calendar
-from app.forms import LoginForm, SignupForm, UploadSleepDataForm  # Import forms
 from app.models import db, User, Entry  # Import models from database
 from flask_login import current_user, login_user, logout_user, login_required
 from app.results import generate_sleep_plot, generate_sleep_metrics, generate_mood_metrics
@@ -133,6 +132,7 @@ def form_popup():
 @app.route("/record")
 @login_required
 def record():
+    form = RecordDateSearchForm()
     # Get the current month or the one from the query string
     month_str = request.args.get("month")
     if month_str:
