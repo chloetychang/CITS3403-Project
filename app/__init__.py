@@ -4,9 +4,11 @@ from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from app.config import Config
+from flask_wtf import CSRFProtect
 
 app = Flask(__name__, static_folder="static")
 app.config.from_object(Config)  # Configure the `app` object using our `Config` class
+csrf = CSRFProtect(app)  # Initialize CSRF protection
 db = SQLAlchemy(app)  # Create SQLAlchemy object called db
 migrate = Migrate(app, db)  # Create a migrate object
 
