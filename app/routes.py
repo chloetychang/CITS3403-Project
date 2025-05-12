@@ -300,3 +300,8 @@ def results():
         highest_mood_wake = highest_day_wake, 
         rem_plot_div=rem_plot_div
     )
+
+@app.route("/share")
+@login_required
+def share():
+    return render_template("share.html")
