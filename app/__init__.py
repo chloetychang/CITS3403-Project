@@ -16,8 +16,6 @@ login_manager.login_view = (
     "login"  # Set the login view to 'login' for redirecting unauthenticated users
 )
 
-app.secret_key = "monke-magic"  # REMINDER to not include secret key in final version.
-
 if __name__ == "__main__":
     app.run()
 

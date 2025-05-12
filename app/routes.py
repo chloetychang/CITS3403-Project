@@ -1,9 +1,9 @@
 # Contains routing logic
-from flask import render_template, redirect, url_for, session, flash, request, jsonify
+from flask import render_template, redirect, url_for, flash, request, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 from app import app
 from app.forms import LoginForm, SignupForm, UploadSleepDataForm  # Import forms
-from datetime import date, datetime, timezone, timedelta
+from datetime import date, datetime, timedelta
 import calendar
 from app.forms import LoginForm, SignupForm, UploadSleepDataForm  # Import forms
 from app.models import db, User, Entry  # Import models from database
@@ -11,6 +11,8 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app.plot import generate_sleep_plot    # Import the function to generate the plot
 from app.forms import SearchUsernameForm  
 from app.models import FriendRequest  # Import the FriendRequest model
+from app.results import generate_sleep_plot, generate_sleep_metrics, generate_mood_metrics
+from app.rem_cycle import rem_cycle, simulate_rem_cycle, generate_rem_plot
 
 @app.route("/")
 def welcome():
@@ -206,6 +208,7 @@ def get_sleep_data():
     try:
         # Filter entries where the wake_datetime date matches the selected date
         entries = Entry.query.filter(
+            Entry.user_id == current_user.user_id,
             db.func.date(Entry.wake_datetime) == selected_date
         ).all()
 
@@ -225,6 +228,7 @@ def get_sleep_data():
 
             # Format the fields for results
             result.append({
+                "entry_id": entry.entry_id,
                 "sleep_date": entry.sleep_datetime.strftime("%d %B %Y"),
                 "sleep_time": entry.sleep_datetime.strftime("%H:%M"),
                 "wake_date": entry.wake_datetime.strftime("%d %B %Y") if entry.wake_datetime else None,
@@ -236,6 +240,24 @@ def get_sleep_data():
     except Exception as e:
         return jsonify({"error": "An error occurred while fetching data"}), 500
 
+# Delete a sleep entry in the database
+@app.route('/delete_sleep_entry/<int:entry_id>', methods=['DELETE'])
+@login_required
+def delete_sleep_entry(entry_id):
+    entry = Entry.query.get_or_404(entry_id)
+    
+    # Make sure the user owns this entry
+    if entry.user_id != current_user.user_id:
+        return jsonify({"error": "Unauthorized"}), 403
+    
+    try:
+        db.session.delete(entry)
+        db.session.commit()
+        return jsonify({"message": "Entry deleted successfully"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+    
 @app.route("/results")
 @login_required # Protected page
 def results():
@@ -244,19 +266,18 @@ def results():
         flash("Please log in to access this page.", "error")
         return redirect(url_for("login"))
     
-    week_offset = int(request.args.get("week_offset", 0))
+    week_offset = int(request.args.get("week_offset", -1))          # Default to -1 if not provided - previous week's (past 7 days) data
     
     # Don't allow next week if it's in the future
     today = date.today()
     requested_start_date = today + timedelta(weeks=week_offset)
     if requested_start_date > today:
         week_offset = 0  # reset if user tries to go too far forward
-    start_date = datetime.today().date() + timedelta(weeks=week_offset-1)
-    end_date = datetime.today().date() - timedelta(days=1) + timedelta(weeks=week_offset) 
+    start_date = date.today() + timedelta(weeks=week_offset)
+    end_date = start_date + timedelta(days=6)
     week_range = f"{start_date.strftime('%b %d (%A)')} – {end_date.strftime('%b %d (%A)')}"
-        
-    plot_div = generate_sleep_plot(week_offset=week_offset)
     
+
     return render_template("results.html", plot_div=plot_div, week_offset=week_offset, week_range=week_range)
 
 @app.route('/share', methods=['GET', 'POST'])
@@ -413,3 +434,31 @@ def unfriend(friend_id):
     
     flash("Friend removed successfully", "info")
     return jsonify({'status': 'success', 'message': 'Friend removed successfully'})
+
+    sleep_plot_div = generate_sleep_plot(week_offset)                           # Sleep Plot - Generates Weekly Overview of Sleep Duration
+    avg_sleep, duration_consistency = generate_sleep_metrics(week_offset)       # Sleep Metrics
+    avg_mood, max_mood, max_day, hours, highest_day_sleep, highest_day_wake = generate_mood_metrics(week_offset)     # Mood Metrics
+    
+    best_sleep, best_wake = rem_cycle(week_offset)
+    if best_sleep and best_wake:
+        rem_data = simulate_rem_cycle(best_sleep, best_wake)
+        rem_plot_div = generate_rem_plot(rem_data)
+    else:
+        rem_plot_div = "<p>No mood-based REM data for this week.</p>" 
+    
+    return render_template(
+        "results.html", 
+        week_offset=week_offset, 
+        week_range=week_range, 
+        plot_div=sleep_plot_div, 
+        average_sleep=avg_sleep, 
+        duration_consistency_percentage=duration_consistency, 
+        average_mood=avg_mood, 
+        highest_mood=max_mood, 
+        highest_day=max_day, 
+        mood_duration=hours, 
+        highest_mood_sleep = highest_day_sleep, 
+        highest_mood_wake = highest_day_wake, 
+        rem_plot_div=rem_plot_div
+    )
+
