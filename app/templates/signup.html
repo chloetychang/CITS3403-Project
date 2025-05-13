@@ -6,7 +6,7 @@
 <div class="max-w-md w-full bg-white text-gray-800 p-8 rounded-xl shadow-xl">
     <h1 class="text-3xl font-bold mb-6 text-center">Sign Up</h1>
 
-    <form method="POST" action="{{ url_for('signup') }}" class="space-y-4">
+    <form method="POST" action="{{ url_for('auth.signup') }}" class="space-y-4">
         {{ form.hidden_tag() }}
         <div>
             {{ form.name.label(class="block text-sm font-medium text-gray-700") }}
@@ -64,7 +64,7 @@
 
     <div class="mt-6 text-center text-sm text-gray-600">
         <p>Already have an account?
-            <a href="{{ url_for('login') }}" class="text-blue-600 hover:underline">Log In</a>
+            <a href="{{ url_for('auth.login') }}" class="text-blue-600 hover:underline">Log In</a>
         </p>
     </div>
 </div>
