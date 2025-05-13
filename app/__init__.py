@@ -12,7 +12,7 @@ migrate = Migrate()
 csrf = CSRFProtect()
 login_manager = LoginManager()  # Create a login manager object
 login_manager.login_view = (
-    "login"  # Set the login view to 'login' for redirecting unauthenticated users
+    "main.login"  # Set the login view to 'login' for redirecting unauthenticated users
 )
 
 # Create the Flask application
