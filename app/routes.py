@@ -31,7 +31,7 @@ def login():
             login_user(user)  # Log the user in using Flask-Login
 
             flash("Logged in successfully!", "success")
-            return redirect(url_for('sleep'))   # redirect to sleep page after successful login
+            return redirect(url_for('main.sleep'))   # redirect to sleep page after successful login
         else:
             flash("Invalid email or password.", "error")
 
@@ -47,13 +47,13 @@ def signup():
         existing_user_email = User.query.filter_by(email=form.email.data).first()
         if existing_user_email:
             flash("Email already registered", "error")
-            return redirect(url_for('signup'))
+            return redirect(url_for('main.signup'))
 
         # Check if the username already exists in the database
         existing_user_username = User.query.filter_by(username=form.username.data).first()
         if existing_user_username:
             flash("Username already taken", "error")
-            return redirect(url_for('signup'))
+            return redirect(url_for('main.signup'))
 
         # Create a new user instance to add to the database
         new_user = User(
@@ -69,7 +69,7 @@ def signup():
         db.session.commit()  # Save the new user to the database
 
         flash("Account created successfully!", "success")
-        return redirect(url_for('login'))  # Redirect to login page after successful signup
+        return redirect(url_for('main.login'))  # Redirect to login page after successful signup
 
     return render_template('signup.html', form=form)
 
@@ -79,7 +79,7 @@ def signup():
 def logout():
     logout_user()  # Log the user out using Flask-Login
     flash("You have been logged out.", "success")
-    return redirect(url_for('login'))
+    return redirect(url_for('main.login'))
 
 
 # Sleep Page Routes (Upload Sleep Data)
@@ -89,7 +89,7 @@ def sleep():
     # Check if the user is logged in using Flask-Login
     if not current_user.is_authenticated:
         flash("Please log in to access this page.", "error")
-        return redirect(url_for("login"))
+        return redirect(url_for("main.login"))
     form = UploadSleepDataForm()                            # Create an instance of the UploadSleepDataForm
     return render_template("sleep.html", form=form)
 
@@ -134,7 +134,7 @@ def form_popup():
         db.session.commit()  # Save the new entry to the database
 
         flash("Sleep data recorded successfully!", "success")
-        return redirect(url_for("sleep"))  # Redirect to sleep page after successful submission
+        return redirect(url_for("main.sleep"))  # Redirect to sleep page after successful submission
 
     return render_template("sleep.html", form=form)
 
@@ -152,7 +152,7 @@ def record():
             current_date = datetime(year, month, 1)
         except ValueError:
             flash("Invalid month format.", "error")
-            return redirect(url_for("record"))
+            return redirect(url_for("main.record"))
     else:
         current_date = datetime.now()
 
@@ -274,7 +274,7 @@ def results():
     # Check if the user is logged in using Flask-Login
     if not current_user.is_authenticated:
         flash("Please log in to access this page.", "error")
-        return redirect(url_for("login"))
+        return redirect(url_for("main.login"))
     
     week_offset = int(request.args.get("week_offset", -1))          # Default to -1 if not provided - previous week's (past 7 days) data
     
@@ -363,11 +363,11 @@ def send_friend_request(user_id):
 
     if not recipient:
         flash("User not found", "error")
-        return redirect(url_for('share'))
+        return redirect(url_for('main.share'))
 
     if recipient.user_id == current_user.user_id:
         flash("You can't send a friend request to yourself", "error")
-        return redirect(url_for('share'))
+        return redirect(url_for('main.share'))
 
     # Check if request already exists
     existing_request = FriendRequest.query.filter_by(
@@ -377,7 +377,7 @@ def send_friend_request(user_id):
 
     if existing_request:
         flash("Friend request already sent", "info")
-        return redirect(url_for('share'))
+        return redirect(url_for('main.share'))
 
     # Create new request
     new_request = FriendRequest(
@@ -389,7 +389,7 @@ def send_friend_request(user_id):
     db.session.commit()
 
     flash("Friend request sent successfully!", "success")
-    return redirect(url_for('share'))
+    return redirect(url_for('main.share'))
 
 @main.route('/handle_friend_request/<int:request_id>', methods=['POST'])
 @login_required
