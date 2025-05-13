@@ -73,5 +73,8 @@
 </div>
 
 {% include "partials/record_popup.html" %}
+<script>
+    const csrf_token = "{{ csrf_token() }}";
+</script>
 <script src="{{ url_for('static', filename='js/record.js') }}"></script>
 {% endblock %}
