@@ -75,3 +75,7 @@ function unfriendUser(friendId) {
     }
 }
 
+//// Add event listeners when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize any event listeners or DOM-dependent code here
+    console.log("share.js loaded");});
