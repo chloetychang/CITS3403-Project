@@ -14,7 +14,7 @@
 
     <!-- Search Form -->
     <div class="mb-8">
-        <form method="GET" action="{{ url_for('share') }}" class="flex">
+        <form method="GET" action="{{ url_for('main.share') }}" class="flex">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
             <input type="text" name="search" placeholder="Search for users..."
                 class="flex-1 p-3 rounded-l-lg bg-white text-gray-800 focus:outline-none h-[48px]">
@@ -31,7 +31,7 @@
             {% for user in search_results %}
             <div class="flex justify-between items-center p-3 bg-white bg-opacity-5 rounded">
                 <span>{{ user.username }}</span>
-                <form method="POST" action="{{ url_for('send_friend_request', user_id=user.user_id) }}">
+                <form method="POST" action="{{ url_for('main.send_friend_request', user_id=user.user_id) }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
                     <button type="submit"
                         class="bg-secondary hover:bg-secondary-dark text-white font-bold py-1 px-4 rounded transition">
@@ -115,7 +115,7 @@
     </div>
     <!-- New fixed logout button (bottom-right) -->
     <div class="fixed bottom-4 right-4">
-        <a href="{{ url_for('logout') }}"
+        <a href="{{ url_for('main.logout') }}"
             class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full shadow-lg transition duration-200 flex items-center">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd"
