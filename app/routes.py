@@ -1,7 +1,7 @@
 # Contains routing logic
-from flask import render_template, redirect, url_for, flash, request, jsonify
+from flask import render_template, redirect, url_for, flash, request, jsonify, Blueprint
 from flask_login import login_user, logout_user, login_required, current_user
-from app import app
+from app import models, routes
 from app.forms import LoginForm, SignupForm, UploadSleepDataForm, RecordDateSearchForm, SearchUsernameForm # Import forms
 from datetime import date, datetime, timedelta
 import calendar
@@ -10,11 +10,17 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app.results import generate_sleep_plot, generate_sleep_metrics, generate_mood_metrics
 from app.rem_cycle import rem_cycle, simulate_rem_cycle, generate_rem_plot
 
-@app.route("/")
+main = Blueprint('main', __name__)
+
+
+# Welcome / Introductory Page Route
+@main.route("/")
 def welcome():
     return render_template("welcome.html")
 
-@app.route('/login', methods=['GET', 'POST'])
+
+# Login Route
+@main.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm() # Create an instance of the LoginForm
     if form.validate_on_submit(): # Check if the form is submitted and valid
@@ -31,7 +37,9 @@ def login():
 
     return render_template('login.html', form=form)
 
-@app.route('/signup', methods=['GET', 'POST'])
+
+# Signup Route
+@main.route('/signup', methods=['GET', 'POST'])
 def signup():
     form = SignupForm()  # Create an instance of the SignupForm
     if form.validate_on_submit():  # Check if the form is submitted and valid
@@ -66,14 +74,16 @@ def signup():
     return render_template('signup.html', form=form)
 
 
-@app.route('/logout')
+# Logout Route
+@main.route('/logout')
 def logout():
     logout_user()  # Log the user out using Flask-Login
     flash("You have been logged out.", "success")
     return redirect(url_for('login'))
 
 
-@app.route("/sleep")
+# Sleep Page Routes (Upload Sleep Data)
+@main.route("/sleep")
 @login_required # Protected page - added decorator to ensure user is logged in
 def sleep():
     # Check if the user is logged in using Flask-Login
@@ -84,7 +94,7 @@ def sleep():
     return render_template("sleep.html", form=form)
 
 
-@app.route("/form_popup", methods=["POST"])
+@main.route("/form_popup", methods=["POST"])
 def form_popup():
     form = UploadSleepDataForm()
     if form.validate_on_submit():
@@ -129,7 +139,8 @@ def form_popup():
     return render_template("sleep.html", form=form)
 
 
-@app.route("/record")
+# Record Page Routes
+@main.route("/record")
 @login_required
 def record():
     form = RecordDateSearchForm()
@@ -191,7 +202,7 @@ def record():
     )
 
 # Fetch sleep data for a specific date
-@app.route('/get_sleep_data')
+@main.route('/get_sleep_data')
 def get_sleep_data():
     date_str = request.args.get('date')  # Expected format: 'YYYY-MM-DD'
     if not date_str:
@@ -238,7 +249,7 @@ def get_sleep_data():
         return jsonify({"error": "An error occurred while fetching data"}), 500
 
 # Delete a sleep entry in the database
-@app.route('/delete_sleep_entry/<int:entry_id>', methods=['DELETE'])
+@main.route('/delete_sleep_entry/<int:entry_id>', methods=['DELETE'])
 @login_required
 def delete_sleep_entry(entry_id):
     try:
@@ -254,8 +265,10 @@ def delete_sleep_entry(entry_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
-    
-@app.route("/results")
+   
+   
+# Results Page Routes 
+@main.route("/results")
 @login_required # Protected page
 def results():
     # Check if the user is logged in using Flask-Login
@@ -301,7 +314,9 @@ def results():
         rem_plot_div=rem_plot_div
     )
 
-@app.route('/share', methods=['GET', 'POST'])
+
+# Share Page Routes
+@main.route('/share', methods=['GET', 'POST'])
 @login_required
 def share():
     search_term = request.args.get('search', '')
@@ -341,7 +356,7 @@ def share():
                          pending_requests=pending_requests,
                          search_results=search_results)
 
-@app.route('/send_friend_request/<int:user_id>', methods=['POST'])
+@main.route('/send_friend_request/<int:user_id>', methods=['POST'])
 @login_required
 def send_friend_request(user_id):
     recipient = User.query.get(user_id)
@@ -376,7 +391,7 @@ def send_friend_request(user_id):
     flash("Friend request sent successfully!", "success")
     return redirect(url_for('share'))
 
-@app.route('/handle_friend_request/<int:request_id>', methods=['POST'])
+@main.route('/handle_friend_request/<int:request_id>', methods=['POST'])
 @login_required
 def handle_friend_request(request_id):
     # Parse the JSON data from the request
@@ -424,7 +439,7 @@ def handle_friend_request(request_id):
     else:
         return jsonify({'error': 'Invalid action'}), 400
 
-@app.route('/unfriend/<int:friend_id>', methods=['POST'])
+@main.route('/unfriend/<int:friend_id>', methods=['POST'])
 @login_required
 def unfriend(friend_id):
     # Get the friend user object
