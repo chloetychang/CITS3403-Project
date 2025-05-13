@@ -12,7 +12,7 @@ migrate = Migrate()
 csrf = CSRFProtect()
 login_manager = LoginManager()  # Create a login manager object
 login_manager.login_view = (
-    "main.login"  # Set the login view to 'login' for redirecting unauthenticated users
+    "auth.login"  # Set the login view to 'login' for redirecting unauthenticated users
 )
 
 # Create the Flask application
@@ -32,5 +32,8 @@ def create_app(isTest=False):
     # Register blueprints and routes
     from app.routes import main as main_blueprint
     flaskApp.register_blueprint(main_blueprint)
+    
+    from app.routes_auth import auth as auth_blueprint
+    flaskApp.register_blueprint(auth_blueprint)
     
     return flaskApp

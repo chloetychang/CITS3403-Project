@@ -1,85 +1,19 @@
 # Contains routing logic
-from flask import render_template, redirect, url_for, flash, request, jsonify, Blueprint
-from flask_login import login_user, logout_user, login_required, current_user
-from app import models, routes
-from app.forms import LoginForm, SignupForm, UploadSleepDataForm, RecordDateSearchForm, SearchUsernameForm # Import forms
+from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify
+from flask_login import current_user, login_required
+from app.forms import UploadSleepDataForm, RecordDateSearchForm, SearchUsernameForm # Import forms
 from datetime import date, datetime, timedelta
 import calendar
 from app.models import db, User, Entry, FriendRequest  # Import models from database
-from flask_login import current_user, login_user, logout_user, login_required
 from app.results import generate_sleep_plot, generate_sleep_metrics, generate_mood_metrics
 from app.rem_cycle import rem_cycle, simulate_rem_cycle, generate_rem_plot
 
 main = Blueprint('main', __name__)
 
-
 # Welcome / Introductory Page Route
 @main.route("/")
 def welcome():
     return render_template("welcome.html")
-
-
-# Login Route
-@main.route('/login', methods=['GET', 'POST'])
-def login():
-    form = LoginForm() # Create an instance of the LoginForm
-    if form.validate_on_submit(): # Check if the form is submitted and valid
-        # Check if the email exists in the database
-        user = User.query.filter_by(email=form.email.data).first()
-        if user and user.check_password(form.password.data):
-            # Store user info in session
-            login_user(user)  # Log the user in using Flask-Login
-
-            flash("Logged in successfully!", "success")
-            return redirect(url_for('main.sleep'))   # redirect to sleep page after successful login
-        else:
-            flash("Invalid email or password.", "error")
-
-    return render_template('login.html', form=form)
-
-
-# Signup Route
-@main.route('/signup', methods=['GET', 'POST'])
-def signup():
-    form = SignupForm()  # Create an instance of the SignupForm
-    if form.validate_on_submit():  # Check if the form is submitted and valid
-        # Check if the email already exists in the database
-        existing_user_email = User.query.filter_by(email=form.email.data).first()
-        if existing_user_email:
-            flash("Email already registered", "error")
-            return redirect(url_for('main.signup'))
-
-        # Check if the username already exists in the database
-        existing_user_username = User.query.filter_by(username=form.username.data).first()
-        if existing_user_username:
-            flash("Username already taken", "error")
-            return redirect(url_for('main.signup'))
-
-        # Create a new user instance to add to the database
-        new_user = User(
-            name=form.name.data,
-            username=form.username.data,
-            age=form.age.data,
-            gender=form.gender.data,
-            email=form.email.data,
-        )
-        new_user.password = form.password.data 
-
-        db.session.add(new_user)  # Add the new user to the session
-        db.session.commit()  # Save the new user to the database
-
-        flash("Account created successfully!", "success")
-        return redirect(url_for('main.login'))  # Redirect to login page after successful signup
-
-    return render_template('signup.html', form=form)
-
-
-# Logout Route
-@main.route('/logout')
-def logout():
-    logout_user()  # Log the user out using Flask-Login
-    flash("You have been logged out.", "success")
-    return redirect(url_for('main.login'))
 
 
 # Sleep Page Routes (Upload Sleep Data)
