@@ -34,13 +34,13 @@ def signup():
         existing_user_email = User.query.filter_by(email=form.email.data).first()
         if existing_user_email:
             flash("Email already registered", "error")
-            return redirect(url_for('main.signup'))
+            return redirect(url_for('auth.signup'))
 
         # Check if the username already exists in the database
         existing_user_username = User.query.filter_by(username=form.username.data).first()
         if existing_user_username:
             flash("Username already taken", "error")
-            return redirect(url_for('main.signup'))
+            return redirect(url_for('auth.signup'))
 
         # Create a new user instance to add to the database
         new_user = User(
