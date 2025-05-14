@@ -43,5 +43,7 @@ class TestSignUp(unittest.TestCase):
         form_entry.validate()
         self.assertIn("Please enter a valid email address", form_entry.email.errors)
     
-    def test_duplicate_username(self):
-        pass
+    def test_password_length(self):
+        form_entry = SignupForm(name="Peppa", username="peppa_pid", age="4", gender="Female", email="peppa@pig.com", password="count")
+        form_entry.validate()
+        self.assertIn("Field must be at least 6 characters long.", form_entry.password.errors)
