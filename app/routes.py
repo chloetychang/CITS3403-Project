@@ -406,7 +406,7 @@ def unfriend(friend_id):
     flash("Friend removed successfully", "info")
     return jsonify({'status': 'success', 'message': 'Friend removed successfully'})
 
-@app.route("/friend_sleep_data/<int:friend_id>")
+@main.route("/friend_sleep_data/<int:friend_id>")
 @login_required
 def friend_sleep_data(friend_id):
     # Verify this user is a friend
