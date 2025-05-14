@@ -19,23 +19,6 @@ class TestSignUp(unittest.TestCase):
         db.drop_all()
         self.app_context.pop()
         
-    def test_user_creation_password_hashing(self):
-        """ 
-        Test that a user can be created, the password is hashed and not stored in plain text 
-        To run test: python -m unittest tests.tests_sign_up.TestSignUp.test_user_creation_password_hashing
-        """
-        user = User(name="Pingu", username="pingu", age="5", gender="Male", email="nootnoot@example.com")
-        user.password = "ahhhh_glorious_fish"
-        db.session.add(user)
-        db.session.commit()
-        
-        retrieved = User.query.filter_by(username="pingu").first()
-        self.assertIsNotNone(retrieved)
-        self.assertNotEqual(retrieved.password_hash, "ahhhh_glorious_fish")          # Check password is hashed
-        self.assertTrue(retrieved.check_password("ahhhh_glorious_fish"))             # Check password validation
-        self.assertIsInstance(retrieved.password_hash, str)                          # Check if password_hash is a string            
-        self.assertTrue(retrieved.password_hash.startswith("pbkdf2:sha256:"))        # Check Werkzeug hash format
-        
     def test_successful_signup(self):
         """
         Test that a user can be created with valid data.
@@ -58,6 +41,23 @@ class TestSignUp(unittest.TestCase):
         self.assertIsNotNone(form_entry.password.data)
         self.assertIsNotNone(form_entry.confirm_password.data)
         self.assertTrue(form_entry.validate())
+        
+    def test_user_creation_password_hashing(self):
+        """ 
+        Test that a user can be created, the password is hashed and not stored in plain text 
+        To run test: python -m unittest tests.tests_sign_up.TestSignUp.test_user_creation_password_hashing
+        """
+        user = User(name="Pingu", username="pingu", age="5", gender="Male", email="nootnoot@example.com")
+        user.password = "ahhhh_glorious_fish"
+        db.session.add(user)
+        db.session.commit()
+        
+        retrieved = User.query.filter_by(username="pingu").first()
+        self.assertIsNotNone(retrieved)
+        self.assertNotEqual(retrieved.password_hash, "ahhhh_glorious_fish")          # Check password is hashed
+        self.assertTrue(retrieved.check_password("ahhhh_glorious_fish"))             # Check password validation
+        self.assertIsInstance(retrieved.password_hash, str)                          # Check if password_hash is a string            
+        self.assertTrue(retrieved.password_hash.startswith("pbkdf2:sha256:"))        # Check Werkzeug hash format
     
     def test_invalid_email(self):
         """
