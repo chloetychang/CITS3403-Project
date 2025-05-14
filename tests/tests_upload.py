@@ -4,6 +4,7 @@ from app.models import User, Entry
 from app.config import TestConfig
 from datetime import datetime
 from app.forms import UploadSleepDataForm
+from werkzeug.datastructures import MultiDict
 
 class TestUpload(unittest.TestCase):
     def setUp(self):
@@ -75,10 +76,38 @@ class TestUpload(unittest.TestCase):
         """
         user = User(user_id="1", name="Skipper", username="skipper", age="35", gender="Male", email="skipper@example.com")
         
-        form_entry = UploadSleepDataForm(entry_date_sleep="2025-05-01", sleep_time="")
-        form_entry.validate()
+        form_entry = UploadSleepDataForm(formdata=MultiDict({
+            "entry_date_sleep": "",
+            "sleep_time": "10:00PM",
+            "entry_date_wake": "2025-05-02",
+            "wake_time": "08:00AM"
+        }))
+        self.assertFalse(form_entry.validate())
+        self.assertIn("This field is required.", form_entry.entry_date_sleep.errors)
+        
+        form_entry = UploadSleepDataForm(formdata=MultiDict({
+            "entry_date_sleep": "2025-05-01",
+            "sleep_time": "",
+            "entry_date_wake": "2025-05-02",
+            "wake_time": "08:00AM"
+        }))
+        self.assertFalse(form_entry.validate())
         self.assertIn("This field is required.", form_entry.sleep_time.errors)
         
-        form_entry = UploadSleepDataForm(entry_date_sleep="2025-05-01", sleep_time="")
-        form_entry.validate()
-        self.assertIn("This field is required.", form_entry.sleep_time.errors)
+        form_entry = UploadSleepDataForm(formdata=MultiDict({
+            "entry_date_sleep": "2025-05-01",
+            "sleep_time": "10:00PM",
+            "entry_date_wake": "",
+            "wake_time": "08:00AM"
+        }))
+        self.assertFalse(form_entry.validate())
+        self.assertIn("This field is required.", form_entry.entry_date_wake.errors)
+        
+        form_entry = form_entry = UploadSleepDataForm(formdata=MultiDict({
+            "entry_date_sleep": "2025-05-01",
+            "sleep_time": "10:00PM",
+            "entry_date_wake": "2025-05-02",
+            "wake_time": ""
+        }))
+        self.assertFalse(form_entry.validate())
+        self.assertIn("This field is required.", form_entry.wake_time.errors)

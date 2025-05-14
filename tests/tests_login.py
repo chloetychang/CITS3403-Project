@@ -3,6 +3,7 @@ from app import create_app, db
 from app.models import User, Entry
 from app.forms import LoginForm
 from app.config import TestConfig
+from werkzeug.datastructures import MultiDict
 
 class TestLogin(unittest.TestCase):
     def setUp(self):
@@ -37,6 +38,8 @@ class TestLogin(unittest.TestCase):
         Test that users can only log in with all required fields filled in.
         To run test: python -m unittest tests.tests_login.TestLogin.test_login_validation
         """
-        form_entry = LoginForm(email="skipper@example.com")
-        form_entry.validate()
+        form_entry = LoginForm(formdata=MultiDict({
+            "email":"skipper@example.com"
+        }))
+        self.assertFalse(form_entry.validate())
         self.assertIn("This field is required.", form_entry.password.errors)

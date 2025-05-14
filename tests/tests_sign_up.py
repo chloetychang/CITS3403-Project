@@ -3,6 +3,7 @@ from app import create_app, db
 from app.models import User, Entry
 from app.forms import SignupForm
 from app.config import TestConfig
+from werkzeug.datastructures import MultiDict
 
 class TestSignUp(unittest.TestCase):
     def setUp(self):
@@ -40,8 +41,15 @@ class TestSignUp(unittest.TestCase):
         Test that a user cannot be created with an invalid email.
         To run test: python -m unittest tests.tests_sign_up.TestSignUp.test_invalid_email
         """
-        form_entry = SignupForm(name="Slacker", username="definitely_unique_user", age="20", gender="Male", email="skipperisaslacker", password="I_wanna_be_like_Skipper")
-        form_entry.validate()
+        form_entry = SignupForm(formdata=MultiDict({
+            "name": "Slacker", 
+            "username": "definitely_unique_user", 
+            "age": "20", 
+            "gender": "Male", 
+            "email": "skipperisaslacker", 
+            "password": "I_wanna_be_like_Skipper"
+        }))
+        self.assertFalse(form_entry.validate())
         self.assertIn("Please enter a valid email address", form_entry.email.errors)
     
     def test_password_length(self):
@@ -49,6 +57,13 @@ class TestSignUp(unittest.TestCase):
         Test that a user cannot be created with a password shorter than 6 characters.
         To run test: python -m unittest tests.tests_sign_up.TestSignUp.test_password_length
         """
-        form_entry = SignupForm(name="Peppa", username="peppa_pig", age="4", gender="Female", email="peppa@pig.com", password="count")
-        form_entry.validate()
+        form_entry = SignupForm(formdata=MultiDict({
+            "name": "Peppa", 
+            "username": "peppa_pig", 
+            "age": "4", 
+            "gender": "Female", 
+            "email": "peppa@pig.com", 
+            "password": "count"
+        }))
+        self.assertFalse(form_entry.validate())
         self.assertIn("Field must be at least 6 characters long.", form_entry.password.errors)
