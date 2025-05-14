@@ -3,6 +3,7 @@ from app import create_app, db
 from app.models import User, Entry
 from app.config import TestConfig
 from datetime import datetime
+from app.forms import UploadSleepDataForm
 
 class TestUpload(unittest.TestCase):
     def setUp(self):
@@ -66,3 +67,18 @@ class TestUpload(unittest.TestCase):
         self.assertEqual(retrieved_again.sleep_datetime, sleep_datetime)
         self.assertEqual(retrieved_again.wake_datetime, wake_datetime)
         self.assertIsNone(retrieved_again.mood)                                         # Mood should be None since it was not provided
+
+    def test_missing_fields(self):
+        """
+        Test that a user cannot create an entry without all required fields.
+        To run test: python -m unittest tests.tests_upload.TestUpload.test_missing_fields
+        """
+        user = User(user_id="1", name="Skipper", username="skipper", age="35", gender="Male", email="skipper@example.com")
+        
+        form_entry = UploadSleepDataForm(entry_date_sleep="2025-05-01", sleep_time="")
+        form_entry.validate()
+        self.assertIn("This field is required.", form_entry.sleep_time.errors)
+        
+        form_entry = UploadSleepDataForm(entry_date_sleep="2025-05-01", sleep_time="")
+        form_entry.validate()
+        self.assertIn("This field is required.", form_entry.sleep_time.errors)
