@@ -11,7 +11,7 @@
                 Clear Form
             </button>
 
-            <form method="POST" action="{{ url_for('form_popup') }}" class="space-y-4">
+            <form method="POST" action="{{ url_for('main.form_popup') }}" class="space-y-4">
                 {{ form.hidden_tag() }}
                 <div>
                     {{ form.entry_date_sleep.label(class="block text-sm font-medium text-gray-700") }}
