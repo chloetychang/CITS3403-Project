@@ -35,7 +35,7 @@ class TestUpload(unittest.TestCase):
         sleep_datetime = datetime.strptime("2025-05-01 22:00", "%Y-%m-%d %H:%M")
         wake_datetime = datetime.strptime("2025-05-02 06:00", "%Y-%m-%d %H:%M")
 
-        # reate and insert Entry
+        # Create and Insert Entry
         entry = Entry(
             user_id=user.user_id,
             sleep_datetime=sleep_datetime,
@@ -45,7 +45,7 @@ class TestUpload(unittest.TestCase):
         db.session.add(entry)
         db.session.commit()
         
-        # Create and insert Entry - Optional Mood entry
+        # Create and Insert Entry - Optional Mood entry
         entry2 = Entry(
             user_id=other_user.user_id,
             sleep_datetime=sleep_datetime,
@@ -54,7 +54,7 @@ class TestUpload(unittest.TestCase):
         db.session.add(entry2)
         db.session.commit()
 
-        # 4. Verify Both Entries
+        # Verify Both Entries
         retrieved = Entry.query.filter_by(user_id=user.user_id).first()
         self.assertIsNotNone(retrieved)
         self.assertEqual(retrieved.sleep_datetime, sleep_datetime)
