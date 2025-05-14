@@ -4,13 +4,22 @@
 {% block content %}
 <div class="flex flex-col items-center justify-center min-h-[80vh]">
     <div class="text-center max-w-2xl">
-        <h1 class="text-8xl mb-28">Sleep</h1>
+        <!-- Torch-style spotlight + moon + title -->
+        <div class="relative w-full h-[500px] flex flex-col justify-center items-center text-center overflow-hidden">
+            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-[280px] h-[440px] z-0"
+                style="background: radial-gradient(ellipse at center, #e4d6abcc 0%, #e4d6ab00 70%);
+                        clip-path: polygon(30% 0%, 70% 0%, 90% 100%, 10% 100%);
+                        filter: blur(8px);
+                        opacity: 0.85;">
+            </div>
+
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-white my-12 drop-shadow-[0_2px_4px_rgba(255,255,255,0.3)]">Sleep 🌙</h1>
         
-        <p class="text-lg mt-20">
+        <p class="text-lg">
             Create a profile to store your records.<br>
-            Upload your sleep data and habits to formulate a sleep plan.<br>
+            Upload your sleep data to discover patterns. <br>
+            Gain insights on your sleep and how your mood gets affected. <br>
             Based on peer reviewed research.<br>
-            do we even need text here
         </p>
         <div class="my-12">
             <button onclick="openPopup()" class="bg-button text-secondary text-2xl font-bold py-4 px-8 rounded-full 
