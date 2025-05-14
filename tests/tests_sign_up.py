@@ -11,26 +11,12 @@ class TestSignUp(unittest.TestCase):
         self.app_context = testApp.app_context()
         self.app_context.push()
         db.create_all()
-        self.add_test_data_to_db()
     
     def tearDown(self):
         """ Called after every test method """
         db.session.remove()
         db.drop_all()
         self.app_context.pop()
-        
-    def add_test_data_to_db(self):
-        users = [
-            User(name="Skipper", username="skipper", age="35", gender="Male", email="skipper@example.com"),
-            User(name="Private", username="private", age="14", gender="Male", email="private@example.com"),
-            User(name="Rico", username="rico", age="32", gender="Male", email="rico@example.com"),
-            User(name="Kowalski", username="kowalski", age="35", gender="Male", email="kowalski@example.com")
-        ]
-        for user in users:
-            user.password = "penguins_are_cool"
-            db.session.add(user)
-            
-        db.session.commit()
         
     def test_user_creation_password_hashing(self):
         """ 
@@ -49,8 +35,13 @@ class TestSignUp(unittest.TestCase):
         self.assertIsInstance(retrieved.password_hash, str)                          # Check if password_hash is a string            
         self.assertTrue(retrieved.password_hash.startswith("pbkdf2:sha256:"))        # Check Werkzeug hash format
     
-    def test_duplicate_email(self):
-        pass
+    def test_invalid_email(self):
+        """
+        Test that a user cannot be created with an invalid email.
+        """
+        form_entry = SignupForm(name="Slacker", username="definitely_unique_user", age="20", gender="Male", email="skipperisaslacker", password="I_wanna_be_like_Skipper")
+        form_entry.validate()
+        self.assertIn("Please enter a valid email address", form_entry.email.errors)
     
     def test_duplicate_username(self):
         pass
