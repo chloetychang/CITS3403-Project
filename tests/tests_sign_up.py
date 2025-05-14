@@ -35,6 +35,29 @@ class TestSignUp(unittest.TestCase):
         self.assertTrue(retrieved.check_password("ahhhh_glorious_fish"))             # Check password validation
         self.assertIsInstance(retrieved.password_hash, str)                          # Check if password_hash is a string            
         self.assertTrue(retrieved.password_hash.startswith("pbkdf2:sha256:"))        # Check Werkzeug hash format
+        
+    def test_successful_signup(self):
+        """
+        Test that a user can be created with valid data.
+        To run test: python -m unittest tests.tests_sign_up.TestSignUp.test_successful_signup
+        """
+        form_entry = SignupForm(formdata=MultiDict({
+            "name": "Skipper", 
+            "username": "definitely_unique_user", 
+            "age": 35,
+            "gender": "male",
+            "email": "skipper@example.com",
+            "password": "penguins_are_cool",
+            "confirm_password": "penguins_are_cool"
+        }))
+        self.assertIsNotNone(form_entry.name.data)
+        self.assertIsNotNone(form_entry.username.data)
+        self.assertIsNotNone(form_entry.age.data)
+        self.assertIsNotNone(form_entry.gender.data)
+        self.assertIsNotNone(form_entry.email.data)
+        self.assertIsNotNone(form_entry.password.data)
+        self.assertIsNotNone(form_entry.confirm_password.data)
+        self.assertTrue(form_entry.validate())
     
     def test_invalid_email(self):
         """
@@ -44,10 +67,11 @@ class TestSignUp(unittest.TestCase):
         form_entry = SignupForm(formdata=MultiDict({
             "name": "Slacker", 
             "username": "definitely_unique_user", 
-            "age": "20", 
-            "gender": "Male", 
+            "age": 20, 
+            "gender": "male", 
             "email": "skipperisaslacker", 
-            "password": "I_wanna_be_like_Skipper"
+            "password": "I_wanna_be_like_Skipper",
+            "confirm_password": "I_wanna_be_like_Skipper"
         }))
         self.assertFalse(form_entry.validate())
         self.assertIn("Please enter a valid email address", form_entry.email.errors)
@@ -60,10 +84,11 @@ class TestSignUp(unittest.TestCase):
         form_entry = SignupForm(formdata=MultiDict({
             "name": "Peppa", 
             "username": "peppa_pig", 
-            "age": "4", 
-            "gender": "Female", 
+            "age": 4, 
+            "gender": "female", 
             "email": "peppa@pig.com", 
-            "password": "count"
+            "password": "count",
+            "confirm_password": "count"
         }))
         self.assertFalse(form_entry.validate())
         self.assertIn("Field must be at least 6 characters long.", form_entry.password.errors)

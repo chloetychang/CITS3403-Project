@@ -74,7 +74,7 @@ class TestUpload(unittest.TestCase):
         Test that a user cannot create an entry without all required fields.
         To run test: python -m unittest tests.tests_upload.TestUpload.test_missing_fields
         """
-        user = User(user_id="1", name="Skipper", username="skipper", age="35", gender="Male", email="skipper@example.com")
+        user = User(user_id="1", name="Skipper", username="skipper", age="35", gender="male", email="skipper@example.com")
         
         form_entry = UploadSleepDataForm(formdata=MultiDict({
             "entry_date_sleep": "",
