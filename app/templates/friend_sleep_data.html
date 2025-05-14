@@ -28,7 +28,7 @@
                 </button>
             </a>
 
-            {% if -week_offset > 0 %}
+            {% if -week_offset >= 2 %}
             <a href="{{ url_for('main.friend_sleep_data', friend_id=friend.user_id, week_offset=week_offset + 1) }}">
                 <button class="bg-secondary mt-4 px-4 py-2 rounded hover:bg-opacity-90 transition duration-200 shadow-lg">
                     Next Week
@@ -39,7 +39,7 @@
     </div>
 
     <!-- Sleep Statistics Section -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <!-- Average Sleep Duration Box -->
         <div class="bg-white bg-opacity-10 p-4 rounded-lg">
             <h3 class="font-bold mb-2">Average Sleep Duration</h3>

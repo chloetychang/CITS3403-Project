@@ -6,7 +6,7 @@ from flask_login import current_user
 
 def rem_cycle(week_offset=0):
     # Compute the week range
-    start_of_week = datetime.today().date() + timedelta(weeks=week_offset)
+    start_of_week = datetime.today().date() + timedelta(1) + timedelta(weeks=week_offset)
     end_of_week = start_of_week + timedelta(days=6)
 
     # Get the best mood entry within that week

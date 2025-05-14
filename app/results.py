@@ -65,9 +65,14 @@ def generate_mood_metrics(week_offset=0):
     count_mood = sum([1 if entry.mood is not None else 0 for entry in entries])
     
     # Get the entry with the highest mood, and break ties by duration
-    if entries:
+    eligible_entries = [
+        e for e in entries
+        if e.mood is not None and e.wake_datetime is not None and e.sleep_datetime is not None
+    ]   
+    
+    if eligible_entries:
         best_entry = max(
-            entries,
+            eligible_entries,
             key=lambda e: (e.mood, (e.wake_datetime - e.sleep_datetime).total_seconds())
         )
     else:

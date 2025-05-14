@@ -6,29 +6,27 @@ from app import db
 
 def get_friend_weekly_entries(friend_id, week_offset=0):
     # Calculate date range for the week
-    today = datetime.today().date()
-    start_date = today + timedelta(days=7 * week_offset)
-    end_date = start_date + timedelta(days=6)
+    start_of_week = datetime.today().date() + timedelta(1) + timedelta(weeks=week_offset)
+    end_of_week = start_of_week + timedelta(days=6)
     
     # Query entries for the week
     entries = Entry.query.filter(
         Entry.user_id == friend_id,
-        Entry.sleep_datetime >= datetime.combine(start_date, datetime.min.time()),
-        Entry.sleep_datetime <= datetime.combine(end_date, datetime.max.time())
+        Entry.wake_datetime >= datetime.combine(start_of_week, datetime.min.time()),
+        Entry.wake_datetime <= datetime.combine(end_of_week, datetime.max.time())
     ).all()
     
-    # Create a dictionary with dates and sleep durations
-    sleep_dict = {}
-    for i in range(7):
-        day = start_date + timedelta(days=i)
-        sleep_dict[day.strftime('%a %d')] = 0
+    sleep_dict = {
+        start_of_week + timedelta(days=i): 0
+        for i in range(7)
+    }
     
     for entry in entries:
-        if entry.wake_datetime:
-            date_key = entry.sleep_datetime.strftime('%a %d')
+        if entry.wake_datetime and entry.sleep_datetime:
             duration = (entry.wake_datetime - entry.sleep_datetime).total_seconds() / 3600
-            if date_key in sleep_dict:
-                sleep_dict[date_key] = duration
+            entry_date = entry.wake_datetime.date()
+            if entry_date in sleep_dict:
+                sleep_dict[entry_date] += duration
     
     return entries, sleep_dict
 
