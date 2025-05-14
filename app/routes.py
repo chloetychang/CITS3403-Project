@@ -413,7 +413,7 @@ def friend_sleep_data(friend_id):
     friend = User.query.get_or_404(friend_id)
     if friend not in current_user.friends:
         flash("You can only view sleep data for your friends.", "error")
-        return redirect(url_for("share"))
+        return redirect(url_for("main.share"))
     
     # Get sleep data for the friend (similar to the results route)
     week_offset = int(request.args.get("week_offset", -1))
