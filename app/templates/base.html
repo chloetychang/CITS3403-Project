@@ -10,7 +10,18 @@
 
 <body class="bg-primary text-white font-sans min-h-screen">
     {% if current_user.is_authenticated %}
-    <div class="w-[80px] md:w-[120px] bg-secondary h-screen fixed flex flex-col items-center pt-5">
+    <!-- Toggle Button -->
+    <button id="navToggle" class="fixed top-4 left-4 z-50 p-2 rounded-lg hover:bg-secondary/80 transition-colors">
+        <svg id="navArrow" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+            class="transition-transform duration-300">
+            <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+        </svg>
+    </button>
+
+    <!-- Navigation Sidebar -->
+    <div id="navbar" class="w-[80px] md:w-[120px] bg-secondary h-screen fixed flex flex-col items-center pt-5 
+            transform transition-transform duration-300 ease-in-out z-40">
         {% set nav_items = [
         {'endpoint': 'main.sleep', 'class': 'my-5', 'icon': 'moon'},
         {'endpoint': 'main.record', 'class': 'mt-auto ml-2', 'icon': 'calendar'},
@@ -69,6 +80,7 @@
     {% block content %}{% endblock %}
     </div>
     <script src="{{ url_for('static', filename='js/flash.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/navbar.js') }}"></script>
 </body>
 
 </html>
