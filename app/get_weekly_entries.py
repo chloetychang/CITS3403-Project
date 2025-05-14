@@ -3,7 +3,7 @@ from app.models import Entry
 from flask_login import current_user
 
 def get_weekly_entries(week_offset = 0):
-    start_of_week = datetime.today().date() + timedelta(weeks=week_offset)
+    start_of_week = datetime.today().date() + timedelta(1) + timedelta(weeks=week_offset)
     end_of_week = start_of_week + timedelta(days=6)
     
     # Query entries only from the current user, as well as between start and end of the target week

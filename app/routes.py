@@ -471,11 +471,11 @@ def friend_sleep_data(friend_id):
     
     # Don't allow next week if it's in the future
     today = date.today()
-    requested_start_date = today + timedelta(weeks=week_offset)
+    requested_start_date = today + timedelta(1) + timedelta(weeks=week_offset)
     if requested_start_date > today:
-        week_offset = 0
+        week_offset = -1 # reset if user tries to go too far forward
     
-    start_date = date.today() + timedelta(weeks=week_offset)
+    start_date = date.today() + timedelta(1) + timedelta(weeks=week_offset)
     end_date = start_date + timedelta(days=6)
     week_range = f"{start_date.strftime('%b %d (%A)')} – {end_date.strftime('%b %d (%A)')}"
     
