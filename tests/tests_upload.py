@@ -56,7 +56,7 @@ class TestUpload(unittest.TestCase):
         db.session.add(entry2)
         db.session.commit()
 
-        # Verify Both Entries
+        # Verify Both Entries - with and without mood
         retrieved = Entry.query.filter_by(user_id=user.user_id).first()
         self.assertIsNotNone(retrieved)
         self.assertEqual(retrieved.sleep_datetime, sleep_datetime)
