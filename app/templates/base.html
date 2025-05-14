@@ -10,12 +10,12 @@
 
 <body class="bg-primary text-white font-sans min-h-screen">
     {% if current_user.is_authenticated %}
-    <div class="w-[120px] bg-secondary h-screen fixed flex flex-col items-center pt-5">
+    <div class="w-[80px] md:w-[120px] bg-secondary h-screen fixed flex flex-col items-center pt-5">
         {% set nav_items = [
-            {'endpoint': 'main.sleep', 'class': 'my-5', 'icon': 'moon'},
-            {'endpoint': 'main.record', 'class': 'mt-auto ml-2', 'icon': 'calendar'},
-            {'endpoint': 'main.results', 'class': 'mt-auto mb-5', 'icon': 'chart'},
-            {'endpoint': 'main.share', 'class': 'mt-auto mb-5 text-xs', 'icon': 'profile'}
+        {'endpoint': 'main.sleep', 'class': 'my-5', 'icon': 'moon'},
+        {'endpoint': 'main.record', 'class': 'mt-auto ml-2', 'icon': 'calendar'},
+        {'endpoint': 'main.results', 'class': 'mt-auto mb-5', 'icon': 'chart'},
+        {'endpoint': 'main.share', 'class': 'mt-auto mb-5 text-xs', 'icon': 'profile'}
         ] %}
         {% for item in nav_items %}
         <a href="{{ url_for(item.endpoint) }}" class="{{ item.class }}">
