@@ -1,7 +1,9 @@
 # CITS3403-Project
 CITS3403 - Agile Web Development Project
 
-## Description: Purpose of the Application, explaining its Design and Use
+## 📝 Description
+
+The Sleep Tracker is a web app that allows users to log sleep and wake times, rate their sleep quality, and view weekly trends through interactive graphs. It is designed with a user-friendly interface and aims to help individuals improve sleep habits by recognizing patterns and behaviors.
 
 
 ## Group Members: UWA ID, Name and Github Username
@@ -14,6 +16,7 @@ CITS3403 - Agile Web Development Project
 
 
 ## Instructions: How to launch the application
+
 ### Virtual Environment
 Set up the virtual environment using the following commands:
 
@@ -53,7 +56,46 @@ flask db upgrade
 ```
 This will create the database and apply both existing migrations (initial and second).
 
-## Instructions: How to run the tests for the application
+## 🧪 Instructions: How to Run Tests
+There are no automated test scripts included at this stage.
+You can manually test the application by:
+
+##🧰 Tech Stack
+
+Backend: Python, Flask, Flask-SQLAlchemy, Flask-Login, Flask-WTF
+
+Frontend: Tailwind CSS, Plotly.js, Jinja2 templates
+
+Database: SQLite (via SQLAlchemy)
+
+Utilities: Flask-Migrate, JavaScript (for flash messages and popups)
+
+##📁 Project Structure
+
+CITS3403-Project/
+├── app/
+│   ├── __init__.py       # App config and factory
+│   ├── routes.py         # Routes and logic
+│   ├── models.py         # DB models (User, Entry)
+│   ├── forms.py          # WTForms
+│   ├── plot.py           # Graph generation
+│   ├── templates/        # HTML pages
+│   └── static/           # JS, icons
+├── migrations/           # DB migration scripts
+├── app.db                # SQLite DB (auto-generated)
+├── requirements.txt      # Python dependencies
+└── README.md             # Project documentation
+
+
+## 🧪 How to Use the Application
+
+Once the app is running locally:
+
+1. **Register a User** – Go to the Sign-Up page and create an account by entering your details.
+2. **Log In** – Access the login page and sign in using your registered email and password.
+3. **Add Sleep Records** – On the Sleep or Records page, input your sleep and wake times, and optionally rate your mood.
+4. **View Results** – Navigate to the Results page to see your weekly sleep analysis as an interactive graph.
+5. **Logout** – Click the logout icon to securely end your session.
 
 ## 🚀 Getting Started
 
@@ -64,5 +106,18 @@ You can use the following test account to log in:
 - **Email**: `admin@example.com`  
 - **Password**: `admin123`
 
+
 ### Registration
 New users can sign up by providing the required information. Once registered, you may log in using your new credentials.
+
+### 📝 Sign Up
+
+New users can create an account by providing basic details like name, age, and email, then log in to begin tracking their sleep.
+
+
+## 🧭 App Navigation
+
+- **Sleep Page**: Upload your sleep and wake times, rate your mood, and manage entries.
+- **Records Page**: View a calendar with all your logged entries; edit or add new ones.
+- **Results Page**: Visualize your weekly sleep trends using an interactive Plotly graph.
+- **Logout**: Securely end your session anytime using the logout option.
