@@ -6,21 +6,20 @@ from app import db
 
 def get_friend_weekly_entries(friend_id, week_offset=0):
     # Calculate date range for the week
-    today = datetime.today().date()
-    start_date = today + timedelta(days=7 * week_offset)
-    end_date = start_date + timedelta(days=6)
+    start_of_week = datetime.today().date() + timedelta(1) + timedelta(weeks=week_offset)
+    end_of_week = start_of_week + timedelta(days=6)
     
     # Query entries for the week
     entries = Entry.query.filter(
         Entry.user_id == friend_id,
-        Entry.sleep_datetime >= datetime.combine(start_date, datetime.min.time()),
-        Entry.sleep_datetime <= datetime.combine(end_date, datetime.max.time())
+        Entry.sleep_datetime >= datetime.combine(start_of_week, datetime.min.time()),
+        Entry.sleep_datetime <= datetime.combine(end_of_week, datetime.max.time())
     ).all()
     
     # Create a dictionary with dates and sleep durations
     sleep_dict = {}
     for i in range(7):
-        day = start_date + timedelta(days=i)
+        day = start_of_week + timedelta(days=i)
         sleep_dict[day.strftime('%a %d')] = 0
     
     for entry in entries:
