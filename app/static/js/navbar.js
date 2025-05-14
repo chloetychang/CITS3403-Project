@@ -31,4 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Handle window resize
+    window.addEventListener('resize', () => {
+        isOpen = window.innerWidth >= 768;
+        updateNavbarState();
+    });
 });
