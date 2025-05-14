@@ -5,8 +5,8 @@ function getCSRFToken() {
 
 function viewFriendData(friendId) {
     console.log("Viewing friend:", friendId);
-    // Implement functionality to display friend's sleep data
-    // This will be implemented later
+    // Implement functionality to display friend's sleep data (fulfilled)
+    window.location.href = `/friend_sleep_data/${friendId}`;
 }
 
 function handleRequest(requestId, action) {

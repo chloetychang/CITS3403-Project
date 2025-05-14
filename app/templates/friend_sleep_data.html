@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Friend's Sleep Data{% endblock %}
+
+{% block content %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<div class="max-w-4xl mx-auto">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold mt-8">{{ friend.username }}'s Sleep Data</h1>
+        <a href="{{ url_for('main.share') }}" class="bg-secondary text-white font-bold py-2 px-4 rounded hover:bg-opacity-90 transition duration-200 mt-8">
+            Back to Friends
+        </a>
+    </div>
+    
+    <!-- Weekly Overview -->
+    <div class="bg-white bg-opacity-10 p-6 rounded-lg mb-6">
+        <h2 class="text-xl font-bold mb-4">Weekly Overview</h2>
+        <p class="text-sm text-gray-300 mb-4">{{ week_range }}</p>
+
+        <div class="overflow-x-auto">
+            <div class="min-h-[400px]">{{ plot_div | safe }}</div>
+        </div>
+
+        <div class="flex gap-4 mb-4">
+            <a href="{{ url_for('main.friend_sleep_data', friend_id=friend.user_id, week_offset=week_offset - 1) }}">
+                <button class="bg-secondary mt-4 px-4 py-2 rounded hover:bg-opacity-90 transition duration-200 shadow-lg">
+                    Previous Week
+                </button>
+            </a>
+
+            {% if -week_offset > 0 %}
+            <a href="{{ url_for('main.friend_sleep_data', friend_id=friend.user_id, week_offset=week_offset + 1) }}">
+                <button class="bg-secondary mt-4 px-4 py-2 rounded hover:bg-opacity-90 transition duration-200 shadow-lg">
+                    Next Week
+                </button>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Sleep Statistics Section -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Average Sleep Duration Box -->
+        <div class="bg-white bg-opacity-10 p-4 rounded-lg">
+            <h3 class="font-bold mb-2">Average Sleep Duration</h3>
+            <p class="text-2xl font-bold">{{ "%.1f"|format(average_sleep) }} hours</p>
+        </div>
+
+        <!-- Sleep Consistency Box -->
+        <div class="bg-white bg-opacity-10 p-4 rounded-lg">
+            <h3 class="font-bold mb-2">Sleep Duration Consistency</h3>
+            <p class="text-2xl font-bold">
+                {{ "%.1f"|format(duration_consistency_percentage) }}%
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

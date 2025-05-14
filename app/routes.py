@@ -7,6 +7,7 @@ import calendar
 from app.models import db, User, Entry, FriendRequest  # Import models from database
 from app.results import generate_sleep_plot, generate_sleep_metrics, generate_mood_metrics
 from app.rem_cycle import rem_cycle, simulate_rem_cycle, generate_rem_plot
+from app.friend_results import generate_friend_sleep_plot, generate_friend_sleep_metrics
 
 main = Blueprint('main', __name__)
 
@@ -404,3 +405,39 @@ def unfriend(friend_id):
 
     flash("Friend removed successfully", "info")
     return jsonify({'status': 'success', 'message': 'Friend removed successfully'})
+
+@main.route("/friend_sleep_data/<int:friend_id>")
+@login_required
+def friend_sleep_data(friend_id):
+    # Verify this user is a friend
+    friend = User.query.get_or_404(friend_id)
+    if friend not in current_user.friends:
+        flash("You can only view sleep data for your friends.", "error")
+        return redirect(url_for("main.share"))
+    
+    # Get sleep data for the friend (similar to the results route)
+    week_offset = int(request.args.get("week_offset", -1))
+    
+    # Don't allow next week if it's in the future
+    today = date.today()
+    requested_start_date = today + timedelta(1) + timedelta(weeks=week_offset)
+    if requested_start_date > today:
+        week_offset = -1 # reset if user tries to go too far forward
+    
+    start_date = date.today() + timedelta(1) + timedelta(weeks=week_offset)
+    end_date = start_date + timedelta(days=6)
+    week_range = f"{start_date.strftime('%b %d (%A)')} – {end_date.strftime('%b %d (%A)')}"
+    
+    # Generate friend's sleep plot
+    sleep_plot_div = generate_friend_sleep_plot(friend_id, week_offset)
+    avg_sleep, duration_consistency = generate_friend_sleep_metrics(friend_id, week_offset)
+    
+    return render_template(
+        "friend_sleep_data.html", 
+        friend=friend,
+        week_offset=week_offset, 
+        week_range=week_range, 
+        plot_div=sleep_plot_div, 
+        average_sleep=avg_sleep, 
+        duration_consistency_percentage=duration_consistency
+    )

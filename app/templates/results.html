@@ -7,7 +7,6 @@ content %}
     <!-- Title and Share Button Row -->
     <div class="flex justify-between items-start mb-6">
         <h1 class="text-3xl font-bold mt-8">Your Sleep Analysis</h1>
-
     </div>
 
     <!-- Separate the graphic and upload pages for easier access -->
@@ -27,7 +26,7 @@ content %}
                 </button>
             </a>
 
-            {% if -week_offset > 0 %}
+            {% if -week_offset >= 2 %}
             <a href="{{ url_for('main.results', week_offset=week_offset + 1) }}">
                 <button
                     class="bg-secondary mt-4 px-4 py-2 rounded hover:bg-opacity-90 transition duration-200 shadow-lg">
