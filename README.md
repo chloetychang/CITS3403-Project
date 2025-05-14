@@ -40,6 +40,13 @@ export SECRET_KEY='your_secret_key_here'
 ```
 Replace `'your_secret_key_here'` with a strong, random string.
 
+### Initialise the Database 
+To initialise the database, run: 
+```bash
+flask db upgrade
+```
+This will create the database and apply existing migrations.
+
 ### Launching the Application
 After setting up the virtual environment, installing the dependencies, and setting your unique secret key run the command:
 
@@ -49,18 +56,15 @@ flask run
 
 (For development, so the server does not have to be stopped and reran as we create modifications, run `flask run --debug`)
 
-### Initialise the Database 
-To initialise the database, run: 
-```bash
-flask db upgrade
-```
-This will create the database and apply both existing migrations (initial and second).
-
 ## 🧪 Instructions: How to Run Tests
-There are no automated test scripts included at this stage.
-You can manually test the application by:
+To run unit tests, insert the following commands into your terminal:
+```bash
+python -m unittest tests.tests_sign_up.TestSignUp    # Run the three unit tests for Sign-Up Page
+python -m unittest tests.tests_login.TestLogin       # Run the unit test for Log-in Page
+python -m unittest tests.tests_upload.TestUpload     # Run the two unit tests for Upload Sleep Data Form
+```
 
-##🧰 Tech Stack
+### 🧰 Tech Stack
 
 Backend: Python, Flask, Flask-SQLAlchemy, Flask-Login, Flask-WTF
 
@@ -70,11 +74,12 @@ Database: SQLite (via SQLAlchemy)
 
 Utilities: Flask-Migrate, JavaScript (for flash messages and popups)
 
-##📁 Project Structure
+### 📁 Project Structure
 
 CITS3403-Project/
 ├── app/
 │   ├── __init__.py       # App config and factory
+|   ├── routes_auth.py    # Routes and logic - for sign-up, login, logout functionality
 │   ├── routes.py         # Routes and logic
 │   ├── models.py         # DB models (User, Entry)
 │   ├── forms.py          # WTForms
