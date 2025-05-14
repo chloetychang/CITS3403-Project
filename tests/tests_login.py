@@ -31,3 +31,12 @@ class TestLogin(unittest.TestCase):
             db.session.add(user)
             
         db.session.commit()
+    
+    def test_login_validation(self):
+        """
+        Test that users can only log in with all required fields filled in.
+        To run test: python -m unittest tests.tests_login.TestLogin.test_login_validation
+        """
+        form_entry = LoginForm(email="skipper@example.com")
+        form_entry.validate()
+        self.assertIn("This field is required.", form_entry.password.errors)

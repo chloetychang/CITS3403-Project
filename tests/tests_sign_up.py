@@ -38,12 +38,17 @@ class TestSignUp(unittest.TestCase):
     def test_invalid_email(self):
         """
         Test that a user cannot be created with an invalid email.
+        To run test: python -m unittest tests.tests_sign_up.TestSignUp.test_invalid_email
         """
         form_entry = SignupForm(name="Slacker", username="definitely_unique_user", age="20", gender="Male", email="skipperisaslacker", password="I_wanna_be_like_Skipper")
         form_entry.validate()
         self.assertIn("Please enter a valid email address", form_entry.email.errors)
     
     def test_password_length(self):
-        form_entry = SignupForm(name="Peppa", username="peppa_pid", age="4", gender="Female", email="peppa@pig.com", password="count")
+        """
+        Test that a user cannot be created with a password shorter than 6 characters.
+        To run test: python -m unittest tests.tests_sign_up.TestSignUp.test_password_length
+        """
+        form_entry = SignupForm(name="Peppa", username="peppa_pig", age="4", gender="Female", email="peppa@pig.com", password="count")
         form_entry.validate()
         self.assertIn("Field must be at least 6 characters long.", form_entry.password.errors)
