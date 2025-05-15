@@ -1,70 +1,64 @@
-import unittest
-import threading
+import os
 import time
+import multiprocessing
+import unittest
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from app import create_app, db
-from app.models import User
 
-class TestConfig:
-    TESTING = True
-    SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
-    WTF_CSRF_ENABLED = False
-    SECRET_KEY = "test-secret-key"
-    SERVER_NAME = "localhost:5000"
+# Uncomment the following line if you need to use ChromeDriverManager
+# from selenium.webdriver.chrome.service import Service
+# from selenium.webdriver.chrome.options import Options
+# from webdriver_manager.chrome import ChromeDriverManager
+from app.config import TestConfig
+from app import create_app, db
+from app.models import User, Entry  # add more models as needed
+
+localhost = "http://localhost:5000"
+
 
 class SeleniumTests(unittest.TestCase):
+    def _run_app(self):
+        self.testApp.run(debug=False, use_reloader=False)
+        
+    def setUp(self):
+        # Create and configure the test app
+        self.testApp = create_app(TestConfig)
+        self.app_context = self.testApp.app_context()
+        self.app_context.push()
 
-    @classmethod
-    def setUpClass(cls):
-        cls.app = create_app(TestConfig)
-        cls.app_context = cls.app.app_context()
-        cls.app_context.push()
+        # Set up database
         db.create_all()
 
-        cls.server_thread = threading.Thread(
-            target=lambda: cls.app.run(port=5000, use_reloader=False, debug=False)
-        )
-        cls.server_thread.daemon = True
-        cls.server_thread.start()
+        # Add Chrome configurations
+        
+        # Start the Flask server safely in a subprocess (macOS safe)
+        if os.name == 'posix':
+            ctx = multiprocessing.get_context("fork")
+            self.server_thread = ctx.Process(target=self._run_app, daemon=True)
+        else:
+            self.server_thread = multiprocessing.Process(target=self._run_app, daemon=True)
+        self.server_thread.start()
+        
+        # Wait for server to boot
         time.sleep(2)
 
-        options = webdriver.ChromeOptions()
-        options.add_argument("--headless")
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")
-        cls.driver = webdriver.Chrome(options=options)
-        cls.driver.implicitly_wait(10)
-        cls.wait = WebDriverWait(cls.driver, 10)
-        cls.base_url = "http://localhost:5000"
+        # Initialize Chrome driver
+        self.driver = webdriver.Chrome()
+        self.base_url = "http://localhost:5000"
+        self.driver.get(localhost)
+        return super().setUp()
+    
+    def tearDown(self):
+        # Clean up resources
+        self.server_thread.terminate()
+        self.driver.close()
 
-    @classmethod
-    def tearDownClass(cls):
-        cls.driver.quit()
+        # Clear the database
         db.session.remove()
         db.drop_all()
-        cls.app_context.pop()
+        self.app_context.pop()
 
-    def setUp(self):
-        try:
-            db.session.query(User).delete()
-            db.session.commit()
-        except:
-            db.session.rollback()
-
-        if self._testMethodName != 'test_static_file_access':
-            user = User(
-                name="Test User",
-                username="testuser",
-                email="test@example.com",
-                age=25,
-                gender="Male"
-            )
-            user.password_hash = "pbkdf2:sha256:50000$9tHyF9rw$5e97f6ec4e694dd650feb7c84940845e477ccc385c76924eda758876356f570a"
-            db.session.add(user)
-            db.session.commit()
-
+        return super().tearDown()
+    
     def test_server_running(self):
         self.driver.get(self.base_url)
         self.assertIn("localhost:5000", self.driver.current_url)
@@ -113,3 +107,4 @@ class SeleniumTests(unittest.TestCase):
         
 if __name__ == "__main__":
     unittest.main()
+
