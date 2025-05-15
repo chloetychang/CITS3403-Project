@@ -121,3 +121,38 @@ New users can create an account by providing basic details like name, age, and e
 - **Records Page**: View a calendar with all your logged entries; edit or add new ones.
 - **Results Page**: Visualize your weekly sleep trends using an interactive Plotly graph.
 - **Logout**: Securely end your session anytime using the logout option.
+
+
+## 🧪 Instructions: How to Run Tests
+
+This project includes **automated unit tests** and **Selenium WebDriver system tests**.
+
+### 🔹 Unit Tests
+
+The following files implement unit tests using Python’s built-in `unittest` framework:
+
+- `test_login.py`
+- `test_signup.py`
+- `test_routes.py`
+- `test_backend_auth.py`
+
+Each test file uses a memory-based test database (`sqlite:///:memory:`), and CSRF protection is disabled for isolated test environments.
+
+To run all unit tests:
+
+```bash
+python -m unittest discover -s tests -p "test_*.py"
+```
+##🔹 Selenium System Tests
+
+Selenium tests are located in:
+
+base_selenium.py
+
+These simulate user actions in a browser using headless Chrome and test the full application stack, including routing, layout rendering, and public-facing views.
+
+To run Selenium tests, install the following:
+
+```bash
+python tests/base_selenium.py
+```
