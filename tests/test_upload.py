@@ -110,3 +110,7 @@ class TestUpload(unittest.TestCase):
         }))
         self.assertFalse(form_entry.validate())
         self.assertIn("This field is required.", form_entry.wake_time.errors)
+        
+
+if __name__ == '__main__':
+    unittest.main()

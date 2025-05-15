@@ -1,10 +1,5 @@
 import unittest
-import json
-from flask import Flask
-
-# Import your app factory and models
 from app import create_app, db
-from app.models import User
 
 class TestAuthentication(unittest.TestCase):
     """Test case for the authentication functionality"""

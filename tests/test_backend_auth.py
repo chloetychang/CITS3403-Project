@@ -1,5 +1,4 @@
 import unittest
-import time
 from app import db, create_app
 from app.models import User
 from datetime import datetime

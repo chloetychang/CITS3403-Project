@@ -161,3 +161,7 @@ class TestSignUp(unittest.TestCase):
         }))
         self.assertFalse(form_entry.validate())
         self.assertIn("Field must be at least 6 characters long.", form_entry.password.errors)
+        
+
+if __name__ == '__main__':
+    unittest.main()

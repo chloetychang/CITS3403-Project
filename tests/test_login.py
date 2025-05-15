@@ -1,6 +1,4 @@
 import unittest
-
-# Import create_app from your Flask factory setup
 from app import create_app, db
 from app.models import User
 from app.forms import LoginForm
@@ -94,6 +92,7 @@ class TestLogin(unittest.TestCase):
         }))
         self.assertFalse(form_entry.validate())
         self.assertIn("This field is required.", form_entry.password.errors)
+    
     
 if __name__ == '__main__':
     unittest.main()
