@@ -1,4 +1,3 @@
-import os
 import time
 import threading
 import unittest
@@ -8,12 +7,10 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from app.config import TestConfig
 from app import create_app, db
-from app.models import User, Entry  
+from app.models import User
 
 localhost = "http://127.0.0.1:5000"
-
 
 class SeleniumTests(unittest.TestCase):
     def _run_app(self):
