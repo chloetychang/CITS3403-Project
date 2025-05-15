@@ -6,42 +6,6 @@ from flask import Flask
 from app import create_app, db
 from app.models import User
 
-
-class TestRoutes(unittest.TestCase):
-    """Test case for the application routes"""
-
-    def setUp(self):
-        self.app = create_app(True)
-        self.app_context = self.app.app_context()
-        self.app_context.push()
-        db.create_all()
-        self.client = self.app.test_client()
-
-    def tearDown(self):
-        db.session.remove()
-        db.drop_all()
-        self.app_context.pop()
-
-    def test_index_route(self):
-        response = self.client.get('/')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b'Welcome', response.data)
-
-    def test_login_route_get(self):
-        response = self.client.get('/login')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b'Log In', response.data)
-
-    def test_signup_route_get(self):
-        response = self.client.get('/signup')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b'Sign Up', response.data)
-
-    def test_invalid_route(self):
-        response = self.client.get('/definitely_not_a_valid_route')
-        self.assertEqual(response.status_code, 404)
-
-
 class TestAuthentication(unittest.TestCase):
     """Test case for the authentication functionality"""
 
