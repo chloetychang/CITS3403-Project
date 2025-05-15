@@ -3,6 +3,8 @@ import unittest
 # Import create_app from your Flask factory setup
 from app import create_app, db
 from app.models import User
+from app.forms import LoginForm
+from werkzeug.datastructures import MultiDict
 
 class TestLogin(unittest.TestCase):
     def setUp(self):
@@ -22,6 +24,19 @@ class TestLogin(unittest.TestCase):
         db.session.remove()
         db.drop_all()
         self.app_context.pop()
+    
+    def add_test_data_to_db(self):
+        users = [
+            User(name="Skipper", username="skipper", age="35", gender="male", email="skipper@example.com"),
+            User(name="Private", username="private", age="14", gender="male", email="private@example.com"),
+            User(name="Rico", username="rico", age="32", gender="male", email="rico@example.com"),
+            User(name="Kowalski", username="kowalski", age="35", gender="male", email="kowalski@example.com")
+        ]
+        for user in users:
+            user.password = "penguins_are_cool"
+            db.session.add(user)
+
+        db.session.commit()
 
     def test_login_missing_fields(self):
         # Missing password
@@ -55,6 +70,30 @@ class TestLogin(unittest.TestCase):
         response = self.client.get('/login')
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'Login', response.data)
+        
+    def test_successful_login_form(self):
+        """
+        Test that a user can log in with valid credentials.
+        To run test: python -m unittest tests.tests_login.TestLogin.test_successful_login
+        """
+        form_entry = LoginForm(formdata=MultiDict({
+            "email":"skipper@example.com",
+            "password":"penguins_are_cool"
+        }))
+        self.assertIsNotNone(form_entry.email.data)
+        self.assertIsNotNone(form_entry.password.data)
+        self.assertTrue(form_entry.validate())
+
+    def test_login_validation_form(self):
+        """
+        Test that users can only log in with all required fields filled in.
+        To run test: python -m unittest tests.tests_login.TestLogin.test_login_validation
+        """
+        form_entry = LoginForm(formdata=MultiDict({
+            "email":"skipper@example.com"
+        }))
+        self.assertFalse(form_entry.validate())
+        self.assertIn("This field is required.", form_entry.password.errors)
     
 if __name__ == '__main__':
     unittest.main()
