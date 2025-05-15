@@ -33,22 +33,21 @@ class SeleniumTests(unittest.TestCase):
         # Set up database
         db.create_all()
         
-        # Add User, only when testing login functionality
-        if self._testMethodName == "test_login_functionality":
-            user = User(
-                name="Pingu",
-                username="pingu",
-                age=4,
-                gender="male",
-                email="pingu@test.com"
-            )
-            user.password_hash = generate_password_hash("test123")
-            db.session.add(user)
-            db.session.commit()
+        # Add test data to the database
+        user = User(
+            name="Pingu",
+            username="pingu",
+            age=4,
+            gender="male",
+            email="pingu@test.com"
+        )
+        user.password_hash = generate_password_hash("test123")
+        db.session.add(user)
+        db.session.commit()
 
         # Add Chrome configurations
         
-        # 🔁 Use Thread instead of Process
+        # Use Thread instead of Process
         self.server_thread = threading.Thread(target=self._run_app)
         self.server_thread.daemon = True
         self.server_thread.start()
@@ -158,8 +157,65 @@ class SeleniumTests(unittest.TestCase):
         # Check that user is now inside sleep page.
         self.assertIn("/sleep", self.driver.current_url)
     
+    # Testing upload form functionality
+    # This test will check if the upload form loads correctly
     def test_upload_form_functionality(self):
-        pass
+        # First, user needs to login (logic as in the test_login_functionality)
+        self.driver.get(f"{self.base_url}/login")
+        
+        email_input = self.driver.find_element(By.ID, "email")
+        password_input = self.driver.find_element(By.ID, "password")
+        submit_button = self.driver.find_element(By.ID, "submit")
+
+        email_input.send_keys("pingu@test.com")
+        password_input.send_keys("test123")
+        submit_button.click()
+        
+        time.sleep(2)
+        
+        # Now, go to the upload form
+        # Wait and click the button that links to form
+        upload_button = WebDriverWait(self.driver, 5).until(
+            EC.element_to_be_clickable((By.ID, "upload_button"))
+        )
+        upload_button.click()
+        
+        sleep_date_input = self.driver.find_element(By.ID, "entry_date_sleep")
+        sleep_time_input = self.driver.find_element(By.ID, "sleep_time")
+        wake_date_input = self.driver.find_element(By.ID, "entry_date_wake")
+        wake_time_input = self.driver.find_element(By.ID, "wake_time")
+        mood_input = self.driver.find_element(By.ID, "mood")
+        submit_button = self.driver.find_element(By.ID, "submit")
+        
+        sleep_date_input.send_keys("30/04/2025")
+        self.driver.execute_script("arguments[0].value = '23:00';", sleep_time_input)       # Inject time via JS - Selenium doesn't support time input
+        wake_date_input.send_keys("01/05/2025")
+        self.driver.execute_script("arguments[0].value = '08:00';", wake_time_input)        # Inject time via JS - Selenium doesn't support time input
+        mood_input.send_keys(3)
+        submit_button.click()
+        
+        # Wait for the flash message to appear
+        success_flash = WebDriverWait(self.driver, 5).until(
+            EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'Sleep data recorded successfully!')]"))
+        )
+
+        # Check its content
+        self.assertIn("Sleep data recorded successfully!", success_flash.text)
+    
+    # Testing if logout works
+    def test_logout_functionality(self):
+        # First, user needs to login (logic as in the test_login_functionality)
+        self.driver.get(f"{self.base_url}/login")
+        
+        email_input = self.driver.find_element(By.ID, "email")
+        password_input = self.driver.find_element(By.ID, "password")
+        submit_button = self.driver.find_element(By.ID, "submit")
+
+        email_input.send_keys("pingu@test.com")
+        password_input.send_keys("test123")
+        submit_button.click()
+        
+        
 
 if __name__ == "__main__":
     unittest.main()
