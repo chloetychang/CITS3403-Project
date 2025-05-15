@@ -86,7 +86,7 @@ class Entry(db.Model):
     entry_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
     sleep_datetime = db.Column(db.DateTime, nullable=False)
-    wake_datetime = db.Column(db.DateTime, nullable=True)
+    wake_datetime = db.Column(db.DateTime, nullable=False)
     mood = db.Column(db.Integer, nullable=True)       # mood - indexed for future calculations
     # sleep duration - calculated from sleep and wake datetime (field not required here)
     # sleep quality - calculated from mood and sleep duration (field not required here)
