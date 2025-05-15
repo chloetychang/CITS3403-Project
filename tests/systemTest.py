@@ -55,7 +55,7 @@ class SeleniumTests(unittest.TestCase):
     
     def tearDown(self):
         # Clean up resources
-        self.driver.close()
+        self.driver.quit()
 
         # Clear the database
         db.session.remove()
