@@ -5,14 +5,6 @@ from app.models import User
 from datetime import datetime
 import werkzeug.security
 
-# Test configuration class - matching the same structure from test_login.py
-class TestConfig:
-    TESTING = True
-    SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
-    WTF_CSRF_ENABLED = False
-    SECRET_KEY = "test-secret-key"
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-
 class TestFlaskBackend(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
