@@ -8,14 +8,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
-# Uncomment the following line if you need to use ChromeDriverManager
-# from selenium.webdriver.chrome.service import Service
-# from selenium.webdriver.chrome.options import Options
-# from webdriver_manager.chrome import ChromeDriverManager
 from app.config import TestConfig
 from app import create_app, db
-from app.models import User, Entry  # add more models as needed
+from app.models import User, Entry  
 
 localhost = "http://127.0.0.1:5000"
 
