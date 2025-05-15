@@ -83,18 +83,19 @@ Utilities: Flask-Migrate, JavaScript (for flash messages and popups)
 #### 1. __Sign Up (New Users)__
 
 - Navigate to the __Sign-Up__ page.
-- Fill in the form.
-- Click __SignUp__ to begin using the app.
+- Fill up the Sign Up form and log in with your new account.
 
 #### 2. __Log In__
 
 - Navigate to the __Login__ page.
-- Enter using your registered email and password.
-- Click __Log In__ to begin using the app.
+- Enter using your registered email and password to start using the application.
 
-Example account:
+Test Account:
+
+```bash
 Email: <admin@example.com>
 Password: admin123
+```
 
 ### 🌙 Core Features
 
@@ -102,41 +103,38 @@ Password: admin123
 
 1. Navigate to the __Sleep__ page.
 2. Click __Upload Sleep Data__.
-3. Fill in the following details:
-   - __Sleep Date & Time__
-   - __Wake Date & Time__
-   - __Mood Rating__
+3. Fill up the details in the form.
 4. Click __Save Entry__ to log your data.
 
 #### View Sleep Records
 
 1. Navigate to the __Records__ page.
-2. Browse your sleep entries in a __calendar format__.
-3. Each date is __color-coded__ based on your sleep duration:
+2. Browse your sleep entries in a calendar format.
+3. Each date is color-coded based on your sleep duration:
 
-   - 🟩 __Green__ – Slept __7 hours or more__
-   - 🟨 __Yellow__ – Slept between __5 and 7 hours__
-   - 🟥 __Red__ – Slept __less than 5 hours__
-   - ⬜ __Grey__ – __No sleep data__ recorded for that date.
+   - 🟩 __Green__ – Slept 7 hours or more
+   - 🟨 __Yellow__ – Slept between 5 and 7 hours
+   - 🟥 __Red__ – Slept less than 5 hours
+   - ⬜ __Grey__ – No sleep data recorded for that date
 
 4. Click on a date to:
-   - View detailed sleep data.
-   - Add a new entry.
-   - Delete an existing record.
+   - View detailed sleep data
+   - Add a new entry
+   - Delete an existing record
 
 #### Analyse Results
 
 1. Navigate the __Results__ page.
 2. Interact with insightful graphs:
-   - Weekly __sleep patterns__
-   - Sleep __duration and consistency trends__
-   - __Mood correlations__
+   - Weekly sleep patterns
+   - Sleep duration and consistency trends
+   - Mood correlations
    - REM cycle pattern
 
 ### 🤝 Share Sleep Data
 
 1. Navigate to the __Share__ page.
-2. Use the __search bar__ to find other existing users by username.
+2. Use the search bar to find other existing users by username.
 3. Send a __friend request__ to connect.
 4. Once accepted, your friend will appear under __Your Friends__.
 5. You can then:
