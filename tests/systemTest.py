@@ -151,7 +151,7 @@ class SeleniumTests(unittest.TestCase):
         self.assertIn("/sleep", self.driver.current_url)
     
     # Testing upload form functionality
-    # This test will check if the upload form loads correctly
+    # This test will check if the upload form will load and submit correctly, when all information is provided.
     def test_upload_form_functionality(self):
         # First, user needs to login (logic as in the test_login_functionality)
         self.driver.get(f"{self.base_url}/login")
