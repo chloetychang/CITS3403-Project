@@ -1,26 +1,25 @@
 {% extends "base.html" %}
 {% block title %}Sleep{% endblock %}
-<!-- should this be changed to homepage? or the name of our application/website? please review -->
 {% block content %}
-<div class="flex flex-col items-center justify-center min-h-[80vh]">
-    <div class="text-center max-w-2xl">
-        <!-- Torch-style spotlight + moon + title -->
-        <div class="relative w-full h-[500px] flex flex-col justify-center items-center text-center overflow-hidden">
-            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-[280px] h-[440px] z-0 pointer-events-none"
-                style="background: radial-gradient(ellipse at center, #e4d6abcc 0%, #e4d6ab00 70%);
-                        clip-path: polygon(30% 0%, 70% 0%, 90% 100%, 10% 100%);
-                        filter: blur(8px);
-                        opacity: 0.85;">
-            </div>
 
-            <h1 class="text-4xl sm:text-5xl font-extrabold text-white my-12 drop-shadow-[0_2px_4px_rgba(255,255,255,0.3)]">Sleep 🌙</h1>
-        
-        <p class="text-lg">
+<div class="flex flex-col items-center justify-center min-h-[80vh] relative"> 
+    <!-- Background shapes -->
+    <div class="h-[250px] w-[560px] bg-[#d5caa1] rounded-[50%] absolute z-0 top-1/2 -translate-y-[60%] filter blur-[1px]"></div>
+    <div class="h-[300px] w-[580px] bg-[#d5caa1] rounded-[50%] absolute z-0 opacity-30 top-1/2 -translate-y-[50%] filter blur-[10px]"></div>
+    <div class="absolute z-0 opacity-50 w-0 h-0 
+                border-l-[270px] border-l-transparent
+                border-r-[270px] border-r-transparent
+                border-b-[400px] border-b-[#d5caa1]
+                top-1/2 left-1/2 -translate-x-1/2 -translate-y-[110%] filter blur-[10px]"></div>
+
+    <div class="text-center max-w-2xl z-10"> <!-- z index to container changed. -->
+        <h1 class="text-8xl mb-28">Sleep</h1>
+        <p class="text-lg mt-20 text-[#4c497e]"><br>
             Create a profile to store your records.<br>
-            Upload your sleep data to discover patterns. <br>
-            Gain insights on your sleep and how your mood gets affected. <br>
-            Based on peer reviewed research.<br>
+            Upload your sleep data to discover patterns.<br>
+            Gain insights on your sleep and mood.<br><br><br>
         </p>
+        <br><br><br>
         <div class="my-12">
             <button onclick="openPopup()" class="bg-button text-secondary text-2xl font-bold py-4 px-8 rounded-full 
                          hover:bg-opacity-90 transition duration-200 shadow-lg">
@@ -28,8 +27,7 @@
             </button>
         </div>
 
-        {% include "partials/form_popup.html"  %}
-
+        {% include "partials/form_popup.html" %}
     </div>
 </div>
 <script src="{{ url_for('static', filename='js/sleep.js') }}"></script>
