@@ -37,7 +37,6 @@ class TestLogin(unittest.TestCase):
         self.app_context.pop()
 
     def test_login_missing_fields(self):
-        """❌ Login form missing field validation."""
         # Missing password
         response = self.client.post('/login', data={
             'email': 'test@example.com',
