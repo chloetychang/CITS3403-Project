@@ -102,22 +102,20 @@ Password: admin123
 #### Upload Sleep Data
 
 1. Navigate to the __Sleep__ page.
-2. Click __Upload Sleep Data__.
-3. Fill up the details in the form.
+2. Click __Upload Sleep Data__ and fill up all the details required.
 4. Click __Save Entry__ to log your data.
 
 #### View Sleep Records
 
-1. Navigate to the __Records__ page.
-2. Browse your sleep entries in a calendar format.
-3. Each date is color-coded based on your sleep duration:
+1. Navigate to the __Records__ page to view your sleep entries in a calendar format.
+2. Each date is color-coded based on your sleep duration:
 
-   - 🟩 __Green__ – Slept 7 hours or more
-   - 🟨 __Yellow__ – Slept between 5 and 7 hours
-   - 🟥 __Red__ – Slept less than 5 hours
-   - ⬜ __Grey__ – No sleep data recorded for that date
+   - 🟩 __Green__ – 7+ hours
+   - 🟨 __Yellow__ – 5 - 7 hours
+   - 🟥 __Red__ – < 5 hours
+   - ⬜ __Grey__ – No sleep data recorded
 
-4. Click on a date to:
+4. Click any date to:
    - View detailed sleep data
    - Add a new entry
    - Delete an existing record
@@ -127,7 +125,6 @@ Password: admin123
 1. Navigate the __Results__ page.
 2. Interact with insightful graphs:
    - Weekly sleep patterns
-   - Sleep duration and consistency trends
    - Mood correlations
    - REM cycle pattern
 
@@ -151,7 +148,6 @@ Password: admin123
 - Record entries __daily__ for accurate tracking.
 - Include __mood ratings__ to help identify how sleep affects emotional well-being.
 - Regularly review __weekly trends__ to improve your sleep habits.
-- Use the __calendar view__ to detect irregularities in your sleep schedule.
 
 ## Instructions: How to Run Tests
 
