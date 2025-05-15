@@ -77,8 +77,9 @@ class SeleniumTests(unittest.TestCase):
         self.driver.get(self.base_url)
         self.assertIn("127.0.0.1:5000", self.driver.current_url)
 
+    # Testing the button on the welcome page that links to /login
     def test_login_page(self):
-        self.driver.get(self.base_url)  # Go to welcome page
+        self.driver.get(self.base_url)
 
         # Wait and click the button that links to /login
         login_button = WebDriverWait(self.driver, 5).until(
@@ -92,9 +93,9 @@ class SeleniumTests(unittest.TestCase):
         )
         self.assertIn("/login", self.driver.current_url)
     
-
+    # Testing the button on the welcome page that links to /signup
     def test_signup_page_loads(self):
-        self.driver.get(self.base_url)  # Go to welcome page
+        self.driver.get(self.base_url)
 
         # Wait and click the button that links to /signup
         signup_button = WebDriverWait(self.driver, 5).until(
