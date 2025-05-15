@@ -64,6 +64,7 @@ class SeleniumTests(unittest.TestCase):
 
         return super().tearDown()
     
+    # Testing if the server is running and the homepage loads
     def test_server_running_homepage_loads(self):
         self.driver.get(self.base_url)
         self.assertIn("127.0.0.1:5000", self.driver.current_url)
