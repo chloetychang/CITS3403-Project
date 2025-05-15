@@ -201,19 +201,6 @@ class SeleniumTests(unittest.TestCase):
 
         # Check its content
         self.assertIn("Sleep data recorded successfully!", success_flash.text)
-    
-    # Testing if logout works
-    def test_logout_functionality(self):
-        # First, user needs to login (logic as in the test_login_functionality)
-        self.driver.get(f"{self.base_url}/login")
-        
-        email_input = self.driver.find_element(By.ID, "email")
-        password_input = self.driver.find_element(By.ID, "password")
-        submit_button = self.driver.find_element(By.ID, "submit")
-
-        email_input.send_keys("pingu@test.com")
-        password_input.send_keys("test123")
-        submit_button.click()
         
 if __name__ == "__main__":
     unittest.main()
