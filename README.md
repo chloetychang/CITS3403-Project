@@ -133,6 +133,21 @@ Password: admin123
    - __Mood correlations__
    - REM cycle pattern
 
+### 🤝 Share Sleep Data
+
+1. Navigate to the __Share__ page.
+2. Use the __search bar__ to find other existing users by username.
+3. Send a __friend request__ to connect.
+4. Once accepted, your friend will appear under __Your Friends__.
+5. You can then:
+   - Click __Show Sleep Data__ to view their shared entries.
+   - Click __Unfriend__ to remove the connection.
+
+#### Notes
+
+- Only __mutual connections__ can view each other’s sleep data.
+- Pending requests will appear under __Pending Friend Requests__.
+
 ### 💡 Tips for Best Use
 
 - Record entries __daily__ for accurate tracking.
