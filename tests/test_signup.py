@@ -1,5 +1,7 @@
 import unittest
 from datetime import datetime
+from app import create_app, db
+from app.models import User
 import os
 import sys
 
@@ -8,33 +10,27 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
-# Define TestConfig within the test file
-class TestConfig:
-    SECRET_KEY = 'test-secret-key'
-    TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-    WTF_CSRF_ENABLED = False
-
-from app import create_app, db
-from app.models import User
-
 class TestSignUp(unittest.TestCase):
     def setUp(self):
-        self.app = create_app(TestConfig)
-        self.app.config['SECRET_KEY'] = TestConfig.SECRET_KEY
-        self.client = self.app.test_client()
-        self.ctx = self.app.app_context()
-        self.ctx.push()
+        self.app = create_app(True)
+        self.app_context = self.app.app_context()
+        self.app_context.push()
         db.create_all()
+        self.client = self.app.test_client()
+
+        # Create dummy user for login tests
+        user = User(name="Test", username="tester", age=25, gender="female", email="test@example.com")
+        user.password = "testpass123"
+        db.session.add(user)
+        db.session.commit()
 
     def tearDown(self):
         db.session.remove()
         db.drop_all()
-        self.ctx.pop()
+        self.app_context.pop()
 
     def test_user_creation_and_password_hashing(self):
-        """✅ Test user creation and password hashing works correctly."""
+        """ Test user creation and password hashing works correctly."""
         response = self.client.post('/signup', data={
             'name': 'Test User',
             'username': 'testuser',

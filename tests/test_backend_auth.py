@@ -18,10 +18,7 @@ class TestFlaskBackend(unittest.TestCase):
     def setUpClass(cls):
         """Set up the application once for all tests"""
         # Initialize the flask app with TestConfig
-        cls.app = create_app(TestConfig)
-        cls.app.config['TESTING'] = True
-        cls.app.config['SECRET_KEY'] = 'test-secret-key'  # Ensure secret key is set
-        cls.app.config['SERVER_NAME'] = 'localhost:5000'
+        cls.app = create_app(True)
         
         # Create app context
         cls.app_context = cls.app.app_context()
