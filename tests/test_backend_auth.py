@@ -6,58 +6,24 @@ from datetime import datetime
 import werkzeug.security
 
 class TestFlaskBackend(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        """Set up the application once for all tests"""
-        # Initialize the flask app with TestConfig
-        cls.app = create_app(True)
-        
-        # Create app context
-        cls.app_context = cls.app.app_context()
-        cls.app_context.push()
-        
-        # Create the database
-        db.create_all()
-        
-        # Set up the test client
-        cls.client = cls.app.test_client()
-    
-    @classmethod
-    def tearDownClass(cls):
-        """Clean up after all tests"""
-        # Clean up database
-        db.session.remove()
-        db.drop_all()
-        
-        # Pop the application context
-        cls.app_context.pop()
-    
     def setUp(self):
         """Setup before each test"""
-        # Clear the database before each test
-        db.session.query(User).delete()
-        db.session.commit()
+        self.app = create_app(True)
+        self.app_context = self.app.app_context()
+        self.app_context.push()
+        db.create_all()
+        self.client = self.app.test_client()
     
     def tearDown(self):
         """Cleanup after each test"""
-        pass
-    
+        db.session.remove()
+        db.drop_all()
+        self.app_context.pop()
 
     def test_homepage_title(self):
         """Test that the homepage loads with correct title"""
         with self.app.test_client() as client:
             response = client.get('/')
-            self.assertEqual(response.status_code, 200)
-    
-    def test_navigation_links(self):
-        """Test that navigation links work correctly"""
-        with self.app.test_client() as client:
-            # Test login route
-            response = client.get('/login')
-            self.assertEqual(response.status_code, 200)
-            
-            # Test signup route
-            response = client.get('/signup')
             self.assertEqual(response.status_code, 200)
     
     def test_user_signup_flow(self):
@@ -79,7 +45,7 @@ class TestFlaskBackend(unittest.TestCase):
         created_user = User.query.filter_by(username=test_username).first()
         self.assertIsNotNone(created_user)
         self.assertEqual(created_user.email, test_email)
-    
+        
     def test_user_login_logout_flow(self):
         """Test the complete login and logout flow"""
         # Create a test user in the database
@@ -89,41 +55,29 @@ class TestFlaskBackend(unittest.TestCase):
         test_password = "SecureP@ss123"
         
         # Create user directly in database
-        user = User(name="Login Test", username=test_username, age=30, 
-                   gender="female", email=test_email)
+        user = User(
+            name="Login Test",
+            username=test_username,
+            age=30,
+            gender="female",
+            email=test_email
+        )
         user.password_hash = werkzeug.security.generate_password_hash(test_password)
         db.session.add(user)
         db.session.commit()
         
-        # Verify user exists
-        user = User.query.filter_by(username=test_username).first()
-        self.assertIsNotNone(user)
-        self.assertEqual(user.email, test_email)
-    
-    def test_login_form_validation(self):
-        """Test login form validation for empty fields"""
-        with self.app.test_client() as client:
-            # Create a user first to verify against
-            test_username = "logintest"
-            test_email = "logintest@example.com"
-            test_password = "SecureP@ss123"
-            
-            user = User(name="Login Test", username=test_username, age=30, 
-                       gender="female", email=test_email)
-            user.password_hash = werkzeug.security.generate_password_hash(test_password)
-            db.session.add(user)
-            db.session.commit()
-            
-            # Test with empty email
-            response = client.get('/login')
-            self.assertEqual(response.status_code, 200)
-    
-    def test_signup_form_validation(self):
-        """Test signup form validation fields"""
-        with self.app.test_client() as client:
-            # Just test the GET request to signup page
-            response = client.get('/signup')
-            self.assertEqual(response.status_code, 200)
+        # Log in via POST request
+        response = self.client.post('/login', data={
+            'email': test_email,
+            'password': test_password
+        }, follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Sleep', response.data)  
+
+        # Log out via GET request
+        response = self.client.get('/logout', follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'You have been logged out.', response.data)
     
     def test_nonexistent_page(self):
         """Test accessing a page that doesn't exist returns 404"""

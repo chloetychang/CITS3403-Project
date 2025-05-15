@@ -1,6 +1,4 @@
 import unittest
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 
 # Import create_app from your Flask factory setup
 from app import create_app, db
@@ -58,8 +56,5 @@ class TestLogin(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'Login', response.data)
     
-    
-
-
 if __name__ == '__main__':
     unittest.main()

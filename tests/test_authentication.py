@@ -8,7 +8,6 @@ from app.models import User
 
 class TestAuthentication(unittest.TestCase):
     """Test case for the authentication functionality"""
-
     def setUp(self):
         self.app = create_app(True)
         self.app_context = self.app.app_context()
