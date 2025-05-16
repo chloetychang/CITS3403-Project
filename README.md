@@ -48,8 +48,11 @@ When a dependency has been added, the requirements file should be updated with t
 Before running the application, ensure you set a secret key for Flask. You can do this by exporting an environment variable. Run the following command in your terminal:
 
 ```bash
-export SECRET_KEY='your_secret_key_here'
+export SECRET_KEY='your_secret_key_here'          
 ```
+
+Note: A different command might be utilised in Windows. <br>
+> In Powershell, the command should be `$env:SECRET_KEY = 'your_secret_key_here'`. This has not been verified due to all developers utilising MacOS. <br>
 
 Replace `'your_secret_key_here'` with a strong, random string.
 
@@ -177,7 +180,7 @@ To run all unit tests:
 python -m unittest discover -s tests -p "test_*.py"
 ```
 
-## 🔹 Selenium System Tests
+### 🔹 Selenium System Tests
 
 Selenium tests are located in:
 
@@ -190,3 +193,6 @@ To run Selenium tests, run the following command:
 ```bash
 python -m tests.systemTest
 ```
+
+## AI Utilisation
+This web application has been developed with the assistance of AI tools such as ChatGPT by OpenAI, which provided support in debugging, code generation, and refining implementation ideas.
