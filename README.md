@@ -1,6 +1,7 @@
 # CITS3403-Project
 
-CITS3403 - Agile Web Development Project
+Project Title: Sleep Tracker <br>
+Web application developed on macOS. Setup instructions assume a Unix-based shell.
 
 ## 📝 Description
 
@@ -52,7 +53,7 @@ export SECRET_KEY='your_secret_key_here'
 ```
 
 Note: A different command might be utilised in Windows. <br>
-> In Powershell, the command should be `$env:SECRET_KEY = 'your_secret_key_here'`. This has not been verified due to all developers utilising MacOS. <br>
+> In Powershell, the command should be `$env:SECRET_KEY = 'your_secret_key_here'`. This has not been verified due to all developers utilising macOS. <br>
 
 Replace `'your_secret_key_here'` with a strong, random string.
 
@@ -88,7 +89,7 @@ Utilities: Flask-Migrate, JavaScript (for flash messages and popups)
 
 ## How to Use the Application
 
-## 🚀 Getting Started
+### 🚀 Getting Started
 
 #### 1. **Sign Up (New Users)**
 
@@ -195,4 +196,4 @@ python -m tests.systemTest
 ```
 
 ## AI Utilisation
-This web application has been developed with the assistance of AI tools such as ChatGPT by OpenAI, which provided support in debugging, code generation, and refining implementation ideas.
+This web application has been developed with the assistance of AI tools such as ChatGPT by OpenAI, which provided support in explaining syntax and errors, debugging, code structuring, and refining implementation ideas.
