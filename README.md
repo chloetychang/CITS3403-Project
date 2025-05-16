@@ -174,12 +174,12 @@ python -m unittest discover -s tests -p "test_*.py"
 
 Selenium tests are located in:
 
-base_selenium.py
+tests/systemTest.py
 
 These simulate user actions in a browser using headless Chrome and test the full application stack, including routing, layout rendering, and public-facing views.
 
-To run Selenium tests, install the following:
+To run Selenium tests, run the following command:
 
 ```bash
-python tests/base_selenium.py
+python -m tests.systemTest
 ```
