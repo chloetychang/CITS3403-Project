@@ -53,6 +53,16 @@ export SECRET_KEY='your_secret_key_here'
 
 Replace `'your_secret_key_here'` with a strong, random string.
 
+### Initialise the Database
+
+To initialise the database, run:
+
+```bash
+flask db upgrade
+```
+
+This will create the database and apply all existing migrations.
+
 ### Launching the Application
 
 After setting up the virtual environment, installing the dependencies, and setting your unique secret key run the command:
@@ -62,16 +72,6 @@ flask run
 ```
 
 (For development, so the server does not have to be stopped and reran as we create modifications, run `flask run --debug`)
-
-### Initialise the Database
-
-To initialise the database, run:
-
-```bash
-flask db upgrade
-```
-
-This will create the database and apply both existing migrations (initial and second).
 
 ## 🧰 Tech Stack
 
@@ -163,10 +163,11 @@ This project includes **automated unit tests** and **Selenium WebDriver system t
 
 The following files implement unit tests using Python’s built-in `unittest` framework:
 
+- `test_authentication.py`
+- `test_backend_auth.py`
 - `test_login.py`
 - `test_signup.py`
-- `test_routes.py`
-- `test_backend_auth.py`
+- `test_upload.py`
 
 Each test file uses a memory-based test database (`sqlite:///:memory:`), and CSRF protection is disabled for isolated test environments.
 
@@ -180,7 +181,7 @@ python -m unittest discover -s tests -p "test_*.py"
 
 Selenium tests are located in:
 
-tests/systemTest.py
+- `tests/systemTest.py`
 
 These simulate user actions in a browser using headless Chrome and test the full application stack, including routing, layout rendering, and public-facing views.
 
