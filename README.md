@@ -4,7 +4,14 @@ CITS3403 - Agile Web Development Project
 
 ## 📝 Description
 
-The Sleep Tracker is a web app that allows users to log sleep and wake times, rate their sleep quality, and view weekly trends through interactive graphs. It is designed with a user-friendly interface and aims to help individuals improve sleep habits by recognizing patterns and behaviors.
+The Sleep Tracker is a comprehensive web application designed to help users monitor and improve their sleep patterns. It offers:
+
+### Key Features
+
+- **Sleep Logging**: Record daily sleep and wake times with mood ratings
+- **Data Visualization**: View sleep patterns through interactive graphs and charts
+- **Calendar View**: Track sleep records with color-coded indicators
+- **Social Features**: Connect with friends and share sleep data with each other
 
 ## Group Members: UWA ID, Name and Github Username
 
@@ -80,14 +87,14 @@ Utilities: Flask-Migrate, JavaScript (for flash messages and popups)
 
 ## 🚀 Getting Started
 
-#### 1. __Sign Up (New Users)__
+#### 1. **Sign Up (New Users)**
 
-- Navigate to the __Sign-Up__ page.
+- Navigate to the **Sign-Up** page.
 - Fill up the Sign Up form and log in with your new account.
 
-#### 2. __Log In__
+#### 2. **Log In**
 
-- Navigate to the __Login__ page.
+- Navigate to the **Login** page.
 - Enter using your registered email and password to start using the application.
 
 Test Account:
@@ -101,57 +108,56 @@ Password: admin123
 
 #### Upload Sleep Data
 
-1. Navigate to the __Sleep__ page.
-2. Click __Upload Sleep Data__ and fill up all the details required.
-4. Click __Save Entry__ to log your data.
+1. Navigate to the **Sleep** page.
+2. Click **Upload Sleep Data** and fill up all the details required.
+3. Click **Save Entry** to log your data.
 
 #### View Sleep Records
 
-1. Navigate to the __Records__ page to view your sleep entries in a calendar format.
+1. Navigate to the **Records** page to view your sleep entries in a calendar format.
 2. Each date is color-coded based on your sleep duration:
 
-   - 🟩 __Green__ – 7+ hours
-   - 🟨 __Yellow__ – 5 - 7 hours
-   - 🟥 __Red__ – < 5 hours
-   - ⬜ __Grey__ – No sleep data recorded
+   - 🟩 **Green** – 7+ hours
+   - 🟨 **Yellow** – 5 - 7 hours
+   - 🟥 **Red** – < 5 hours
+   - ⬜ **Grey** – No sleep data recorded
 
-4. Click any date to:
+3. Click any date to:
    - View detailed sleep data
    - Add a new entry
    - Delete an existing record
 
 #### Analyse Results
 
-1. Navigate the __Results__ page.
+1. Navigate the **Results** page.
 2. Interact with insightful graphs:
    - Weekly sleep patterns
    - Mood correlations
    - REM cycle pattern
 
-### 🤝 Share Sleep Data
+### Share Sleep Data
 
-1. Navigate to the __Share__ page.
-2. Use the search bar to find other existing users by username.
-3. Send a __friend request__ to connect.
-4. Once accepted, your friend will appear under __Your Friends__.
-5. You can then:
-   - Click __Show Sleep Data__ to view their shared entries.
-   - Click __Unfriend__ to remove the connection.
+1. Navigate to the **Share** page.
+2. Search for other exisiting users and send a **friend request** to connect.
+3. Once accepted, your friend will appear under **Your Friends**.
+4. You can then:
+   - Click **Show Sleep Data** to view their shared entries.
+   - Click **Unfriend** to remove the connection.
 
 #### Notes
 
-- Only __mutual connections__ can view each other’s sleep data.
-- Pending requests will appear under __Pending Friend Requests__.
+- Only **mutual connections** can view each other’s sleep data.
+- Pending requests will appear under **Pending Friend Requests**.
 
 ### 💡 Tips for Best Use
 
-- Record entries __daily__ for accurate tracking.
-- Include __mood ratings__ to help identify how sleep affects emotional well-being.
-- Regularly review __weekly trends__ to improve your sleep habits.
+- Record entries **daily** for accurate tracking.
+- Include **mood ratings** to help identify how sleep affects emotional well-being.
+- Regularly review **weekly trends** to improve your sleep habits.
 
 ## Instructions: How to Run Tests
 
-This project includes __automated unit tests__ and __Selenium WebDriver system tests__.
+This project includes **automated unit tests** and **Selenium WebDriver system tests**.
 
 ### 🔹 Unit Tests
 
